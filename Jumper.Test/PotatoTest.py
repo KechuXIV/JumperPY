@@ -18,7 +18,7 @@ class PotatoTest(unittest.TestCase):
 
     def test_MovePotato(self):
         expectedPosition = self.potato.ActualPosition
-        key = None
+        key = []
 
         self.potato.Motion(key)
 
@@ -29,7 +29,8 @@ class PotatoTest(unittest.TestCase):
     def test_MovePotatoLeft(self):
         expectedPosition = Point(self.potato.ActualPosition.X - self.potato.__velocidadEnX__,
             self.potato.ActualPosition.Y)
-        key = Key.A
+        key = []
+        key.append(Key.A)
 
         self.potato.Motion(key)
 
@@ -41,7 +42,8 @@ class PotatoTest(unittest.TestCase):
     def test_MovePotatoRight(self):
         expectedPosition = Point(self.potato.ActualPosition.X + self.potato.__velocidadEnX__,
             self.potato.ActualPosition.Y)
-        key = Key.D
+        key = []
+        key.append(Key.D)
 
         self.potato.Motion(key)
 
@@ -51,8 +53,7 @@ class PotatoTest(unittest.TestCase):
         self.assertEqual(expectedPosition.Y, actualPosition.Y)
 
     def test_GetPotatoSprite(self):
-        expectedPosition = Point(self.potato.ActualPosition.X,
-            self.potato.ActualPosition.Y)
+        expectedPosition = self.potato.ActualPosition
 
         sprite = self.potato.GetSprite()
 
@@ -63,7 +64,6 @@ class PotatoTest(unittest.TestCase):
         self.assertEqual(expectedPosition.Y, sprite.rect.y)
         self.assertEqual(30, sprite.rect.width)
         self.assertEqual(30, sprite.rect.height)
-        
 
 if __name__ == '__main__':
     unittest.main()

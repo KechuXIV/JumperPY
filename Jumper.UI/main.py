@@ -57,14 +57,14 @@ def UpdateWindow():
 def Logic():
 	keys = pygame.key.get_pressed()
 
-	key = None
+	keysPressed = []
 
 	if(keys[pygame.K_d]):
-		key = Key.D
+		keysPressed.append(Key.D)
 	elif(keys[pygame.K_a]):
-		key = Key.A
+		keysPressed.append(Key.A)
 
-	potato.Motion(key)
+	potato.Motion(keysPressed)
 
 
 while True:

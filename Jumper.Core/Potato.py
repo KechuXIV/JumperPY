@@ -11,7 +11,7 @@ class Potato():
 
 	def __init__(self):
 		self.__velocidadEnX__ = 30
-		self.ActualPosition = Point(30,30)
+		self.ActualPosition = Point(30*8,30*8)
 		self.__sprite__ = pygame.sprite.Sprite()
 		self.__sprite__.image = pygame.image.load(
 			os.path.join('..', 'Jumper.Core','Resources','redbox.png'))
@@ -19,10 +19,10 @@ class Potato():
 		self.__sprite__.rect = pygame.Rect(
 			(self.ActualPosition.X, self.ActualPosition.Y), (30, 30))
 
-	def Motion(self, key):
-		if(key == Key.A):
+	def Motion(self, keysPressed):
+		if(Key.A in keysPressed):
 			self.ActualPosition.X -= self.__velocidadEnX__
-		elif(key == Key.D):
+		elif(Key.D in keysPressed):
 			self.ActualPosition.X += self.__velocidadEnX__
 
 		self.__sprite__.rect.x = self.ActualPosition.X
