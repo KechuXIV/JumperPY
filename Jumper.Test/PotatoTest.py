@@ -5,16 +5,20 @@ import os
 
 lib_path = os.path.abspath(os.path.join('..', 'Jumper.Core'))
 sys.path.append(lib_path)
+lib_path = os.path.abspath(os.path.join('..', 'Jumper.UI'))
+sys.path.append(lib_path)
 
 from Potato import *
 from Point import *
 from Key import *
+from PygameSpriteManager import *
 
 
 class PotatoTest(unittest.TestCase):
 
     def setUp(self):
-        self.potato = Potato()
+        self.spriteManager = PygameSpriteManager()
+        self.potato = Potato(self.spriteManager)
 
     def test_MovePotato(self):
         expectedPosition = self.potato.ActualPosition

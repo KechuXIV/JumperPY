@@ -9,12 +9,14 @@ sys.path.append(lib_path)
 from Potato import *
 from Point import *
 from Key import *
+from PygameSpriteManager import *
 
 pygame.init()
 screenWidth = 600
 screenHeight = 300
 screen = pygame.display.set_mode((screenWidth, screenHeight))
-potato = Potato()
+pygameSpriteManager = PygameSpriteManager()
+potato = Potato(pygameSpriteManager)
 allSprites = pygame.sprite.Group()
 allSprites.add(potato.GetSprite())
 

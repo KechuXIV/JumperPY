@@ -9,11 +9,12 @@ from Key import *
 
 class Potato():
 
-	def __init__(self):
+	def __init__(self, spriteManager):
 		self.__SPEED__ = Point(30, 45)
+		self.__SPRITEMANAGER__ = spriteManager
 
 		self.ActualPosition = Point(30*8,30*8)
-		self.InitializeSprite()
+		self.CreateSprite()
 
 		self.isJumping = False
 		self.isGoingDown = False
@@ -22,14 +23,16 @@ class Potato():
 		
 
 	def GetSprite(self):
-		return self.__sprite__
+		return self.__SPRITEMANAGER__.GetSprite()
 
-	def InitializeSprite(self):
-		self.__sprite__ = pygame.sprite.Sprite()
-		self.__sprite__.image = pygame.image.load(
-			os.path.join('..', 'Jumper.Core','Resources','redbox.png'))
-		self.__sprite__.rect = pygame.Rect(
-			(self.ActualPosition.X, self.ActualPosition.Y), (30, 30))
+	def CreateSprite(self):
+		imagePath = os.path.join('..', 'Jumper.Core','Resources','redbox.png')
+		print(imagePath)
+		width = 30
+		height = 30
+
+		self.__SPRITEMANAGER__.CreateSprite(self.ActualPosition.X, self.ActualPosition.Y,
+			width, height, imagePath)
 
 	def Jump(self):
 		if(self.isJumping):
@@ -65,7 +68,4 @@ class Potato():
 		return self.UpdateSpritePosition()
 
 	def UpdateSpritePosition(self):
-		self.__sprite__.rect.x = self.ActualPosition.X
-		self.__sprite__.rect.y = self.ActualPosition.Y
-
-		return self.__sprite__
+		return self.__SPRITEMANAGER__.UpdateSprite(self.ActualPosition.X, self.ActualPosition.Y)
