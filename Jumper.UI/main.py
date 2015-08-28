@@ -20,7 +20,7 @@ allSprites.add(potato.GetSprite())
 
 clock = pygame.time.Clock()
 
-FPS = 10
+FPS = 20
 
 def CheckQuitEvent():
     for event in pygame.event.get():
@@ -61,8 +61,10 @@ def Logic():
 
 	if(keys[pygame.K_d]):
 		keysPressed.append(Key.D)
-	elif(keys[pygame.K_a]):
+	if(keys[pygame.K_a]):
 		keysPressed.append(Key.A)
+	if(keys[pygame.K_SPACE]):
+		keysPressed.append(Key.Space)
 
 	potato.Motion(keysPressed)
 
