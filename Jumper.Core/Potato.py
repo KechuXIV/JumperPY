@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import pygame
 import os
 
@@ -15,19 +14,41 @@ class Potato():
 		self.__SCREEN__ = screenCords
 
 		self.ActualPosition = Point(30*8,30*8)
+
+		self.images = ['potatoStanding.png', 'potatoWalking.png', 'potatoJumping.png']
+		self.isJumping = False
+		self.isGoingLeft = True
+		self.isGoingDown = False
+		self.isStanding = True
+		self.actualImageIndex = 0
+
 		self.CreateSprite()
 
-		self.isJumping = False
-		self.isGoingDown = False
 		self.maxJumping = self.__SPEED__.Y * 3
 		self.startJumpingCord = self.ActualPosition.Y
 		
+	def GetImagePath(self, image):
+		return os.path.join('..', 'Jumper.Core','Resources', image)
+
+	def GetImageToShow(self):
+		image = None
+		if(self.isJumping | self.isGoingDown):
+			self.actualImageIndex = 2
+		elif(not self.isStanding):
+			if(self.actualImageIndex > 1):
+				self.actualImageIndex = 0
+			else:
+				self.actualImageIndex += 1
+		else:
+			self.actualImageIndex = 0
+
+		return self.images[self.actualImageIndex]
 
 	def GetSprite(self):
 		return self.__SPRITEMANAGER__.GetSprite()
 
 	def CreateSprite(self):
-		imagePath = os.path.join('..', 'Jumper.Core','Resources','redbox.png')
+		imagePath = self.GetImagePath(self.images[0])
 		width = 30
 		height = 30
 
@@ -58,6 +79,7 @@ class Potato():
 			self.isJumping = True
 
 	def Motion(self, keysPressed):
+		self.isStanding = True
 		self.MoveOnXAxis(keysPressed)
 
 		if(Key.Space in keysPressed):
@@ -69,17 +91,40 @@ class Potato():
 
 	def MoveOnXAxis(self, keysPressed):
 		if(Key.A in keysPressed):
+			self.isStanding = False
 			self.ActualPosition.X -= self.__SPEED__.X
+			if(not self.isGoingLeft):
+				self.isGoingLeft = True
 		elif(Key.D in keysPressed):
 			self.ActualPosition.X += self.__SPEED__.X
+			self.isStanding = False
+			if(self.isGoingLeft):
+				self.isGoingLeft = False
+		self.UpdateImage()
 
 		self.StayOnScreen()
+
+	def FlipSpriteImage(self):
+		return self.__SPRITEMANAGER__.FlipSpriteImage()
 
 	def StayOnScreen(self):
 		if(self.ActualPosition.X < 0):
 				self.ActualPosition.X = 0
 		elif(self.ActualPosition.X > self.__SCREEN__.X - self.__SPEED__.X):
 				self.ActualPosition.X = self.__SCREEN__.X - self.__SPEED__.X
+
+	def UpdateImage(self):
+		image = self.GetImageToShow()
+
+		imagePath = self.GetImagePath(image)
+
+		self.UpdateSpriteImage(imagePath)
+
+		if(not self.isGoingLeft):
+			self.FlipSpriteImage()
+
+	def UpdateSpriteImage(self, imagePath):
+		return self.__SPRITEMANAGER__.UpdateSpriteImage(imagePath)
 
 	def UpdateSpritePosition(self):
 		return self.__SPRITEMANAGER__.UpdateSprite(self.ActualPosition.X, self.ActualPosition.Y)

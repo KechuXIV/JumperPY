@@ -32,6 +32,7 @@ class PotatoTest(unittest.TestCase):
         actualPosition = self.potato.ActualPosition
 
         self.assertEqual(expectedPosition, actualPosition)
+        self.assertTrue(self.potato.isStanding)
 
     def test_MovePotatoLeft(self):
         expectedPosition = Point(self.potato.ActualPosition.X - self.potato.__SPEED__.X,
@@ -43,6 +44,8 @@ class PotatoTest(unittest.TestCase):
 
         self.assertEqual(expectedPosition.X, sprite.rect.x)
         self.assertEqual(expectedPosition.Y, sprite.rect.y)
+        self.assertTrue(self.potato.isGoingLeft)
+        self.assertFalse(self.potato.isStanding)
 
     def test_MovePotatoRight(self):
         expectedPosition = Point(self.potato.ActualPosition.X + self.potato.__SPEED__.X,
@@ -54,6 +57,8 @@ class PotatoTest(unittest.TestCase):
 
         self.assertEqual(expectedPosition.X, sprite.rect.x)
         self.assertEqual(expectedPosition.Y, sprite.rect.y)
+        self.assertFalse(self.potato.isGoingLeft)
+        self.assertFalse(self.potato.isStanding)
 
     def test_MovePotatoJump(self):
         expectedPosition = Point(self.potato.ActualPosition.X,

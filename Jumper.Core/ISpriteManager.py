@@ -7,7 +7,13 @@ class ISpriteManager():
 		raise NotImplementedError("Should have implemented this")
 
 	def GetSprite(self):
-		raise NotImplementedError("Should have implemented this")		
+		raise NotImplementedError("Should have implemented this")
+
+	def FlipSpriteImage(self):
+		raise NotImplementedError("Should have implemented this")
 
 	def UpdateSprite(self, xPosition, yPosition, width = None, height = None, imagePath = None):
+		raise NotImplementedError("Should have implemented this")
+
+	def UpdateSpriteImage(self, imagePath):
 		raise NotImplementedError("Should have implemented this")

@@ -15,13 +15,13 @@ pygame.init()
 screenCords = Point(600, 300)
 screen = pygame.display.set_mode((screenCords.X, screenCords.Y))
 pygameSpriteManager = PygameSpriteManager()
-potato = Potato(screenCords, pygameSpriteManager)
+potato = Potato(screenCords,pygameSpriteManager)
 allSprites = pygame.sprite.Group()
 allSprites.add(potato.GetSprite())
 
 clock = pygame.time.Clock()
 
-FPS = 20
+FPS = 10
 
 def CheckQuitEvent():
     for event in pygame.event.get():
@@ -33,6 +33,11 @@ def Draw():
 
 	allSprites.draw(screen)
 
+	DrawLines()
+	
+	UpdateWindow()
+
+def DrawLines():
 	x = 0
 	y = 0
 
@@ -45,8 +50,6 @@ def Draw():
 
 		pygame.draw.line(screen, (0, 200, 200), (0, y), (600, x), (1))
 		pygame.draw.line(screen, (0, 200, 200), (x, 0), (x, 300), (1))
-	
-	UpdateWindow()
 
 
 def ClearScreen():
