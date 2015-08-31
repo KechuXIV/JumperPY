@@ -111,7 +111,7 @@ class PotatoTest(unittest.TestCase):
 
         sprite = self.potato.Motion(keysPressed)
 
-        self.assertEqual(sprite.rect.x, self.potato.__SCREEN__.X - self.potato.__SPEED__.X)
+        self.assertEqual(sprite.rect.x, self.potato.__SCREEN__.X - self.potato.__WIDTH__)
 
     def test_PotatoCantGoOutsideFromScreenStart(self):
         self.potato.ActualPosition.X = 0

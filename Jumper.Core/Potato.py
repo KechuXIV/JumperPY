@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import pygame
 import os
 
 from Point import *
@@ -9,9 +8,11 @@ from Key import *
 class Potato():
 
 	def __init__(self, screenCords, spriteManager):
-		self.__SPEED__ = Point(30, 45)
+		self.__SPEED__ = Point(15, 45)
 		self.__SPRITEMANAGER__ = spriteManager
 		self.__SCREEN__ = screenCords
+		self.__WIDTH__ = 30
+		self.__HEIGHT__ = 30
 
 		self.ActualPosition = Point(30*8,30*8)
 
@@ -49,11 +50,9 @@ class Potato():
 
 	def CreateSprite(self):
 		imagePath = self.GetImagePath(self.images[0])
-		width = 30
-		height = 30
 
 		self.__SPRITEMANAGER__.CreateSprite(self.ActualPosition.X, self.ActualPosition.Y,
-			width, height, imagePath)
+			self.__WIDTH__, self.__HEIGHT__, imagePath)
 
 	def EndJumpCycle(self):
 		self.ActualPosition.Y = self.startJumpingCord
@@ -110,8 +109,8 @@ class Potato():
 	def StayOnScreen(self):
 		if(self.ActualPosition.X < 0):
 				self.ActualPosition.X = 0
-		elif(self.ActualPosition.X > self.__SCREEN__.X - self.__SPEED__.X):
-				self.ActualPosition.X = self.__SCREEN__.X - self.__SPEED__.X
+		elif(self.ActualPosition.X > self.__SCREEN__.X - self.__WIDTH__):
+				self.ActualPosition.X = self.__SCREEN__.X - self.__WIDTH__
 
 	def UpdateImage(self):
 		image = self.GetImageToShow()

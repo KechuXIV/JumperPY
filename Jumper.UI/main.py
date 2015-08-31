@@ -44,9 +44,9 @@ def DrawLines():
 	pygame.draw.line(screen, (0, 200, 200), (0, 0), (600, x), (1))
 	pygame.draw.line(screen, (0, 200, 200), (0, 0), (x, 300), (1))
 
-	for i in xrange(1,20):
-		x += 30 
-		y += 30
+	for i in xrange(1,40):
+		x += 15
+		y += 15
 
 		pygame.draw.line(screen, (0, 200, 200), (0, y), (600, x), (1))
 		pygame.draw.line(screen, (0, 200, 200), (x, 0), (x, 300), (1))
