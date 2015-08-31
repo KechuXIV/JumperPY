@@ -34,6 +34,11 @@ class Potato():
 		self.__SPRITEMANAGER__.CreateSprite(self.ActualPosition.X, self.ActualPosition.Y,
 			width, height, imagePath)
 
+	def EndJumpCycle(self):
+		self.ActualPosition.Y = self.startJumpingCord
+		self.isJumping = False
+		self.isGoingDown = False
+
 	def Jump(self):
 		if(self.isJumping):
 			if(self.isGoingDown):
@@ -45,9 +50,7 @@ class Potato():
 				self.isGoingDown = True
 
 			if(self.ActualPosition.Y >= self.startJumpingCord):
-				self.ActualPosition.Y = self.startJumpingCord
-				self.isJumping = False
-				self.isGoingDown = False
+				self.EndJumpCycle()
 
 	def JumpInitialize(self):
 		if(not self.isJumping):
@@ -55,14 +58,7 @@ class Potato():
 			self.isJumping = True
 
 	def Motion(self, keysPressed):
-		if(Key.A in keysPressed):
-			self.ActualPosition.X -= self.__SPEED__.X
-			if(self.ActualPosition.X < 0):
-				self.ActualPosition.X = 0
-		elif(Key.D in keysPressed):
-			self.ActualPosition.X += self.__SPEED__.X
-			if(self.ActualPosition.X > self.__SCREEN__.X - self.__SPEED__.X):
-				self.ActualPosition.X = self.__SCREEN__.X - self.__SPEED__.X
+		self.MoveOnXAxis(keysPressed)
 
 		if(Key.Space in keysPressed):
 			self.JumpInitialize()
@@ -70,6 +66,20 @@ class Potato():
 		self.Jump()
 
 		return self.UpdateSpritePosition()
+
+	def MoveOnXAxis(self, keysPressed):
+		if(Key.A in keysPressed):
+			self.ActualPosition.X -= self.__SPEED__.X
+		elif(Key.D in keysPressed):
+			self.ActualPosition.X += self.__SPEED__.X
+
+		self.StayOnScreen()
+
+	def StayOnScreen(self):
+		if(self.ActualPosition.X < 0):
+				self.ActualPosition.X = 0
+		elif(self.ActualPosition.X > self.__SCREEN__.X - self.__SPEED__.X):
+				self.ActualPosition.X = self.__SCREEN__.X - self.__SPEED__.X
 
 	def UpdateSpritePosition(self):
 		return self.__SPRITEMANAGER__.UpdateSprite(self.ActualPosition.X, self.ActualPosition.Y)
