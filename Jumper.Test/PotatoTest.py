@@ -17,8 +17,11 @@ from PygameSpriteManager import *
 class PotatoTest(unittest.TestCase):
 
     def setUp(self):
+        screenWidth = 600
+        screenHeight = 300
+        screen = Point(screenWidth, screenHeight)
         self.spriteManager = PygameSpriteManager()
-        self.potato = Potato(self.spriteManager)
+        self.potato = Potato(screen, self.spriteManager)
 
     def test_MovePotato(self):
         expectedPosition = self.potato.ActualPosition
@@ -94,6 +97,26 @@ class PotatoTest(unittest.TestCase):
 
         self.assertTrue(self.potato.isJumping)
         self.assertEqual(expectedStartJumpingCord, self.potato.startJumpingCord)
+
+    def test_PotatoCantGoOutsideFromScreenEnding(self):
+        self.potato.ActualPosition.X = self.potato.__SCREEN__.X
+
+        keysPressed = []
+        keysPressed.append(Key.D)
+
+        sprite = self.potato.Motion(keysPressed)
+
+        self.assertEqual(sprite.rect.x, self.potato.__SCREEN__.X - self.potato.__SPEED__.X)
+
+    def test_PotatoCantGoOutsideFromScreenStart(self):
+        self.potato.ActualPosition.X = 0
+
+        keysPressed = []
+        keysPressed.append(Key.A)
+
+        sprite = self.potato.Motion(keysPressed)
+
+        self.assertEqual(sprite.rect.x, 0)
 
     def test_GetPotatoSprite(self):
         expectedPosition = self.potato.ActualPosition

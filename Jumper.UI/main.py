@@ -12,11 +12,10 @@ from Key import *
 from PygameSpriteManager import *
 
 pygame.init()
-screenWidth = 600
-screenHeight = 300
-screen = pygame.display.set_mode((screenWidth, screenHeight))
+screenCords = Point(600, 300)
+screen = pygame.display.set_mode((screenCords.X, screenCords.Y))
 pygameSpriteManager = PygameSpriteManager()
-potato = Potato(pygameSpriteManager)
+potato = Potato(screenCords, pygameSpriteManager)
 allSprites = pygame.sprite.Group()
 allSprites.add(potato.GetSprite())
 

@@ -9,9 +9,10 @@ from Key import *
 
 class Potato():
 
-	def __init__(self, spriteManager):
+	def __init__(self, screenCords, spriteManager):
 		self.__SPEED__ = Point(30, 45)
 		self.__SPRITEMANAGER__ = spriteManager
+		self.__SCREEN__ = screenCords
 
 		self.ActualPosition = Point(30*8,30*8)
 		self.CreateSprite()
@@ -27,7 +28,6 @@ class Potato():
 
 	def CreateSprite(self):
 		imagePath = os.path.join('..', 'Jumper.Core','Resources','redbox.png')
-		print(imagePath)
 		width = 30
 		height = 30
 
@@ -57,8 +57,12 @@ class Potato():
 	def Motion(self, keysPressed):
 		if(Key.A in keysPressed):
 			self.ActualPosition.X -= self.__SPEED__.X
+			if(self.ActualPosition.X < 0):
+				self.ActualPosition.X = 0
 		elif(Key.D in keysPressed):
 			self.ActualPosition.X += self.__SPEED__.X
+			if(self.ActualPosition.X > self.__SCREEN__.X - self.__SPEED__.X):
+				self.ActualPosition.X = self.__SCREEN__.X - self.__SPEED__.X
 
 		if(Key.Space in keysPressed):
 			self.JumpInitialize()
