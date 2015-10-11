@@ -133,8 +133,8 @@ class PotatoTest(unittest.TestCase):
         self.assertTrue(sprite.rect is not None)
         self.assertEqual(expectedPosition.X, sprite.rect.x)
         self.assertEqual(expectedPosition.Y, sprite.rect.y)
-        self.assertEqual(30, sprite.rect.width)
         self.assertEqual(30, sprite.rect.height)
+        self.assertEqual(30, sprite.rect.width)
 
 if __name__ == '__main__':
     unittest.main()
