@@ -8,6 +8,7 @@ sys.path.append(lib_path)
 
 from ISpriteManager import *
 
+
 class PygameSpriteManager(ISpriteManager):
 
 	def __init__(self):

@@ -7,15 +7,18 @@ from Tile import *
 
 class LevelManager():
 
+	def __init__(self, imageManager):
+		self.__actualLevel__ = 0
 
-
-	def __init__(self):
-		self.__actualLevel__ = 15
-
-		self.levels = self.GetLevels() 
+		self.levels = self.GetLevels()
+		self.imageManager = imageManager
+		self.tile = Tile(imageManager) 
 
 	def GetLevel(self):
 		return self.levels[self.__actualLevel__]
+
+	def GetLevelPath(self):
+		return os.path.join('..', 'Jumper.Core','Resources','levels', self.GetLevel() + '.png')
 
 	def GetLevels(self):
 		levels = ["leap_of_faith"]
@@ -57,10 +60,10 @@ class LevelManager():
 		return levels
 
 	def GetRenderedLevel(self):
-		tile = Tile()
+		levelPath = self.GetLevelPath()
 
-		levelPath = os.path.join('..', 'Jumper.Core','Resources','levels', self.GetLevel() + '.png')
 		surfaceLevelPath = pygame.image.load(levelPath)
+		
 		pixelArray = pygame.PixelArray(surfaceLevelPath)
 		width = surfaceLevelPath.get_width()
 		height = surfaceLevelPath.get_height()
@@ -69,13 +72,13 @@ class LevelManager():
 		red = pygame.Color(surfaceLevelPath.map_rgb((255, 0, 0)))
 		green = pygame.Color(surfaceLevelPath.map_rgb((76, 255, 0)))
 
-		surceface = pygame.Surface([width*32,height*32], pygame.SRCALPHA, 32)
+		surceface = pygame.Surface([width*self.tile.Width,height*self.tile.Height], pygame.SRCALPHA, 32)
 
 		for x in xrange(0,width):
 			for y in xrange(0,height):
  				color = pygame.Color(pixelArray[x, y])
 				if color == black:
-					surceface.blit(tile.Image,(x*30,y*30))
+					surceface.blit(self.tile.Image,(x*self.tile.Width,y*self.tile.Height))
 				elif color == red:
 					pass
 				elif color == green:

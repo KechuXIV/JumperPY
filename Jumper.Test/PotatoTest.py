@@ -128,9 +128,9 @@ class PotatoTest(unittest.TestCase):
 
         sprite = self.potato.GetSprite()
 
-        self.assertTrue(sprite is not None)
-        self.assertTrue(sprite.image is not None)
-        self.assertTrue(sprite.rect is not None)
+        self.assertIsNotNone(sprite)
+        self.assertIsNotNone(sprite.image)
+        self.assertIsNotNone(sprite.rect)
         self.assertEqual(expectedPosition.X, sprite.rect.x)
         self.assertEqual(expectedPosition.Y, sprite.rect.y)
         self.assertEqual(30, sprite.rect.height)

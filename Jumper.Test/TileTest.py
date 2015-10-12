@@ -5,23 +5,22 @@ import os
 
 lib_path = os.path.abspath(os.path.join('..', 'Jumper.Core'))
 sys.path.append(lib_path)
+lib_path = os.path.abspath(os.path.join('..', 'Jumper.UI'))
+sys.path.append(lib_path)
 
+from ImageManager import *
 from Tile import *
 
 
 class TileTest(unittest.TestCase):
 
 	def setUp(self):
-		self.tile = Tile()
-
-	def test_GetTilePath(self):
-		expectedPath = "../Jumper.Core/Resources/tile.png"
-		path = self.tile.Path
-		self.assertEqual(path, expectedPath)
+		imageManager = ImageManager() 
+		self.tile = Tile(imageManager)
 
 	def test_GetTileHeightAndWidth(self):
-		expectedHeight = 32
-		expectedWidth = 32
+		expectedHeight = 30
+		expectedWidth = 30
 
 		height = self.tile.Height
 		witdh = self.tile.Width

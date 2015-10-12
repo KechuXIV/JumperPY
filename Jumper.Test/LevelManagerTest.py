@@ -9,12 +9,14 @@ lib_path = os.path.abspath(os.path.join('..', 'Jumper.UI'))
 sys.path.append(lib_path)
 
 from LevelManager import *
+from ImageManager import *
 
 
 class LevelManagerTest(unittest.TestCase):
 
 	def setUp(self):
-		self.levelManager = LevelManager()
+		imageManager = ImageManager()
+		self.levelManager = LevelManager(imageManager)
 
 	def test_GetLevel(self):
 		expectedLevel = "leap_of_faith"
@@ -34,6 +36,13 @@ class LevelManagerTest(unittest.TestCase):
 		actualLevel = self.levelManager.GoToNextLevel()
 
 		self.assertEqual(actualLevel, expectedLevel)
+
+	def test_GetLevelPath(self):
+		expectedPath = "../Jumper.Core/Resources/levels/leap_of_faith.png"
+
+		path = self.levelManager.GetLevelPath()
+
+		self.assertEqual(path, expectedPath)
 
 if __name__ == '__main__':
 	unittest.main()
