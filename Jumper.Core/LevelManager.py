@@ -7,11 +7,14 @@ from Tile import *
 
 class LevelManager():
 
-	def __init__(self, imageManager):
+	def __init__(self, imageManager, surcefaceManager, spriteManager):
 		self.__actualLevel__ = 0
+		self.__sprite__ = None
+		self.imageManager = imageManager
+		self.surfaceManager = surcefaceManager
+		self.spriteManager = spriteManager
 
 		self.levels = self.GetLevels()
-		self.imageManager = imageManager
 		self.tile = Tile(imageManager) 
 
 	def GetLevel(self):
@@ -62,33 +65,36 @@ class LevelManager():
 	def GetRenderedLevel(self):
 		levelPath = self.GetLevelPath()
 
-		surfaceLevelPath = pygame.image.load(levelPath)
+		self.imageManager.LoadImage(levelPath)
 		
-		pixelArray = pygame.PixelArray(surfaceLevelPath)
-		width = surfaceLevelPath.get_width()
-		height = surfaceLevelPath.get_height()
+		width = self.imageManager.GetImageWidth()
+		height = self.imageManager.GetImageHeight()
 
-		black = pygame.Color(surfaceLevelPath.map_rgb((0, 0, 0)))
-		red = pygame.Color(surfaceLevelPath.map_rgb((255, 0, 0)))
-		green = pygame.Color(surfaceLevelPath.map_rgb((76, 255, 0)))
+		pixelArray = self.imageManager.GetPixelArray()
 
-		surceface = pygame.Surface([width*self.tile.Width,height*self.tile.Height], pygame.SRCALPHA, 32)
+		black = self.imageManager.GetImageColor(0, 0, 0)
+		red = self.imageManager.GetImageColor(255, 0, 0)
+		green = self.imageManager.GetImageColor(76, 255, 0)
+
+		self.surfaceManager.CreateSurface(width*self.tile.Width, height*self.tile.Height)
 
 		for x in xrange(0,width):
 			for y in xrange(0,height):
- 				color = pygame.Color(pixelArray[x, y])
+ 				color = self.imageManager.GetPixelArrayItemColor(pixelArray[x, y])
 				if color == black:
-					surceface.blit(self.tile.Image,(x*self.tile.Width,y*self.tile.Height))
+					self.surfaceManager.BlitIntoSurface(self.tile.Image, x*self.tile.Width, y*self.tile.Height)
 				elif color == red:
 					pass
 				elif color == green:
 					pass
 
-		sprite = pygame.sprite.Sprite()
-		sprite.image = surceface
-		sprite.rect = pygame.Rect((0, 0), (width*30, height*30))
+		sourceface = self.surfaceManager.GetSurface()
 
-		return sprite
+		self.spriteManager.CreateSpriteFromSurface(0, 0, width*self.tile.Width, height*self.tile.Height, sourceface)
+
+		self.__sprite__ = self.spriteManager.GetSprite()
+
+		return self.__sprite__
 
 	def GoToNextLevel(self):
 		self.__actualLevel__ += 1

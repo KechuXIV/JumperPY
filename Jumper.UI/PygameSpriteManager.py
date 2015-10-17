@@ -17,8 +17,14 @@ class PygameSpriteManager(ISpriteManager):
 		self.__height__ = None
 
 	def CreateSprite(self, xPosition, yPosition, width, height, imagePath):
+		sourceface = pygame.transform.scale(pygame.image.load(imagePath), (width, height))
+		self.CreateSpriteFromSurface(xPosition, yPosition, width, height, sourceface)
+
+		return self.__sprite__
+
+	def CreateSpriteFromSurface(self, xPosition, yPosition, width, height, sourceface):
 		self.__sprite__ = pygame.sprite.Sprite()
-		self.__sprite__.image = pygame.transform.scale(pygame.image.load(imagePath), (width, height))
+		self.__sprite__.image = sourceface
 		self.__width__ = width
 		self.__height__ = height
 		self.__sprite__.rect = pygame.Rect((xPosition, yPosition), (width, height))

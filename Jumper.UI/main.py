@@ -7,22 +7,29 @@ lib_path = os.path.abspath(os.path.join('..', 'Jumper.Core'))
 sys.path.append(lib_path)
 
 from Potato import *
+from LevelManager import *
 from Point import *
 from Key import *
+
 from PygameSpriteManager import *
-from LevelManager import *
+from PygameImageManager import *
+from PygameSurfaceManager import *
 
 
 pygame.init()
 screenCords = Point(600, 300)
 screen = pygame.display.set_mode((screenCords.X, screenCords.Y))
-pygameSpriteManager = PygameSpriteManager()
-levelManager = LevelManager() 
-potato = Potato(screenCords,pygameSpriteManager)
+levelManagerPygameSpriteManager = PygameSpriteManager()
+potatoPygameSpriteManager = PygameSpriteManager()
+pygameImageManager = PygameImageManager()
+pygameSourceManager = PygameSurfaceManager()
+levelManager = LevelManager(pygameImageManager, pygameSourceManager, levelManagerPygameSpriteManager)
+potato = Potato(screenCords, potatoPygameSpriteManager)
 
 allSprites = pygame.sprite.Group()
-allSprites.add(levelManager.GetRenderedLevel())
 allSprites.add(potato.GetSprite())
+allSprites.add(levelManager.GetRenderedLevel())
+
 
 clock = pygame.time.Clock()
 

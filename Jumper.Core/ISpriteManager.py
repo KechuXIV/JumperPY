@@ -6,6 +6,9 @@ class ISpriteManager():
 	def CreateSprite(self, xPosition, yPosition, width, height, imagePath):
 		raise NotImplementedError("Should have implemented this")
 
+	def CreateSpriteFromSurface(self, xPosition, yPosition, width, height, sourceface):
+		raise NotImplementedError("Should have implemented this")
+
 	def GetSprite(self):
 		raise NotImplementedError("Should have implemented this")
 

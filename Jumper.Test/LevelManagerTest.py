@@ -9,14 +9,18 @@ lib_path = os.path.abspath(os.path.join('..', 'Jumper.UI'))
 sys.path.append(lib_path)
 
 from LevelManager import *
-from ImageManager import *
+from PygameImageManager import *
+from PygameSurfaceManager import *
+from PygameSpriteManager import *
 
 
 class LevelManagerTest(unittest.TestCase):
 
 	def setUp(self):
-		imageManager = ImageManager()
-		self.levelManager = LevelManager(imageManager)
+		imageManager = PygameImageManager()
+		surfaceManager = PygameSurfaceManager()
+		spriteManager = PygameSpriteManager()
+		self.levelManager = LevelManager(imageManager, surfaceManager, spriteManager)
 
 	def test_GetLevel(self):
 		expectedLevel = "leap_of_faith"
