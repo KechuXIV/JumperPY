@@ -17,18 +17,25 @@ from PygameSurfaceManager import *
 
 
 pygame.init()
+
 screenCords = Point(600, 300)
 screen = pygame.display.set_mode((screenCords.X, screenCords.Y))
+
 levelManagerPygameSpriteManager = PygameSpriteManager()
 potatoPygameSpriteManager = PygameSpriteManager()
+
 pygameImageManager = PygameImageManager()
 pygameSourceManager = PygameSurfaceManager()
+
 levelManager = LevelManager(pygameImageManager, pygameSourceManager, levelManagerPygameSpriteManager)
+levelSprite = levelManager.GetRenderedLevel()
+enviroment = levelManager.GetEnviroment()
+
 potato = Potato(screenCords, potatoPygameSpriteManager)
 
 allSprites = pygame.sprite.Group()
 allSprites.add(potato.GetSprite())
-allSprites.add(levelManager.GetRenderedLevel())
+allSprites.add(levelSprite)
 
 
 clock = pygame.time.Clock()

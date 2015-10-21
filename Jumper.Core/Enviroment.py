@@ -7,10 +7,10 @@ from Point import *
 
 class Enviroment():
 
-	def __init__(self):
-		self.starCords = Point(0,0)
-		self.finishCords = Point(0,0)
-		self.tiles = [Point(1,2),Point(2,3)]
+	def __init__(self, starCords, finishCords, tiles):
+		self.starCords = starCords
+		self.finishCords = finishCords
+		self.tiles = tiles
 
 	def GetStartCords(self):
 		return self.starCords

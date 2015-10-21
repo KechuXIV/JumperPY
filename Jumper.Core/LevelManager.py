@@ -3,6 +3,7 @@ import os
 import pygame
 
 from Tile import *
+from Enviroment import *
 
 
 class LevelManager():
@@ -11,11 +12,17 @@ class LevelManager():
 		self.__actualLevel__ = 0
 		self.__sprite__ = None
 		self.imageManager = imageManager
+		self.enviroment = None
 		self.surfaceManager = surcefaceManager
 		self.spriteManager = spriteManager
 
 		self.levels = self.GetLevels()
-		self.tile = Tile(imageManager) 
+		self.tile = Tile(imageManager)
+
+	def GetEnviroment(self):
+		if self.enviroment is None:
+			raise Exception("Level not rendered")
+		return self.enviroment
 
 	def GetLevel(self):
 		return self.levels[self.__actualLevel__]
@@ -78,15 +85,22 @@ class LevelManager():
 
 		self.surfaceManager.CreateSurface(width*self.tile.Width, height*self.tile.Height)
 
+		startCord = None
+		finishCord = None
+		tilesCords = []
+
 		for x in xrange(0,width):
 			for y in xrange(0,height):
  				color = self.imageManager.GetPixelArrayItemColor(pixelArray[x, y])
 				if color == black:
 					self.surfaceManager.BlitIntoSurface(self.tile.Image, x*self.tile.Width, y*self.tile.Height)
+					tilesCords.append(Point(x, y))
 				elif color == red:
-					pass
+					startCord = Point(x, y)
 				elif color == green:
-					pass
+					finishCord = Point(x, y)
+
+		self.enviroment = Enviroment(startCord, finishCord, tilesCords)
 
 		sourceface = self.surfaceManager.GetSurface()
 
