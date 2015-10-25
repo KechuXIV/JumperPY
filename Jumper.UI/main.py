@@ -31,7 +31,7 @@ levelManager = LevelManager(pygameImageManager, pygameSourceManager, levelManage
 levelSprite = levelManager.GetRenderedLevel()
 enviroment = levelManager.GetEnviroment()
 
-potato = Potato(screenCords, potatoPygameSpriteManager)
+potato = Potato(screenCords, potatoPygameSpriteManager, enviroment)
 
 allSprites = pygame.sprite.Group()
 allSprites.add(potato.GetSprite())

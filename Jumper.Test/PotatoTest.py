@@ -12,7 +12,7 @@ from Potato import *
 from Point import *
 from Key import *
 from PygameSpriteManager import *
-
+from Enviroment import *
 
 class PotatoTest(unittest.TestCase):
 
@@ -21,7 +21,8 @@ class PotatoTest(unittest.TestCase):
         screenHeight = 300
         screen = Point(screenWidth, screenHeight)
         self.spriteManager = PygameSpriteManager()
-        self.potato = Potato(screen, self.spriteManager)
+        enviroment = Enviroment(Point(0, 1), Point(10, 1), [Point(1, 1), Point(1, 2)])
+        self.potato = Potato(screen, self.spriteManager, enviroment)
 
     def test_MovePotato(self):
         expectedPosition = self.potato.ActualPosition

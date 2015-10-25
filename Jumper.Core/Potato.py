@@ -7,14 +7,16 @@ from Key import *
 
 class Potato():
 
-	def __init__(self, screenCords, spriteManager):
+	def __init__(self, screenCords, spriteManager, enviroment):
 		self.__SPEED__ = Point(15, 45)
 		self.__SPRITEMANAGER__ = spriteManager
 		self.__SCREEN__ = screenCords
 		self.__WIDTH__ = 30
 		self.__HEIGHT__ = 30
 
-		self.ActualPosition = Point(30*8,30*8)
+		#self.ActualPosition = Point(30*8,30*8)
+		startCord = enviroment.GetStartCords()
+		self.ActualPosition = Point(startCord.X*30, startCord.Y*30)
 
 		self.images = ['potatoStanding.png', 'potatoWalking.png', 'potatoJumping.png']
 		self.isJumping = False
