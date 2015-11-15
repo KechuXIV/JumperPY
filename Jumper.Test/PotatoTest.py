@@ -24,6 +24,36 @@ class PotatoTest(unittest.TestCase):
         enviroment = Enviroment(Point(0, 1), Point(10, 1), [Point(1, 1), Point(1, 2)])
         self.potato = Potato(screen, self.spriteManager, enviroment)
 
+    def test_MovePotatoLeftStayingOnScreen(self):
+        self.potato.ActualPosition.X = 0
+        expectedPosition = Point(0,
+            self.potato.ActualPosition.Y)
+
+        keysPressed = []
+        keysPressed.append(Key.A)
+
+        sprite = self.potato.Motion(keysPressed)
+
+        self.assertEqual(expectedPosition.X, sprite.rect.x)
+        self.assertEqual(expectedPosition.Y, sprite.rect.y)
+        self.assertTrue(self.potato.isGoingLeft)
+        self.assertFalse(self.potato.isStanding)
+
+    def test_MovePotatoRightStayingOnScreen(self):
+        self.potato.ActualPosition.X = 570
+        expectedPosition = Point(570,
+            self.potato.ActualPosition.Y)
+
+        keysPressed = []
+        keysPressed.append(Key.D)
+
+        sprite = self.potato.Motion(keysPressed)
+
+        self.assertEqual(expectedPosition.X, sprite.rect.x)
+        self.assertEqual(expectedPosition.Y, sprite.rect.y)
+        self.assertFalse(self.potato.isGoingLeft)
+        self.assertFalse(self.potato.isStanding)
+
     def test_MovePotato(self):
         expectedPosition = self.potato.ActualPosition
         keysPressed = []
@@ -36,8 +66,10 @@ class PotatoTest(unittest.TestCase):
         self.assertTrue(self.potato.isStanding)
 
     def test_MovePotatoLeft(self):
+        self.potato.ActualPosition.X = 30
         expectedPosition = Point(self.potato.ActualPosition.X - self.potato.__SPEED__.X,
             self.potato.ActualPosition.Y)
+
         keysPressed = []
         keysPressed.append(Key.A)
 
