@@ -2,8 +2,9 @@
 import os
 import pygame
 
-from Tile import *
+from Checkpoint import *
 from Enviroment import *
+from Tile import *
 
 
 class LevelManager():
@@ -18,6 +19,19 @@ class LevelManager():
 
 		self.levels = self.GetLevels()
 		self.tile = Tile(imageManager)
+		self.checkpoint = Checkpoint(imageManager)
+
+	def CreateSpriteFromSurface(self):
+		sourceface = self.surfaceManager.GetSurface()
+		width = self.imageManager.GetImageWidth()
+		height = self.imageManager.GetImageHeight()
+		self.spriteManager.CreateSpriteFromSurface(0, 0, width*self.tile.Width, height*self.tile.Height, sourceface)
+
+	def UpdateSpriteFromSurface(self):
+		sourceface = self.surfaceManager.GetSurface()
+		width = self.imageManager.GetImageWidth()
+		height = self.imageManager.GetImageHeight()
+		self.spriteManager.UpdateSpriteFromSurface(0, 0, width*self.tile.Width, height*self.tile.Height, sourceface)
 
 	def GetEnviroment(self):
 		if self.enviroment is None:
@@ -70,6 +84,27 @@ class LevelManager():
 		return levels
 
 	def GetRenderedLevel(self):
+		self.LoadAndRenderLevel()
+		self.CreateSpriteFromSurface()
+		self.GetSprite()
+
+		return self.__sprite__
+
+	def GetSprite(self):
+		self.__sprite__ = self.spriteManager.GetSprite()
+
+	def GoToNextLevel(self):
+		if(self.__actualLevel__ >= (len(self.levels)-1)):
+			self.__actualLevel__ = 0	
+		self.__actualLevel__ += 1
+
+		self.LoadAndRenderLevel()
+		self.UpdateSpriteFromSurface()
+		self.GetSprite()
+		
+		return self.__sprite__ 
+
+	def LoadAndRenderLevel(self):
 		levelPath = self.GetLevelPath()
 
 		self.imageManager.LoadImage(levelPath)
@@ -98,19 +133,7 @@ class LevelManager():
 				elif color == red:
 					startCord = Point(x, y)
 				elif color == green:
+					self.surfaceManager.BlitIntoSurface(self.checkpoint.Image, x*self.tile.Width, y*self.tile.Height)
 					finishCord = Point(x, y)
 
-		self.enviroment = Enviroment(startCord, finishCord, tilesCords)
-
-		sourceface = self.surfaceManager.GetSurface()
-
-		self.spriteManager.CreateSpriteFromSurface(0, 0, width*self.tile.Width, height*self.tile.Height, sourceface)
-
-		self.__sprite__ = self.spriteManager.GetSprite()
-
-		return self.__sprite__
-
-	def GoToNextLevel(self):
-		self.__actualLevel__ += 1
-
-		return self.levels[self.__actualLevel__]
+		self.enviroment = Enviroment(startCord, finishCord, tilesCords)		

@@ -7,15 +7,15 @@ from Key import *
 
 class Potato():
 
-	def __init__(self, screenCords, spriteManager, enviroment):
+	def __init__(self, screenCords, spriteManager, enviroment, soundManager):
 		self.__SPEED__ = Point(15, 45)
 		self.__SPRITEMANAGER__ = spriteManager
 		self.__SCREEN__ = screenCords
 		self.__WIDTH__ = 30
 		self.__HEIGHT__ = 30
+		self.__ENVIROMENT__ = enviroment
 
-		#self.ActualPosition = Point(30*8,30*8)
-		startCord = enviroment.GetStartCords()
+		startCord = self.__ENVIROMENT__.GetStartCords()
 		self.ActualPosition = Point(startCord.X*30, startCord.Y*30)
 
 		self.images = ['potatoStanding.png', 'potatoWalking.png', 'potatoJumping.png']
@@ -23,7 +23,12 @@ class Potato():
 		self.isGoingLeft = True
 		self.isGoingDown = False
 		self.isStanding = True
+		self.reachCheckpoint = False
 		self.actualImageIndex = 0
+
+		self.deathSound = soundManager.GetSound(os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'death.wav'))
+		self.jumpSound = soundManager.GetSound(os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'jump.wav'))
+		self.checkpointSound = soundManager.GetSound(os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'checkpoint.wav'))
 
 		self.CreateSprite()
 
@@ -57,9 +62,11 @@ class Potato():
 			self.__WIDTH__, self.__HEIGHT__, imagePath)
 
 	def EndJumpCycle(self):
-		self.ActualPosition.Y = self.startJumpingCord
 		self.isJumping = False
 		self.isGoingDown = False
+
+	def FlipSpriteImage(self):
+		return self.__SPRITEMANAGER__.FlipSpriteImage()
 
 	def Jump(self):
 		if(self.isJumping):
@@ -68,26 +75,35 @@ class Potato():
 			else:
 				self.ActualPosition.Y -= self.__SPEED__.Y
 
-			if(self.ActualPosition.Y <= self.maxJumping):
-				self.isGoingDown = True
-
-			if(self.ActualPosition.Y >= self.startJumpingCord):
+			if(self.ThereIsTileBehind()):
 				self.EndJumpCycle()
+			else:
+				if(abs(self.ActualPosition.Y - self.startJumpingCord) >= self.maxJumping):
+					if(self.ActualPosition.Y >= self.__SCREEN__.Y):
+						self.EndJumpCycle()
+						startCord = self.__ENVIROMENT__.GetStartCords()
+						self.ActualPosition = Point(startCord.X*30, startCord.Y*30)
+						self.deathSound.play()
+						self.isStanding = True
+					else:
+						self.isGoingDown = True
 
 	def JumpInitialize(self):
 		if(not self.isJumping):
+			self.jumpSound.play()
 			self.startJumpingCord = self.ActualPosition.Y
+			self.isStanding = False
 			self.isJumping = True
 
 	def Motion(self, keysPressed):
 		self.isStanding = True
-		self.MoveOnXAxis(keysPressed)
-
 		if(Key.Space in keysPressed):
 			self.JumpInitialize()
-			
-		self.Jump()
 
+		self.MoveOnXAxis(keysPressed)
+		self.MoveOnYAxis()
+	
+		self.Jump()
 		return self.UpdateSpritePosition()
 
 	def MoveOnXAxis(self, keysPressed):
@@ -101,18 +117,48 @@ class Potato():
 			self.isStanding = False
 			if(self.isGoingLeft):
 				self.isGoingLeft = False
+		
+		self.ReachCheckpoint()
 		self.UpdateImage()
 
 		self.StayOnScreen()
 
-	def FlipSpriteImage(self):
-		return self.__SPRITEMANAGER__.FlipSpriteImage()
+	def MoveOnYAxis(self):
+		if((not self.isJumping) and (not self.ThereIsTileBehind())):
+			self.JumpInitialize()
+			self.isGoingDown = True
+
+	def NewLevel(self, enviroment):
+		self.__ENVIROMENT__ = enviroment
+
+		startCord = self.__ENVIROMENT__.GetStartCords()
+		self.ActualPosition = Point(startCord.X*30, startCord.Y*30)
+		self.isJumping = False
+		self.isGoingLeft = True
+		self.isGoingDown = False
+		self.isStanding = True
+		self.reachCheckpoint = False
+		self.actualImageIndex = 0
+
+	def ReachCheckpoint(self):
+		actualCord = Point(abs(self.ActualPosition.X/30), abs(self.ActualPosition.Y/30))
+		self.reachCheckpoint =  actualCord == self.__ENVIROMENT__.GetFinishCords()
+		if(self.reachCheckpoint):
+			self.checkpointSound.play()
+			
+
+	def SetActualPosition(self, point):
+		self.ActualPosition = Point(point.X*30, point.Y*30)
 
 	def StayOnScreen(self):
 		if(self.ActualPosition.X < 0):
 				self.ActualPosition.X = 0
 		elif(self.ActualPosition.X > self.__SCREEN__.X - self.__WIDTH__):
 				self.ActualPosition.X = self.__SCREEN__.X - self.__WIDTH__
+
+	def ThereIsTileBehind(self):
+		behindPosition = Point(abs(self.ActualPosition.X/30), abs(self.ActualPosition.Y/30) + 1)
+		return self.__ENVIROMENT__.IsTile(behindPosition)
 
 	def UpdateImage(self):
 		image = self.GetImageToShow()

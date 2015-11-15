@@ -14,12 +14,17 @@ from Key import *
 from PygameSpriteManager import *
 from PygameImageManager import *
 from PygameSurfaceManager import *
+from PygameSoundManager import *
 
 
 pygame.init()
+sountrack = pygame.mixer.Sound(os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'killingtime.ogg'))
+sountrack.play(-1)
 
 screenCords = Point(600, 300)
 screen = pygame.display.set_mode((screenCords.X, screenCords.Y))
+
+pygameSoundManager = PygameSoundManager()
 
 levelManagerPygameSpriteManager = PygameSpriteManager()
 potatoPygameSpriteManager = PygameSpriteManager()
@@ -31,12 +36,11 @@ levelManager = LevelManager(pygameImageManager, pygameSourceManager, levelManage
 levelSprite = levelManager.GetRenderedLevel()
 enviroment = levelManager.GetEnviroment()
 
-potato = Potato(screenCords, potatoPygameSpriteManager, enviroment)
+potato = Potato(screenCords, potatoPygameSpriteManager, enviroment, pygameSoundManager)
 
 allSprites = pygame.sprite.Group()
 allSprites.add(potato.GetSprite())
 allSprites.add(levelSprite)
-
 
 clock = pygame.time.Clock()
 
@@ -50,15 +54,12 @@ def CheckQuitEvent():
 
 def Draw():
 	ClearScreen()
-
 	allSprites.draw(screen)
-
 #	DrawLines()
-	
 	UpdateWindow()
 
 def DrawLines():
-	x = 0
+	x = 0 
 	y = 0
 
 	pygame.draw.line(screen, (0, 200, 200), (0, 0), (600, x), (1))
@@ -92,6 +93,10 @@ def Logic():
 		keysPressed.append(Key.Space)
 
 	potato.Motion(keysPressed)
+	if(potato.reachCheckpoint):
+		levelManager.GoToNextLevel()
+		enviroment = levelManager.GetEnviroment()
+		potato.NewLevel(enviroment)
 
 while True:
 	CheckQuitEvent()

@@ -57,6 +57,15 @@ class PygameSpriteManager(ISpriteManager):
 
 		return self.__sprite__
 
+	def UpdateSpriteFromSurface(self, xPosition, yPosition, width, height, sourceface):
+		self.__sprite__.rect.x = xPosition
+		self.__sprite__.rect.y = yPosition
+		self.__sprite__.image = sourceface
+		self.__width__ = width
+		self.__height__ = height
+
+		return self.__sprite__
+
 	def UpdateSpriteImage(self, imagePath):
 		self.__sprite__.image = pygame.transform.scale(pygame.image.load(imagePath), (self.__width__, self.__height__))
 

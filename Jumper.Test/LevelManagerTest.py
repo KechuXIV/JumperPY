@@ -59,11 +59,10 @@ class LevelManagerTest(unittest.TestCase):
 		self.assertIsNotNone(renderedLevel)
 
 	def test_GoToNextLevel(self):
-		expectedLevel = "jumpering"
-
+		renderedLevel = self.levelManager.GetRenderedLevel()
 		actualLevel = self.levelManager.GoToNextLevel()
 
-		self.assertEqual(actualLevel, expectedLevel)
+		self.assertIsNotNone(actualLevel)
 
 
 if __name__ == '__main__':
