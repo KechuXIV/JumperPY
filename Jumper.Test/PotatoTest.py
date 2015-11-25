@@ -162,7 +162,7 @@ class PotatoTest(unittest.TestCase):
 
         sprite = self.potato.Motion(keysPressed)
 
-        self.assertEqual(sprite.rect.x, 555)
+        self.assertEqual(sprite.rect.x, 585)
 
     def test_PotatoDie(self):
         self.potato.SetActualPosition(Point(1,20))
