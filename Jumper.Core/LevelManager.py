@@ -27,12 +27,6 @@ class LevelManager():
 		height = self.imageManager.GetImageHeight()
 		self.spriteManager.CreateSpriteFromSurface(0, 0, width*self.tile.Width, height*self.tile.Height, sourceface)
 
-	def UpdateSpriteFromSurface(self):
-		sourceface = self.surfaceManager.GetSurface()
-		width = self.imageManager.GetImageWidth()
-		height = self.imageManager.GetImageHeight()
-		self.spriteManager.UpdateSpriteFromSurface(0, 0, width*self.tile.Width, height*self.tile.Height, sourceface)
-
 	def GetEnviroment(self):
 		if self.enviroment is None:
 			raise Exception("Level not rendered")
@@ -128,12 +122,20 @@ class LevelManager():
 			for y in xrange(0,height):
  				color = self.imageManager.GetPixelArrayItemColor(pixelArray[x, y])
 				if color == black:
-					self.surfaceManager.BlitIntoSurface(self.tile.Image, x*self.tile.Width, y*self.tile.Height)
-					tilesCords.append(Point(x, y))
+					if(x != 20):
+						self.surfaceManager.BlitIntoSurface(self.tile.Image, x*self.tile.Width, y*self.tile.Height)
+						tilesCords.append(Point(x, y))
 				elif color == red:
-					startCord = Point(x, y)
+					if(x != 20): startCord = Point(x, y)
 				elif color == green:
-					self.surfaceManager.BlitIntoSurface(self.checkpoint.Image, x*self.tile.Width, y*self.tile.Height)
-					finishCord = Point(x, y)
+					if(x != 20): 
+						self.surfaceManager.BlitIntoSurface(self.checkpoint.Image, x*self.tile.Width, y*self.tile.Height)
+						finishCord = Point(x, y)
 
-		self.enviroment = Enviroment(startCord, finishCord, tilesCords)		
+		self.enviroment = Enviroment(startCord, finishCord, tilesCords)
+
+	def UpdateSpriteFromSurface(self):
+		sourceface = self.surfaceManager.GetSurface()
+		width = self.imageManager.GetImageWidth()
+		height = self.imageManager.GetImageHeight()
+		self.spriteManager.UpdateSpriteFromSurface(0, 0, width*self.tile.Width, height*self.tile.Height, sourceface)

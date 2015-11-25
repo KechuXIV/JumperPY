@@ -48,8 +48,8 @@ class PotatoTest(unittest.TestCase):
 
     def test_MovePotatoLeftStayingOnScreen(self):
         self.potato.SetActualPosition(Point(0,0))
-        expectedPosition = Point(0,
-            self.potato.ActualPosition.Y)
+        expectedPosition = Point(600,
+            30)
 
         keysPressed = []
         keysPressed.append(Key.A)
@@ -63,7 +63,7 @@ class PotatoTest(unittest.TestCase):
 
     def test_MovePotatoRightStayingOnScreen(self):
         self.potato.SetActualPosition(Point(19,0))
-        expectedPosition = Point(570,
+        expectedPosition = Point(585,
             self.potato.ActualPosition.Y)
 
         keysPressed = []
@@ -152,17 +152,17 @@ class PotatoTest(unittest.TestCase):
 
         sprite = self.potato.Motion(keysPressed)
 
-        self.assertEqual(sprite.rect.x, self.potato.__SCREEN__.X - self.potato.__WIDTH__)
+        self.assertEqual(sprite.rect.x, 0)
 
     def test_PotatoCantGoOutsideFromScreenStart(self):
-        self.potato.ActualPosition.X = 0
+        self.potato.ActualPosition.X = 570
 
         keysPressed = []
         keysPressed.append(Key.A)
 
         sprite = self.potato.Motion(keysPressed)
 
-        self.assertEqual(sprite.rect.x, 0)
+        self.assertEqual(sprite.rect.x, 555)
 
     def test_PotatoDie(self):
         self.potato.SetActualPosition(Point(1,20))
@@ -216,7 +216,8 @@ class PotatoTest(unittest.TestCase):
 
     def test_PotatoShouldDescendIfThereIsNotTileBehind(self):
         self.potato.SetActualPosition(Point(1,1))
-        expectedPosition = Point(self.potato.ActualPosition.X, self.potato.ActualPosition.Y + self.potato.__SPEED__.Y)
+        expectedPosition = Point(self.potato.ActualPosition.X,
+            self.potato.ActualPosition.Y + self.potato.__SPEED__.Y)
         keysPressed = []
 
         self.potato.Motion(keysPressed)

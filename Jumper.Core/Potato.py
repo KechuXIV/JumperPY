@@ -8,7 +8,7 @@ from Key import *
 class Potato():
 
 	def __init__(self, screenCords, spriteManager, enviroment, soundManager):
-		self.__SPEED__ = Point(15, 45)
+		self.__SPEED__ = Point(15, 30)
 		self.__SPRITEMANAGER__ = spriteManager
 		self.__SCREEN__ = screenCords
 		self.__WIDTH__ = 30
@@ -142,7 +142,7 @@ class Potato():
 
 	def ReachCheckpoint(self):
 		actualCord = Point(abs(self.ActualPosition.X/30), abs(self.ActualPosition.Y/30))
-		self.reachCheckpoint =  actualCord == self.__ENVIROMENT__.GetFinishCords()
+		self.reachCheckpoint = actualCord == self.__ENVIROMENT__.GetFinishCords()
 		if(self.reachCheckpoint):
 			self.checkpointSound.play()
 			
@@ -152,9 +152,9 @@ class Potato():
 
 	def StayOnScreen(self):
 		if(self.ActualPosition.X < 0):
-				self.ActualPosition.X = 0
-		elif(self.ActualPosition.X > self.__SCREEN__.X - self.__WIDTH__):
-				self.ActualPosition.X = self.__SCREEN__.X - self.__WIDTH__
+			self.ActualPosition.X = self.__SCREEN__.X
+		elif(self.ActualPosition.X > self.__SCREEN__.X):
+			self.ActualPosition.X = 0
 
 	def ThereIsTileBehind(self):
 		behindPosition = Point(abs(self.ActualPosition.X/30), abs(self.ActualPosition.Y/30) + 1)
