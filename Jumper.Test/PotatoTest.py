@@ -26,7 +26,7 @@ class PotatoTest(unittest.TestCase):
         self.spriteManager = PygameSpriteManager()
         soundManager = PygameSoundManager()
 
-        tiles = [Point(0, 1),Point(1, 1), Point(2, 1), Point(19, 1)]
+        tiles = [Point(0, 1),Point(1, 1), Point(2, 1), Point(19, 1), Point(0,4), Point(2,4), Point(0,5), Point(1,5), Point(2,5)]
         startCord = Point(0, 1)
         finishCord = Point(10, 1)
 
@@ -158,7 +158,7 @@ class PotatoTest(unittest.TestCase):
         self.potato.ActualPosition.X = 570
 
         keysPressed = []
-        keysPressed.append(Key.A)
+        keysPressed.append(Key.D)
 
         sprite = self.potato.Motion(keysPressed)
 
@@ -213,6 +213,17 @@ class PotatoTest(unittest.TestCase):
         self.potato.SetActualPosition(Point(x, y))
 
         self.assertEqual(self.potato.ActualPosition, Point(x*30,y*30))
+
+    def test_ShouldNotMoveIfThereIsTileGoingRight(self):
+        self.potato.SetActualPosition(Point(1,4))
+        expectedPosition = self.potato.ActualPosition
+
+        keysPressed = []
+        keysPressed.append(Key.A)
+
+        self.potato.Motion(keysPressed)
+
+        self.assertEqual(self.potato.ActualPosition, expectedPosition)
 
     def test_PotatoShouldDescendIfThereIsNotTileBehind(self):
         self.potato.SetActualPosition(Point(1,1))
