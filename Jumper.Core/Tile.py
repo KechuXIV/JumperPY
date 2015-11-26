@@ -8,4 +8,5 @@ class Tile():
 		self.Width = 30
 		self.Height = 30
 		path = os.path.join('..', 'Jumper.Core','Resources', 'tile.png')
+		print(path)
 		self.Image = imageManager.CreateImage(self.Width, self.Height, path)
