@@ -9,12 +9,23 @@ lib_path = os.path.abspath(os.path.join('..', 'Jumper.UI'))
 sys.path.append(lib_path)
 
 from LevelManager import *
-from mock import MagicMock
+#from mock import MagicMock
+from mock import *
 from Point import *
 from IImageManager import *
 from ISurfaceManager import *
 from ISpriteManager import *
 
+
+def getColor(r, g, b):
+	if((0,0,0) == (r,g,b)):
+		return "Black"
+	elif((255, 0, 0) == (r,g,b)):
+		return "Red"
+	elif((76, 255, 0) == (r,g,b)):
+		return "Green"
+	else:
+		return "Color"
 
 class LevelManagerTest(unittest.TestCase):
 
@@ -62,14 +73,14 @@ class LevelManagerTest(unittest.TestCase):
 		path = target.GetLevelPath()
 
 		self.assertEqual(path, expectedPath)
-
+		
 	def test_GetRenderedLevel(self):
 		self.__imageManager__.CreateImage = MagicMock()
 		self.__imageManager__.LoadImage = MagicMock()
-		self.__imageManager__.GetImageWidth = MagicMock()
-		self.__imageManager__.GetImageHeight = MagicMock()
+		self.__imageManager__.GetImageWidth = MagicMock(return_value=20)
+		self.__imageManager__.GetImageHeight = MagicMock(return_value=12)
 		self.__imageManager__.GetPixelArray = MagicMock()
-		self.__imageManager__.GetImageColor = MagicMock()
+		self.__imageManager__.GetImageColor = Mock(None, side_effect=getColor)
 		self.__imageManager__.GetPixelArrayItemColor = MagicMock()
 		self.__surfaceManager__.CreateSurface = MagicMock()
 		self.__surfaceManager__.GetSurface = MagicMock()
@@ -80,6 +91,13 @@ class LevelManagerTest(unittest.TestCase):
 		renderedLevel = target.GetRenderedLevel()
 
 		self.assertIsNotNone(renderedLevel)
+		self.__imageManager__.LoadImage.assert_called_with(os.path.join('..', 'Jumper.Core','Resources','levels', 'leap_of_faith.png'))
+		self.__imageManager__.GetImageWidth.assert_called_with()
+		self.__imageManager__.GetImageHeight.assert_called_with()
+		self.__imageManager__.GetPixelArray.assert_called_with()
+		calls = [call(0, 0, 0),call(255, 0, 0),call(76, 255, 0)]
+		self.__imageManager__.GetImageColor.assert_has_calls(calls, any_order=False)
+		self.__surfaceManager__.CreateSurface.assert_called_with(20*30, 12*30)
 
 	def test_GoToNextLevel(self):
 		self.__imageManager__.CreateImage = MagicMock()
@@ -103,3 +121,4 @@ class LevelManagerTest(unittest.TestCase):
 
 if __name__ == '__main__':
 	unittest.main()
+	
