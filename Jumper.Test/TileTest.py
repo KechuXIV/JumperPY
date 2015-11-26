@@ -9,7 +9,7 @@ lib_path = os.path.abspath(os.path.join('..', 'Jumper.UI'))
 sys.path.append(lib_path)
 
 from mock import MagicMock
-from PygameImageManager import *
+from IImageManager import *
 from Tile import *
 
 
