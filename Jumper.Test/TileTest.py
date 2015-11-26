@@ -16,7 +16,7 @@ from Tile import *
 class TileTest(unittest.TestCase):
 
 	def setUp(self):
-		self.__imageManager__ = PygameImageManager()
+		self.__imageManager__ = IImageManager()
 
 	def test_GetTileHeightAndWidth(self):
 		expectedHeight = 30
