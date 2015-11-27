@@ -162,7 +162,7 @@ class Potato():
 
 	def UpdateImage(self):
 		image = self.GetImageToShow()
-
+		
 		imagePath = self.GetImagePath(image)
 
 		self.UpdateSpriteImage(imagePath)

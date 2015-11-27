@@ -9,7 +9,6 @@ lib_path = os.path.abspath(os.path.join('..', 'Jumper.UI'))
 sys.path.append(lib_path)
 
 from LevelManager import *
-#from mock import MagicMock
 from mock import *
 from Point import *
 from IImageManager import *

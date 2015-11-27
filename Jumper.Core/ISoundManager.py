@@ -3,5 +3,5 @@
 
 class ISoundManager():
 
-	def GetSound(soundPath):
+	def GetSound(self, soundPath):
 		raise NotImplementedError("Should have implemented this")
