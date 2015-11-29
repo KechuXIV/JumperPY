@@ -13,8 +13,6 @@ from Key import *
 from Point import *
 from Potato import *
 from mock import *
-from PygameSoundManager import *
-from PygameSpriteManager import *
 from ISoundManager import *
 from ISpriteManager import *
 
