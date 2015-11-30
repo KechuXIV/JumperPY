@@ -23,7 +23,8 @@ class PotatoTest(unittest.TestCase):
     def setUp(self):
         screenWidth = 600
         screenHeight = 300
-        tiles = [Point(0, 1),Point(1, 1), Point(2, 1), Point(19, 1), Point(0,4), Point(2,4), Point(0,5), Point(1,5), Point(2,5)]
+        tiles = [Point(0, 1),Point(1, 1), Point(2, 1), Point(19, 1), Point(0,4), Point(2,4), Point(0,5), Point(1,5), Point(2,5), Point(3,5)]
+        #tiles = [Point(0, 1)]
         startCord = Point(0, 1)
         finishCord = Point(10, 1)
 
@@ -43,8 +44,6 @@ class PotatoTest(unittest.TestCase):
             self.__spriteManager__,
             self.__enviroment__,
             self.__soundManager__)
-
-        expectedPosition = target.ActualPosition
 
         sprite = target.GetSprite()
 
@@ -274,9 +273,11 @@ class PotatoTest(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.ActualPosition.X = target.__SCREEN__.X
+        target.ActualPosition.X = target.__SCREEN__.X + 1
+        target.ActualPosition.Y = 0
 
         sprite = target.Motion(keysPressed)
+        
         self.__spriteManager__.UpdateSprite.assert_called_with(0, target.ActualPosition.Y)
 
     def test_PotatoRebootScreenStart(self):
@@ -296,6 +297,7 @@ class PotatoTest(unittest.TestCase):
             self.__soundManager__)
 
         target.ActualPosition.X = 0
+        target.ActualPosition.Y = 0
 
         sprite = target.Motion(keysPressed)
 
@@ -410,7 +412,29 @@ class PotatoTest(unittest.TestCase):
             self.__soundManager__)
 
         target.SetActualPosition(Point(1,4))
-        expectedPosition = target.ActualPosition
+        expectedPosition = Point(target.ActualPosition.X, target.ActualPosition.Y)
+
+        target.Motion(keysPressed)
+
+        self.assertEqual(target.ActualPosition, expectedPosition)
+        
+    def test_ShouldNotMoveIfThereIsTileGoingLeft(self):
+        keysPressed = []
+        keysPressed.append(Key.D)
+
+        self.__spriteManager__.UpdateSpriteImage = MagicMock()
+        self.__spriteManager__.UpdateSprite = MagicMock()
+
+        self.__soundManager__.GetSound = MagicMock()
+        self.__spriteManager__.CreateSprite = MagicMock()
+        self.__spriteManager__.FlipSpriteImage = MagicMock()
+        target = Potato(self.__screen__,
+            self.__spriteManager__,
+            self.__enviroment__,
+            self.__soundManager__)
+
+        target.SetActualPosition(Point(3,4))
+        expectedPosition = Point(target.ActualPosition.X, target.ActualPosition.Y)
 
         target.Motion(keysPressed)
 
