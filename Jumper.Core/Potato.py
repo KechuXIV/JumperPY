@@ -109,15 +109,18 @@ class Potato():
 	def MoveOnXAxis(self, keysPressed):
 		if(Key.A in keysPressed):
 			self.isStanding = False
-			self.ActualPosition.X -= self.__SPEED__.X
 			if(not self.isGoingLeft):
 				self.isGoingLeft = True
+			if(not self.thereIsTileRight()):
+				self.ActualPosition.X -= self.__SPEED__.X
+				
 		elif(Key.D in keysPressed):
-			self.ActualPosition.X += self.__SPEED__.X
 			self.isStanding = False
 			if(self.isGoingLeft):
 				self.isGoingLeft = False
-		
+			if(not self.thereIsTileLeft()):
+				self.ActualPosition.X += self.__SPEED__.X
+				
 		self.ReachCheckpoint()
 		self.UpdateImage()
 
@@ -159,6 +162,14 @@ class Potato():
 	def ThereIsTileBehind(self):
 		behindPosition = Point(abs(self.ActualPosition.X/30), abs(self.ActualPosition.Y/30) + 1)
 		return self.__ENVIROMENT__.IsTile(behindPosition)
+		
+	def thereIsTileLeft(self):
+		leftPosition = Point(abs(self.ActualPosition.X/30) - 1, abs(self.ActualPosition.Y/30))
+		return self.__ENVIROMENT__.IsTile(leftPosition)
+		
+	def thereIsTileRight(self):
+		rightPosition = Point(abs(self.ActualPosition.X/30) + 1, abs(self.ActualPosition.Y/30))
+		return self.__ENVIROMENT__.IsTile(rightPosition)
 
 	def UpdateImage(self):
 		image = self.GetImageToShow()
