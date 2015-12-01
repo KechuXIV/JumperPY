@@ -23,8 +23,21 @@ class PotatoTest(unittest.TestCase):
     def setUp(self):
         screenWidth = 600
         screenHeight = 300
-        tiles = [Point(0, 1),Point(1, 1), Point(2, 1), Point(19, 1), Point(0,4), Point(2,4), Point(0,5), Point(1,5), Point(2,5), Point(3,5)]
-        #tiles = [Point(0, 1)]
+        
+        tiles = [Point(0, 1), Point(0,4), Point(0,5), Point(1, 1), Point(1,5), Point(2, 1), Point(2,4), Point(2,5),Point(3,5), Point(4,5), Point(19, 1)]
+        # Boceto de Tiles:
+        #   [0][1][2][3][4][5][6][7][8][9][0][1][2][3][4][5][6][7][8][9]
+        #[0] 
+        #[1][x][x][x]                                                [x]
+        #[2]
+        #[3]
+        #[4][x]   [x]
+        #[5][x][x][x][x][x]
+        #[6]
+        #[7]
+        #[8]
+        #[9]
+        #----------------------------------------------------------------
         startCord = Point(0, 1)
         finishCord = Point(10, 1)
 
@@ -415,7 +428,6 @@ class PotatoTest(unittest.TestCase):
         expectedPosition = Point(target.ActualPosition.X, target.ActualPosition.Y)
 
         target.Motion(keysPressed)
-
         self.assertEqual(target.ActualPosition, expectedPosition)
         
     def test_ShouldNotMoveIfThereIsTileGoingLeft(self):
@@ -433,7 +445,7 @@ class PotatoTest(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(3,4))
+        target.SetActualPosition(Point(1,4))
         expectedPosition = Point(target.ActualPosition.X, target.ActualPosition.Y)
 
         target.Motion(keysPressed)
@@ -500,3 +512,4 @@ class PotatoTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
