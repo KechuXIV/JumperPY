@@ -35,7 +35,7 @@ class LevelManager():
 		return self.levels[self.__actualLevel__]
 
 	def GetLevelPath(self):
-		return os.path.join('..', 'Jumper.Core','Resources','levels', self.GetLevel() + '.png')
+		return os.path.join('..', 'bin','Resources','levels', self.GetLevel() + '.png')
 
 	def GetLevels(self):
 		levels = ["leap_of_faith"]

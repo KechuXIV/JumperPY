@@ -3,9 +3,9 @@ import unittest
 import sys
 import os
 
-lib_path = os.path.abspath(os.path.join('..', 'Jumper.Core'))
+lib_path = os.path.abspath(os.path.join('..', 'bin'))
 sys.path.append(lib_path)
-lib_path = os.path.abspath(os.path.join('..', 'Jumper.UI'))
+lib_path = os.path.abspath(os.path.join('..', 'ui'))
 sys.path.append(lib_path)
 
 from Enviroment import *
@@ -60,9 +60,9 @@ class PotatoTest(unittest.TestCase):
 
         sprite = target.GetSprite()
 
-        pathDeathSound = os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'death.wav')
-        pathJumpSound = os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'jump.wav')
-        pathCheckpointSound = os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'checkpoint.wav')
+        pathDeathSound = os.path.join('..', 'bin','Resources', 'sounds', 'death.wav')
+        pathJumpSound = os.path.join('..', 'bin','Resources', 'sounds', 'jump.wav')
+        pathCheckpointSound = os.path.join('..', 'bin','Resources', 'sounds', 'checkpoint.wav')
 
         self.assertIsNotNone(spriteMock)
         self.assertEqual(sprite.Description, "Sprite Mockeado")

@@ -3,7 +3,7 @@ import pygame
 import os
 import sys
 
-lib_path = os.path.abspath(os.path.join('..', 'Jumper.Core'))
+lib_path = os.path.abspath(os.path.join('..', 'bin'))
 sys.path.append(lib_path)
 
 from Potato import *
@@ -18,7 +18,7 @@ from PygameSoundManager import *
 
 
 pygame.init()
-sountrack = pygame.mixer.Sound(os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'killingtime.ogg'))
+sountrack = pygame.mixer.Sound(os.path.join('..', 'bin','Resources', 'sounds', 'killingtime.ogg'))
 sountrack.play(-1)
 
 screenCords = Point(600, 300)

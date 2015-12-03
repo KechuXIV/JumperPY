@@ -3,9 +3,9 @@ import unittest
 import sys
 import os
 
-lib_path = os.path.abspath(os.path.join('..', 'Jumper.Core'))
+lib_path = os.path.abspath(os.path.join('..', 'bin'))
 sys.path.append(lib_path)
-lib_path = os.path.abspath(os.path.join('..', 'Jumper.UI'))
+lib_path = os.path.abspath(os.path.join('..', 'ui'))
 sys.path.append(lib_path)
 
 from LevelManager import *
@@ -65,7 +65,7 @@ class LevelManagerTest(unittest.TestCase):
 		self.assertEqual(actualLevel, expectedLevel)
 
 	def test_GetLevelPath(self):
-		expectedPath = "../Jumper.Core/Resources/levels/leap_of_faith.png"
+		expectedPath = "../bin/Resources/levels/leap_of_faith.png"
 		self.__imageManager__.CreateImage = MagicMock()
 		
 		target = LevelManager(self.__imageManager__, self.__surfaceManager__, self.__spriteManager__)
@@ -90,7 +90,7 @@ class LevelManagerTest(unittest.TestCase):
 		renderedLevel = target.GetRenderedLevel()
 
 		self.assertIsNotNone(renderedLevel)
-		self.__imageManager__.LoadImage.assert_called_with(os.path.join('..', 'Jumper.Core','Resources','levels', 'leap_of_faith.png'))
+		self.__imageManager__.LoadImage.assert_called_with(os.path.join('..', 'bin','Resources','levels', 'leap_of_faith.png'))
 		self.__imageManager__.GetImageWidth.assert_called_with()
 		self.__imageManager__.GetImageHeight.assert_called_with()
 		self.__imageManager__.GetPixelArray.assert_called_with()

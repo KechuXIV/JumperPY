@@ -3,9 +3,9 @@ import unittest
 import sys
 import os
 
-lib_path = os.path.abspath(os.path.join('..', 'Jumper.Core'))
+lib_path = os.path.abspath(os.path.join('..', 'bin'))
 sys.path.append(lib_path)
-lib_path = os.path.abspath(os.path.join('..', 'Jumper.UI'))
+lib_path = os.path.abspath(os.path.join('..', 'ui'))
 sys.path.append(lib_path)
 
 from mock import MagicMock
@@ -28,7 +28,7 @@ class TileTest(unittest.TestCase):
 		height = target.Height
 		witdh = target.Width
 
-		self.__imageManager__.CreateImage.assert_called_with(expectedWidth, expectedHeight, os.path.join('..', 'Jumper.Core','Resources', 'tile.png'))
+		self.__imageManager__.CreateImage.assert_called_with(expectedWidth, expectedHeight, os.path.join('..', 'bin','Resources', 'tile.png'))
 		self.assertEqual(height, expectedHeight)
 		self.assertEqual(witdh, expectedWidth)
 

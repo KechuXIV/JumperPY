@@ -3,7 +3,7 @@ import unittest
 import sys
 import os
 
-lib_path = os.path.abspath(os.path.join('..', 'Jumper.Core'))
+lib_path = os.path.abspath(os.path.join('..', 'bin'))
 sys.path.append(lib_path)
 
 from Point import *
