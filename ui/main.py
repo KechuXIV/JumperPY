@@ -22,7 +22,7 @@ pygame.init()
 sountrack = pygame.mixer.Sound(os.path.join('..', 'bin','Resources', 'sounds', 'killingtime.ogg'))
 sountrack.play(-1)
 
-screenCords = Point(600, 300)
+screenCords = Point(600, 360)
 screen = pygame.display.set_mode((screenCords.X, screenCords.Y))
 
 pygameSoundManager = PygameSoundManager()

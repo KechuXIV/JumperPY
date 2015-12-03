@@ -161,15 +161,15 @@ class Potato():
 			self.ActualPosition.X = 0
 
 	def ThereIsTileBehind(self):
-		behindPosition = Point(abs(self.ActualPosition.X/30), abs(self.ActualPosition.Y/30) + 1)
+		behindPosition = Point(round(self.ActualPosition.X/30), round(self.ActualPosition.Y/30) + 1)
 		return self.__ENVIROMENT__.IsTile(behindPosition)
 		
 	def thereIsTileLeft(self):
-		leftPosition = Point(abs(self.ActualPosition.X/30) + 1, abs(self.ActualPosition.Y/30))
+		leftPosition = Point(round(self.ActualPosition.X/30) + 1, round(self.ActualPosition.Y/30))
 		return self.__ENVIROMENT__.IsTile(leftPosition)
 		
 	def thereIsTileRight(self):
-		rightPosition = Point(abs(self.ActualPosition.X/30) - 1, abs(self.ActualPosition.Y/30))
+		rightPosition = Point(round(self.ActualPosition.X/30) - 1, round(self.ActualPosition.Y/30))
 		return self.__ENVIROMENT__.IsTile(rightPosition)
 
 	def UpdateImage(self):
