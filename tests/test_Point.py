@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import unittest
 import sys
 import os
+import unittest
 
 lib_path = os.path.abspath(os.path.join('..', 'bin'))
 sys.path.append(lib_path)
@@ -10,7 +10,7 @@ sys.path.append(lib_path)
 from Point import *
 
 
-class PointTest(unittest.TestCase):
+class test_Point(unittest.TestCase):
 
 	def setUp(self):
 		self.Point = Point()
@@ -38,5 +38,5 @@ class PointTest(unittest.TestCase):
 
 		self.assertNotEqual(self.Point, notPoint)
 
-if __name__ == '__main__':
-	unittest.main()
+if __name__ == "__main__":
+    unittest.main()

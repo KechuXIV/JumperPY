@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import unittest
 import sys
 import os
+import unittest
 
+lib_path = os.path.abspath(os.path.join('bin'))
+sys.path.append(lib_path)
 lib_path = os.path.abspath(os.path.join('..', 'bin'))
 sys.path.append(lib_path)
 lib_path = os.path.abspath(os.path.join('..', 'ui'))
@@ -18,8 +20,7 @@ from ISoundManager import *
 from ISpriteManager import *
 
 
-
-class PotatoTest(unittest.TestCase):
+class test_Potato(unittest.TestCase):
 
     def setUp(self):
         screenWidth = 600
@@ -171,6 +172,7 @@ class PotatoTest(unittest.TestCase):
             self.__soundManager__)
 
         target.SetActualPosition(Point(1,0))
+        target.isGoingLeft = False
         expectedPosition = Point(target.ActualPosition.X - target.__SPEED__.X,
             target.ActualPosition.Y)
         sprite = target.Motion(keysPressed)
@@ -511,6 +513,5 @@ class PotatoTest(unittest.TestCase):
 
         self.assertFalse(thereIsTileBehind)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
-

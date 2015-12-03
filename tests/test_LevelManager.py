@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import unittest
 import sys
 import os
+import unittest
 
 lib_path = os.path.abspath(os.path.join('..', 'bin'))
 sys.path.append(lib_path)
@@ -27,7 +27,7 @@ def getColor(r, g, b):
 	else:
 		return "Color"
 
-class LevelManagerTest(unittest.TestCase):
+class test_LevelManager(unittest.TestCase):
 
 	def setUp(self):
 		self.__imageManager__ = IImageManager()
@@ -118,7 +118,5 @@ class LevelManagerTest(unittest.TestCase):
 
 		self.assertIsNotNone(actualLevel)
 
-
-if __name__ == '__main__':
-	unittest.main()
-	
+if __name__ == "__main__":
+    unittest.main()

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import unittest
 import sys
 import os
+import unittest
 
 lib_path = os.path.abspath(os.path.join('..', 'bin'))
 sys.path.append(lib_path)
@@ -14,7 +14,7 @@ from IImageManager import *
 from Tile import *
 
 
-class TileTest(unittest.TestCase):
+class test_Tile(unittest.TestCase):
 
 	def setUp(self):
 		self.__imageManager__ = IImageManager()
@@ -41,5 +41,5 @@ class TileTest(unittest.TestCase):
 
 		self.assertIsNotNone(image)
 
-if __name__ == '__main__':
-	unittest.main()
+if __name__ == "__main__":
+    unittest.main()

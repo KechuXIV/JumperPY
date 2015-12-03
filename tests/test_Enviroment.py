@@ -1,16 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import unittest
 import sys
 import os
+import unittest
 
+lib_path = os.path.abspath(os.path.join('bin'))
+sys.path.append(lib_path)
 lib_path = os.path.abspath(os.path.join('..', 'bin'))
 sys.path.append(lib_path)
 
+from mock import MagicMock
 from Enviroment import *
 from Point import *
 
-class EnviromentTest(unittest.TestCase):
+class test_Enviroment(unittest.TestCase):
 
 	def setUp(self):
 		startCords = Point(0, 0)
@@ -45,6 +48,6 @@ class EnviromentTest(unittest.TestCase):
 		isTile = self.enviroment.IsTile(point)
 
 		self.assertFalse(isTile)
-
-if __name__ == '__main__':
-	unittest.main()
+		
+if __name__ == "__main__":
+    unittest.main()
