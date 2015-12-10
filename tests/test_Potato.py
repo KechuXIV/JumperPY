@@ -72,8 +72,7 @@ class test_Potato(unittest.TestCase):
         self.__soundManager__.GetSound.assert_has_calls(calls)
 
     def test_MovePotatoLeftInTheEdgeOfTheScreen(self):
-        expectedPosition = Point(600,
-            30)
+        expectedPosition = Point(600, 8)
 
         self.__soundManager__.GetSound = MagicMock()
         self.__spriteManager__.CreateSprite = MagicMock()
@@ -102,7 +101,7 @@ class test_Potato(unittest.TestCase):
         self.__spriteManager__.UpdateSprite.assert_called_with(expectedPosition.X, expectedPosition.Y)
 
     def test_MovePotatoRightInTheEdgeOfTheScreen(self):
-        expectedPosition = Point(585, 0)
+        expectedPosition = Point(572, 0)
 
         self.__soundManager__.GetSound = MagicMock()
         self.__spriteManager__.CreateSprite = MagicMock()
@@ -385,14 +384,13 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(1,0))
+        target.SetActualPosition(Point(3,4))
 
         expectedPosition = Point(target.ActualPosition.X,
-            target.ActualPosition.Y)
+            112)
 
         target.JumpInitialize()
-        for x in xrange(0,10):
-            target.Jump()
+        target.Jump()
 
         actualPosition = target.ActualPosition
 
@@ -427,7 +425,7 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(1,4))
+        target.SetActualPosition(Point(2,4))
         expectedPosition = Point(target.ActualPosition.X, target.ActualPosition.Y)
 
         target.Motion(keysPressed)

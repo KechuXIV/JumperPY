@@ -45,7 +45,7 @@ allSprites.add(levelSprite)
 
 clock = pygame.time.Clock()
 
-FPS = 10
+FPS = 120
 
 def CheckQuitEvent():
 	for event in pygame.event.get():

@@ -9,15 +9,14 @@ from Key import *
 class Potato():
 
 	def __init__(self, screenCords, spriteManager, enviroment, soundManager):
-		self.__SPEED__ = Point(15, 30)
+		self.__SPEED__ = Point(2, 8)
 		self.__SPRITEMANAGER__ = spriteManager
 		self.__SCREEN__ = screenCords
 		self.__WIDTH__ = 30
 		self.__HEIGHT__ = 30
 		self.__ENVIROMENT__ = enviroment
 
-		startCord = self.__ENVIROMENT__.GetStartCords()
-		self.ActualPosition = Point(startCord.X*30, startCord.Y*30)
+		self.SetPotatoOnStartPosition()
 
 		self.images = ['potatoStanding.png', 'potatoWalking.png', 'potatoJumping.png']
 		self.isJumping = False
@@ -33,7 +32,7 @@ class Potato():
 
 		self.CreateSprite()
 
-		self.maxJumping = self.__SPEED__.Y * 3
+		self.maxJumping = self.__SPEED__.Y * 10
 		self.startJumpingCord = self.ActualPosition.Y
 		
 	def GetImagePath(self, image):
@@ -73,21 +72,24 @@ class Potato():
 		if(self.isJumping):
 			if(self.isGoingDown):
 				self.ActualPosition.Y += self.__SPEED__.Y
+				self.__SPEED__.Y += 0.4
 			else:
-				self.ActualPosition.Y -= self.__SPEED__.Y
+				if(self.__SPEED__.Y <= 0):
+					self.isGoingDown = True
+				else:
+					self.ActualPosition.Y -= self.__SPEED__.Y
+					self.__SPEED__.Y -= 0.4
 
-			if(self.ThereIsTileBehind()):
+
+			if(self.ThereIsTileBehind() and self.isGoingDown):
 				self.EndJumpCycle()
+				self.stabilizeYPosition()
 			else:
-				if(abs(self.ActualPosition.Y - self.startJumpingCord) >= self.maxJumping):
-					if(self.ActualPosition.Y >= self.__SCREEN__.Y):
-						self.EndJumpCycle()
-						startCord = self.__ENVIROMENT__.GetStartCords()
-						self.ActualPosition = Point(startCord.X*30, startCord.Y*30)
-						self.deathSound.play()
-						self.isStanding = True
-					else:
-						self.isGoingDown = True
+				if(self.ActualPosition.Y >= self.__SCREEN__.Y):
+					self.EndJumpCycle()
+					self.deathSound.play()
+					self.SetPotatoOnStartPosition()
+					self.isStanding = True
 
 	def JumpInitialize(self):
 		if(not self.isJumping):
@@ -95,6 +97,7 @@ class Potato():
 			self.startJumpingCord = self.ActualPosition.Y
 			self.isStanding = False
 			self.isJumping = True
+			self.__SPEED__.Y = 8
 
 	def Motion(self, keysPressed):
 		self.isStanding = True
@@ -135,8 +138,7 @@ class Potato():
 	def NewLevel(self, enviroment):
 		self.__ENVIROMENT__ = enviroment
 
-		startCord = self.__ENVIROMENT__.GetStartCords()
-		self.ActualPosition = Point(startCord.X*30, startCord.Y*30)
+		self.SetPotatoOnStartPosition()
 		self.isJumping = False
 		self.isGoingLeft = True
 		self.isGoingDown = False
@@ -149,10 +151,16 @@ class Potato():
 		self.reachCheckpoint = actualCord == self.__ENVIROMENT__.GetFinishCords()
 		if(self.reachCheckpoint):
 			self.checkpointSound.play()
-			
+
+	def SetPotatoOnStartPosition(self):
+		startCord = self.__ENVIROMENT__.GetStartCords()
+		self.ActualPosition = Point(startCord.X*30, startCord.Y*30)
 
 	def SetActualPosition(self, point):
 		self.ActualPosition = Point(point.X*30, point.Y*30)
+
+	def stabilizeYPosition(self):
+		self.ActualPosition.Y = round(self.ActualPosition.Y/30) * 30
 
 	def StayOnScreen(self):
 		if(self.ActualPosition.X < 0):
@@ -169,7 +177,7 @@ class Potato():
 		return self.__ENVIROMENT__.IsTile(leftPosition)
 		
 	def thereIsTileRight(self):
-		rightPosition = Point(round(self.ActualPosition.X/30) - 1, round(self.ActualPosition.Y/30))
+		rightPosition = Point(round((self.ActualPosition.X/30)), round(self.ActualPosition.Y/30))
 		return self.__ENVIROMENT__.IsTile(rightPosition)
 
 	def UpdateImage(self):

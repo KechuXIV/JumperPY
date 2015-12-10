@@ -39,7 +39,8 @@ class LevelManager():
 		return os.path.join('..', 'bin','Resources','levels', self.GetLevel() + '.png')
 
 	def GetLevels(self):
-		levels = ["leap_of_faith"]
+		levels = []
+		levels.append("leap_of_faith")
 		levels.append("jumpering")
 		levels.append("think_fast")
 		levels.append("not_so_hard_maze")
@@ -126,7 +127,8 @@ class LevelManager():
 						self.surfaceManager.BlitIntoSurface(self.tile.Image, x*self.tile.Width, y*self.tile.Height)
 						tilesCords.append(Point(x, y))
 				elif color == red:
-					if(x != 20): startCord = Point(x, y)
+					if(x != 20): 
+						startCord = Point(x, y)
 				elif color == green:
 					if(x != 20): 
 						self.surfaceManager.BlitIntoSurface(self.checkpoint.Image, x*self.tile.Width, y*self.tile.Height)
