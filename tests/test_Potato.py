@@ -60,7 +60,7 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        sprite = target.GetSprite()
+        sprite = target.getSprite()
 
         pathDeathSound = os.path.join('..', 'bin','Resources', 'sounds', 'death.wav')
         pathJumpSound = os.path.join('..', 'bin','Resources', 'sounds', 'jump.wav')
@@ -89,8 +89,8 @@ class test_Potato(unittest.TestCase):
             self.__spriteManager__,
             self.__enviroment__,
             self.__soundManager__)
-        target.SetActualPosition(Point(0,0))
-        sprite = target.Motion(keysPressed)
+        target.setActualPosition(Point(0,0))
+        sprite = target.motion(keysPressed)
 
         pathDeathSound = os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'death.wav')
         pathJumpSound = os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'jump.wav')
@@ -119,8 +119,8 @@ class test_Potato(unittest.TestCase):
             self.__spriteManager__,
             self.__enviroment__,
             self.__soundManager__)
-        target.SetActualPosition(Point(19,0))
-        sprite = target.Motion(keysPressed)
+        target.setActualPosition(Point(19,0))
+        sprite = target.motion(keysPressed)
 
         pathDeathSound = os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'death.wav')
         pathJumpSound = os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'jump.wav')
@@ -143,10 +143,10 @@ class test_Potato(unittest.TestCase):
             self.__spriteManager__,
             self.__enviroment__,
             self.__soundManager__)
-        target.SetActualPosition(Point(1,0))
+        target.setActualPosition(Point(1,0))
         expectedPosition = target.ActualPosition
 
-        target.Motion(keysPressed)
+        target.motion(keysPressed)
 
         actualPosition = target.ActualPosition
 
@@ -170,11 +170,11 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(1,0))
+        target.setActualPosition(Point(1,0))
         target.isGoingLeft = False
         expectedPosition = Point(target.ActualPosition.X - target.__SPEED__.X,
             target.ActualPosition.Y)
-        sprite = target.Motion(keysPressed)
+        sprite = target.motion(keysPressed)
 
         self.assertTrue(target.isGoingLeft)
         self.assertFalse(target.isStanding)
@@ -198,10 +198,10 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(1,0))
+        target.setActualPosition(Point(1,0))
         expectedPosition = Point(target.ActualPosition.X + target.__SPEED__.X,
             target.ActualPosition.Y)
-        sprite = target.Motion(keysPressed)
+        sprite = target.motion(keysPressed)
 
         self.assertFalse(target.isGoingLeft)
         self.assertFalse(target.isStanding)
@@ -226,10 +226,10 @@ class test_Potato(unittest.TestCase):
             self.__spriteManager__,
             self.__enviroment__,
             self.__soundManager__)
-        target.SetActualPosition(Point(1,0))
+        target.setActualPosition(Point(1,0))
         expectedPosition = Point(target.ActualPosition.X,
             target.ActualPosition.Y - target.__SPEED__.Y)
-        target.Motion(keysPressed)
+        target.motion(keysPressed)
 
         self.assertFalse(target.isStanding)
         self.__spriteManager__.UpdateSprite.assert_called_with(expectedPosition.X, expectedPosition.Y)
@@ -248,8 +248,8 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(2,5))
-        target.Motion(keysPressed)
+        target.setActualPosition(Point(2,5))
+        target.motion(keysPressed)
 
         self.assertFalse(target.reachCheckpoint)
 
@@ -267,8 +267,8 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(10,1))
-        target.Motion(keysPressed)
+        target.setActualPosition(Point(10,1))
+        target.motion(keysPressed)
 
         self.assertTrue(target.reachCheckpoint)
 
@@ -291,7 +291,7 @@ class test_Potato(unittest.TestCase):
         target.ActualPosition.X = target.__SCREEN__.X + 1
         target.ActualPosition.Y = 0
 
-        sprite = target.Motion(keysPressed)
+        sprite = target.motion(keysPressed)
         
         self.__spriteManager__.UpdateSprite.assert_called_with(0, target.ActualPosition.Y)
 
@@ -314,7 +314,7 @@ class test_Potato(unittest.TestCase):
         target.ActualPosition.X = 0
         target.ActualPosition.Y = 0
 
-        sprite = target.Motion(keysPressed)
+        sprite = target.motion(keysPressed)
 
         self.__spriteManager__.UpdateSprite.assert_called_with(600, target.ActualPosition.Y)
 
@@ -332,11 +332,11 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(1,20))
+        target.setActualPosition(Point(1,20))
         target.isJumping = True
         target.isGoingDown = True
         
-        target.Motion(keysPressed)
+        target.motion(keysPressed)
 
         self.assertEqual(Point(0,30), target.ActualPosition)
 
@@ -351,7 +351,7 @@ class test_Potato(unittest.TestCase):
         target.isJumping = True
         expectedStartJumpingCord = target.startJumpingCord
 
-        target.JumpInitialize()
+        target.jumpInitialize()
 
         self.assertTrue(target.isJumping)
         self.assertEqual(expectedStartJumpingCord, target.startJumpingCord)
@@ -370,7 +370,7 @@ class test_Potato(unittest.TestCase):
         target.isJumping = False
         target.ActualPosition.Y = expectedStartJumpingCord
 
-        target.JumpInitialize()
+        target.jumpInitialize()
 
         self.assertTrue(target.isJumping)
         self.assertEqual(expectedStartJumpingCord, target.startJumpingCord)
@@ -384,13 +384,13 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(3,4))
+        target.setActualPosition(Point(3,4))
 
         expectedPosition = Point(target.ActualPosition.X,
             112)
 
-        target.JumpInitialize()
-        target.Jump()
+        target.jumpInitialize()
+        target.jump()
 
         actualPosition = target.ActualPosition
 
@@ -407,7 +407,7 @@ class test_Potato(unittest.TestCase):
             self.__spriteManager__,
             self.__enviroment__,
             self.__soundManager__)
-        target.SetActualPosition(Point(x, y))
+        target.setActualPosition(Point(x, y))
 
         self.assertEqual(target.ActualPosition, Point(x*30,y*30))
 
@@ -425,10 +425,10 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(2,4))
+        target.setActualPosition(Point(2,4))
         expectedPosition = Point(target.ActualPosition.X, target.ActualPosition.Y)
 
-        target.Motion(keysPressed)
+        target.motion(keysPressed)
         self.assertEqual(target.ActualPosition, expectedPosition)
         
     def test_ShouldNotMoveIfThereIsTileGoingLeft(self):
@@ -446,10 +446,10 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(1,4))
+        target.setActualPosition(Point(1,4))
         expectedPosition = Point(target.ActualPosition.X, target.ActualPosition.Y)
 
-        target.Motion(keysPressed)
+        target.motion(keysPressed)
 
         self.assertEqual(target.ActualPosition, expectedPosition)
 
@@ -467,11 +467,11 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(1,1))
+        target.setActualPosition(Point(1,1))
         expectedPosition = Point(target.ActualPosition.X,
             target.ActualPosition.Y + target.__SPEED__.Y)
 
-        target.Motion(keysPressed)
+        target.motion(keysPressed)
 
         actualPosition = target.ActualPosition
 
@@ -490,9 +490,9 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(1,0))
+        target.setActualPosition(Point(1,0))
         
-        thereIsTileBehind = target.ThereIsTileBehind()
+        thereIsTileBehind = target.thereIsTileBehind()
 
         self.assertTrue(thereIsTileBehind)
 
@@ -505,9 +505,9 @@ class test_Potato(unittest.TestCase):
             self.__enviroment__,
             self.__soundManager__)
 
-        target.SetActualPosition(Point(1,1))
+        target.setActualPosition(Point(1,1))
         
-        thereIsTileBehind = target.ThereIsTileBehind()
+        thereIsTileBehind = target.thereIsTileBehind()
 
         self.assertFalse(thereIsTileBehind)
 
