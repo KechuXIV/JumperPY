@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+from Block import Block
 
 
-class Tile():
+class Tile(Block):
 
 	def __init__(self, imageManager):
-		self.Width = 30
-		self.Height = 30
-		path = os.path.join('..', 'bin','Resources', 'tile.png')
-		self.Image = imageManager.createImage(self.Width, self.Height, path)
+		Block.__init__(self, imageManager, os.path.join('..', 'bin','Resources', 'tile.png'))

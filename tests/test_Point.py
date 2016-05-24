@@ -13,30 +13,33 @@ from Point import *
 class test_Point(unittest.TestCase):
 
 	def setUp(self):
-		self.Point = Point()
+		self.target = Point()
+		
+	def tearDown(self):
+		pass
 
 	def test_ToString(self):
 		expectedString = "(5;3)"
-		self.Point.X = 5
-		self.Point.Y = 3
+		self.target.X = 5
+		self.target.Y = 3
 
-		string = str(self.Point)
+		string = str(self.target)
 
 		self.assertEqual(string, expectedString)
 
 	def test_Equal(self):
 		expectedPoint = Point(1,3)
-		self.Point.X = 1
-		self.Point.Y = 3
+		self.target.X = 1
+		self.target.Y = 3
 
-		self.assertEqual(self.Point, expectedPoint)
+		self.assertEqual(self.target, expectedPoint)
 
 	def test_NotEqual(self):
 		notPoint = Point(4,5)
-		self.Point.X = 4
-		self.Point.Y = 5
+		self.target.X = 4
+		self.target.Y = 5
 
-		self.assertNotEqual(self.Point, notPoint)
+		self.assertNotEqual(self.target, notPoint)
 
 if __name__ == "__main__":
     unittest.main()

@@ -9,7 +9,8 @@ from Tile import *
 
 class LevelManager():
 
-	def __init__(self, imageManager, surcefaceManager, spriteManager):
+	def __init__(self, imageManager, surcefaceManager,
+		spriteManager, tile, checkpoint):
 		self.__actualLevel__ = 0
 		self.__sprite__ = None
 		self.imageManager = imageManager
@@ -18,8 +19,8 @@ class LevelManager():
 		self.spriteManager = spriteManager
 
 		self.levels = self.getLevels()
-		self.tile = Tile(imageManager)
-		self.checkpoint = Checkpoint(imageManager)
+		self.tile = tile
+		self.checkpoint = checkpoint
 
 	def createSpriteFromSurface(self):
 		sourceface = self.surfaceManager.getSurface()

@@ -18,6 +18,7 @@ class test_Tile(unittest.TestCase):
 
 	def setUp(self):
 		self.imageManager = Mock(spec=IImageManager)
+		
 		self.target = Tile(self.imageManager)
 		
 		self.imageManagerExpects = []

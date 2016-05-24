@@ -4,11 +4,11 @@
 
 class ISurfaceManager():
 
-	def CreateSurface(self, width, height):
+	def createSurface(self, width, height):
 		raise NotImplementedError("Should have implemented this")
 
-	def GetSurface(self):
+	def getSurface(self):
 		raise NotImplementedError("Should have implemented this")
 
-	def BlitIntoSurface(self, image, width, height):
+	def blitIntoSurface(self, image, width, height):
 		raise NotImplementedError("Should have implemented this")	
