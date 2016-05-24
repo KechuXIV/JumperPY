@@ -9,4 +9,4 @@ class Tile():
 		self.Width = 30
 		self.Height = 30
 		path = os.path.join('..', 'bin','Resources', 'tile.png')
-		self.Image = imageManager.CreateImage(self.Width, self.Height, path)
+		self.Image = imageManager.createImage(self.Width, self.Height, path)

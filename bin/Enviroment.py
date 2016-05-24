@@ -12,11 +12,11 @@ class Enviroment():
 		self.finishCords = finishCords
 		self.tiles = tiles
 
-	def GetStartCords(self):
+	def getStartCords(self):
 		return self.starCords
 
-	def GetFinishCords(self):
+	def getFinishCords(self):
 		return self.finishCords
 
-	def IsTile(self, point):
+	def isTile(self, point):
 		return point in self.tiles

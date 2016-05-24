@@ -9,4 +9,4 @@ class Checkpoint():
 		self.Width = 30
 		self.Height = 30
 		path = os.path.join('..', 'bin','Resources', 'checkpoint.png')
-		self.Image = imageManager.CreateImage(self.Width, self.Height, path)
+		self.Image = imageManager.createImage(self.Width, self.Height, path)

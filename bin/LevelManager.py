@@ -17,28 +17,28 @@ class LevelManager():
 		self.surfaceManager = surcefaceManager
 		self.spriteManager = spriteManager
 
-		self.levels = self.GetLevels()
+		self.levels = self.getLevels()
 		self.tile = Tile(imageManager)
 		self.checkpoint = Checkpoint(imageManager)
 
-	def CreateSpriteFromSurface(self):
-		sourceface = self.surfaceManager.GetSurface()
-		width = self.imageManager.GetImageWidth()
-		height = self.imageManager.GetImageHeight()
-		self.spriteManager.CreateSpriteFromSurface(0, 0, width*self.tile.Width, height*self.tile.Height, sourceface)
+	def createSpriteFromSurface(self):
+		sourceface = self.surfaceManager.getSurface()
+		width = self.imageManager.getImageWidth()
+		height = self.imageManager.getImageHeight()
+		self.spriteManager.createSpriteFromSurface(0, 0, width*self.tile.Width, height*self.tile.Height, sourceface)
 
-	def GetEnviroment(self):
+	def getEnviroment(self):
 		if self.enviroment is None:
 			raise Exception("Level not rendered")
 		return self.enviroment
 
-	def GetLevel(self):
+	def getLevel(self):
 		return self.levels[self.__actualLevel__]
 
-	def GetLevelPath(self):
-		return os.path.join('..', 'bin','Resources','levels', self.GetLevel() + '.png')
+	def getLevelPath(self):
+		return os.path.join('..', 'bin','Resources','levels', self.getLevel() + '.png')
 
-	def GetLevels(self):
+	def getLevels(self):
 		levels = []
 		levels.append("leap_of_faith")
 		levels.append("jumpering")
@@ -78,42 +78,42 @@ class LevelManager():
 
 		return levels
 
-	def GetRenderedLevel(self):
-		self.LoadAndRenderLevel()
-		self.CreateSpriteFromSurface()
-		self.GetSprite()
+	def getRenderedLevel(self):
+		self.loadAndRenderLevel()
+		self.createSpriteFromSurface()
+		self.getSprite()
 
 		return self.__sprite__
 
-	def GetSprite(self):
-		self.__sprite__ = self.spriteManager.GetSprite()
+	def getSprite(self):
+		self.__sprite__ = self.spriteManager.getSprite()
 
-	def GoToNextLevel(self):
+	def goToNextLevel(self):
 		if(self.__actualLevel__ >= (len(self.levels)-1)):
 			self.__actualLevel__ = 0	
 		self.__actualLevel__ += 1
 
-		self.LoadAndRenderLevel()
-		self.UpdateSpriteFromSurface()
-		self.GetSprite()
+		self.loadAndRenderLevel()
+		self.updateSpriteFromSurface()
+		self.getSprite()
 		
 		return self.__sprite__ 
 
-	def LoadAndRenderLevel(self):
-		levelPath = self.GetLevelPath()
+	def loadAndRenderLevel(self):
+		levelPath = self.getLevelPath()
 
-		self.imageManager.LoadImage(levelPath)
+		self.imageManager.loadImage(levelPath)
 		
-		width = self.imageManager.GetImageWidth()
-		height = self.imageManager.GetImageHeight()
+		width = self.imageManager.getImageWidth()
+		height = self.imageManager.getImageHeight()
 
-		pixelArray = self.imageManager.GetPixelArray()
+		pixelArray = self.imageManager.getPixelArray()
 
-		black = self.imageManager.GetImageColor(0, 0, 0)
-		red = self.imageManager.GetImageColor(255, 0, 0)
-		green = self.imageManager.GetImageColor(76, 255, 0)
+		black = self.imageManager.getImageColor(0, 0, 0)
+		red = self.imageManager.getImageColor(255, 0, 0)
+		green = self.imageManager.getImageColor(76, 255, 0)
 
-		self.surfaceManager.CreateSurface(width*self.tile.Width, height*self.tile.Height)
+		self.surfaceManager.createSurface(width*self.tile.Width, height*self.tile.Height)
 
 		startCord = None
 		finishCord = None
@@ -121,23 +121,23 @@ class LevelManager():
 
 		for x in xrange(0,width):
 			for y in xrange(0,height):
- 				color = self.imageManager.GetPixelArrayItemColor(pixelArray[x, y])
+ 				color = self.imageManager.getPixelArrayItemColor(pixelArray[x, y])
 				if color == black:
 					if(x != 20):
-						self.surfaceManager.BlitIntoSurface(self.tile.Image, x*self.tile.Width, y*self.tile.Height)
+						self.surfaceManager.blitIntoSurface(self.tile.Image, x*self.tile.Width, y*self.tile.Height)
 						tilesCords.append(Point(x, y))
 				elif color == red:
 					if(x != 20): 
 						startCord = Point(x, y)
 				elif color == green:
 					if(x != 20): 
-						self.surfaceManager.BlitIntoSurface(self.checkpoint.Image, x*self.tile.Width, y*self.tile.Height)
+						self.surfaceManager.blitIntoSurface(self.checkpoint.Image, x*self.tile.Width, y*self.tile.Height)
 						finishCord = Point(x, y)
 
 		self.enviroment = Enviroment(startCord, finishCord, tilesCords)
 
-	def UpdateSpriteFromSurface(self):
-		sourceface = self.surfaceManager.GetSurface()
-		width = self.imageManager.GetImageWidth()
-		height = self.imageManager.GetImageHeight()
-		self.spriteManager.UpdateSpriteFromSurface(0, 0, width*self.tile.Width, height*self.tile.Height, sourceface)
+	def updateSpriteFromSurface(self):
+		sourceface = self.surfaceManager.getSurface()
+		width = self.imageManager.getImageWidth()
+		height = self.imageManager.getImageHeight()
+		self.spriteManager.updateSpriteFromSurface(0, 0, width*self.tile.Width, height*self.tile.Height, sourceface)

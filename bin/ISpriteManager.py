@@ -4,23 +4,23 @@
 
 class ISpriteManager():
 
-	def CreateSprite(self, xPosition, yPosition, width, height, imagePath):
+	def createSprite(self, xPosition, yPosition, width, height, imagePath):
 		raise NotImplementedError("Should have implemented this")
 
-	def CreateSpriteFromSurface(self, xPosition, yPosition, width, height, sourceface):
+	def createSpriteFromSurface(self, xPosition, yPosition, width, height, sourceface):
 		raise NotImplementedError("Should have implemented this")
 
-	def GetSprite(self):
+	def getSprite(self):
 		raise NotImplementedError("Should have implemented this")
 
-	def FlipSpriteImage(self):
+	def flipSpriteImage(self):
 		raise NotImplementedError("Should have implemented this")
 
-	def UpdateSprite(self, xPosition, yPosition, width = None, height = None, imagePath = None):
+	def updateSprite(self, xPosition, yPosition, width = None, height = None, imagePath = None):
 		raise NotImplementedError("Should have implemented this")
 
-	def UpdateSpriteFromSurface(self, xPosition, yPosition, width, height, sourceface):
+	def updateSpriteFromSurface(self, xPosition, yPosition, width, height, sourceface):
 		raise NotImplementedError("Should have implemented this")
 
-	def UpdateSpriteImage(self, imagePath):
+	def updateSpriteImage(self, imagePath):
 		raise NotImplementedError("Should have implemented this")

@@ -26,9 +26,9 @@ class Potato():
 		self.reachCheckpoint = False
 		self.actualImageIndex = 0
 
-		self.deathSound = soundManager.GetSound(os.path.join('..', 'bin','Resources', 'sounds', 'death.wav'))
-		self.jumpSound = soundManager.GetSound(os.path.join('..', 'bin','Resources', 'sounds', 'jump.wav'))
-		self.checkpointSound = soundManager.GetSound(os.path.join('..', 'bin','Resources', 'sounds', 'checkpoint.wav'))
+		self.deathSound = soundManager.getSound(os.path.join('..', 'bin','Resources', 'sounds', 'death.wav'))
+		self.jumpSound = soundManager.getSound(os.path.join('..', 'bin','Resources', 'sounds', 'jump.wav'))
+		self.checkpointSound = soundManager.getSound(os.path.join('..', 'bin','Resources', 'sounds', 'checkpoint.wav'))
 
 		self.createSprite()
 
@@ -53,12 +53,12 @@ class Potato():
 		return self.images[self.actualImageIndex]
 
 	def getSprite(self):
-		return self.__SPRITEMANAGER__.GetSprite()
+		return self.__SPRITEMANAGER__.getSprite()
 
 	def createSprite(self):
 		imagePath = self.getImagePath(self.images[0])
 
-		self.__SPRITEMANAGER__.CreateSprite(self.ActualPosition.X, self.ActualPosition.Y,
+		self.__SPRITEMANAGER__.createSprite(self.ActualPosition.X, self.ActualPosition.Y,
 			self.__WIDTH__, self.__HEIGHT__, imagePath)
 
 	def endjumpCycle(self):
@@ -66,7 +66,7 @@ class Potato():
 		self.isGoingDown = False
 
 	def flipSpriteImage(self):
-		return self.__SPRITEMANAGER__.FlipSpriteImage()
+		return self.__SPRITEMANAGER__.flipSpriteImage()
 
 	def jump(self):
 		if(self.isJumping):
@@ -147,12 +147,12 @@ class Potato():
 
 	def hasReachCheckpoint(self):
 		actualCord = Point(abs(self.ActualPosition.X/30), abs(self.ActualPosition.Y/30))
-		self.reachCheckpoint = actualCord == self.__ENVIROMENT__.GetFinishCords()
+		self.reachCheckpoint = actualCord == self.__ENVIROMENT__.getFinishCords()
 		if(self.reachCheckpoint):
 			self.checkpointSound.play()
 
 	def setPotatoOnStartPosition(self):
-		startCord = self.__ENVIROMENT__.GetStartCords()
+		startCord = self.__ENVIROMENT__.getStartCords()
 		self.ActualPosition = Point(startCord.X*30, startCord.Y*30)
 
 	def setActualPosition(self, point):
@@ -169,15 +169,15 @@ class Potato():
 
 	def thereIsTileBehind(self):
 		behindPosition = Point(round(self.ActualPosition.X/30), round(self.ActualPosition.Y/30) + 1)
-		return self.__ENVIROMENT__.IsTile(behindPosition)
+		return self.__ENVIROMENT__.isTile(behindPosition)
 		
 	def thereIsTileLeft(self):
 		leftPosition = Point(round(self.ActualPosition.X/30) + 1, round(self.ActualPosition.Y/30))
-		return self.__ENVIROMENT__.IsTile(leftPosition)
+		return self.__ENVIROMENT__.isTile(leftPosition)
 		
 	def thereIsTileRight(self):
 		rightPosition = Point(round((self.ActualPosition.X/30)), round(self.ActualPosition.Y/30))
-		return self.__ENVIROMENT__.IsTile(rightPosition)
+		return self.__ENVIROMENT__.isTile(rightPosition)
 
 	def updateImage(self):
 		image = self.getImageToShow()
@@ -190,7 +190,7 @@ class Potato():
 			self.flipSpriteImage()
 
 	def updateSpriteImage(self, imagePath):
-		return self.__SPRITEMANAGER__.UpdateSpriteImage(imagePath)
+		return self.__SPRITEMANAGER__.updateSpriteImage(imagePath)
 
 	def updateSpritePosition(self):
-		return self.__SPRITEMANAGER__.UpdateSprite(self.ActualPosition.X, self.ActualPosition.Y)
+		return self.__SPRITEMANAGER__.updateSprite(self.ActualPosition.X, self.ActualPosition.Y)

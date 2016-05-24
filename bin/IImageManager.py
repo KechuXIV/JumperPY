@@ -4,26 +4,26 @@
 
 class IImageManager():
 
-	def CreateImage(self, width, height, imagePath):
+	def createImage(self, width, height, imagePath):
 		raise NotImplementedError("Should have implemented this")
 
-	def LoadImage(self, imagePath):
+	def loadImage(self, imagePath):
 		raise NotImplementedError("Should have implemented this")
 
-	def GetImage(self):
+	def getImage(self):
 		raise NotImplementedError("Should have implemented this")
 
-	def GetImageWidth(self):
+	def getImageWidth(self):
 		raise NotImplementedError("Should have implemented this")
 
-	def GetImageHeight(self):
+	def getImageHeight(self):
 		raise NotImplementedError("Should have implemented this")
 
-	def GetImageColor(self, r, g, b):
+	def getImageColor(self, r, g, b):
 		raise NotImplementedError("Should have implemented this")
 
-	def GetPixelArray(self):
+	def getPixelArray(self):
 		raise NotImplementedError("Should have implemented this")
 
-	def GetPixelArrayItemColor(self, pixelArrayItem):
+	def getPixelArrayItemColor(self, pixelArrayItem):
 		raise NotImplementedError("Should have implemented this")
