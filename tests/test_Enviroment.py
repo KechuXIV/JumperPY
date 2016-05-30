@@ -19,6 +19,9 @@ class test_Enviroment(unittest.TestCase):
 		finishCords = Point(2, 3)
 		tiles = [Point(1, 2),Point(4, 5)]
 		self.target = Enviroment(startCords, finishCords, tiles)
+		
+	def tearDown(self):
+		pass
 
 	def test_GetStartCords(self):
 		expectedCords = Point(0, 0)

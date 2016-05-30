@@ -31,9 +31,6 @@ class Potato():
 		self.checkpointSound = soundManager.getSound(os.path.join('..', 'bin','Resources', 'sounds', 'checkpoint.wav'))
 
 		self.createSprite()
-
-		self.maxjumping = self.__SPEED__.Y * 10
-		self.startJumpingCord = self.ActualPosition.Y
 		
 	def getImagePath(self, image):
 		return os.path.join('..', 'bin','Resources', image)
@@ -93,7 +90,6 @@ class Potato():
 	def jumpInitialize(self):
 		if(not self.isJumping):
 			self.jumpSound.play()
-			self.startJumpingCord = self.ActualPosition.Y
 			self.isStanding = False
 			self.isJumping = True
 			self.__SPEED__.Y = 8
@@ -114,14 +110,14 @@ class Potato():
 			self.isStanding = False
 			if(not self.isGoingLeft):
 				self.isGoingLeft = True
-			if(not self.thereIsTileRight()):
+			if(not self.thereIsTileLeft()):
 				self.ActualPosition.X -= self.__SPEED__.X
 				
 		elif(Key.D in keysPressed):
 			self.isStanding = False
 			if(self.isGoingLeft):
 				self.isGoingLeft = False
-			if(not self.thereIsTileLeft()):
+			if(not self.thereIsTileRight()):
 				self.ActualPosition.X += self.__SPEED__.X
 				
 		self.hasReachCheckpoint()
@@ -153,7 +149,7 @@ class Potato():
 
 	def setPotatoOnStartPosition(self):
 		startCord = self.__ENVIROMENT__.getStartCords()
-		self.ActualPosition = Point(startCord.X*30, startCord.Y*30)
+		self.setActualPosition(startCord)
 
 	def setActualPosition(self, point):
 		self.ActualPosition = Point(point.X*30, point.Y*30)
@@ -169,15 +165,21 @@ class Potato():
 
 	def thereIsTileBehind(self):
 		behindPosition = Point(round(self.ActualPosition.X/30), round(self.ActualPosition.Y/30) + 1)
-		return self.__ENVIROMENT__.isTile(behindPosition)
+		isTileBehind = self.__ENVIROMENT__.isTile(behindPosition)
+		print ("isTileBehind: {0}".format(isTileBehind))
+		return isTileBehind
 		
 	def thereIsTileLeft(self):
 		leftPosition = Point(round(self.ActualPosition.X/30) + 1, round(self.ActualPosition.Y/30))
-		return self.__ENVIROMENT__.isTile(leftPosition)
+		isTileLeft = self.__ENVIROMENT__.isTile(leftPosition)
+		print ("isTileLeft: {0}".format(isTileLeft))
+		return isTileLeft
 		
 	def thereIsTileRight(self):
-		rightPosition = Point(round((self.ActualPosition.X/30)), round(self.ActualPosition.Y/30))
-		return self.__ENVIROMENT__.isTile(rightPosition)
+		rightPosition = Point(round((self.ActualPosition.X/30)) - 1, round(self.ActualPosition.Y/30))
+		isTileRight = self.__ENVIROMENT__.isTile(rightPosition)
+		print ("isTileRight: {0}".format(isTileRight))
+		return isTileRight
 
 	def updateImage(self):
 		image = self.getImageToShow()

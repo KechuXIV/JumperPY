@@ -13,3 +13,6 @@ class Point():
 
 	def __eq__(self, other):
 		return self.X == other.X and self.Y == other.Y
+		
+	def __repr__(self):
+		return "({0};{1})".format(self.X, self.Y)

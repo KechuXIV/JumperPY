@@ -15,525 +15,376 @@ from Enviroment import *
 from Key import *
 from Point import *
 from Potato import *
-from mock import *
+from mock import Mock, MagicMock, call, NonCallableMock
 from ISoundManager import *
 from ISpriteManager import *
 
+# class C(object):
+    
+#     def __getitem__(self, k):
+#         return 5
 
 class test_Potato(unittest.TestCase):
 
     def setUp(self):
         screenWidth = 600
         screenHeight = 300
+
+        self.screen = Point(screenWidth, screenHeight)
+        self.spriteManager = Mock(spec=ISpriteManager)
+        self.enviroment = Mock(spec=Enviroment)
+        self.soundManager = Mock(spec=ISoundManager)
         
-        tiles = [Point(0, 1), Point(0,4), Point(0,5), Point(1, 1), Point(1,5), Point(2, 1), Point(2,4), Point(2,5),Point(3,5), Point(4,5), Point(19, 1)]
-        # Boceto de Tiles:
-        #   [0][1][2][3][4][5][6][7][8][9][0][1][2][3][4][5][6][7][8][9]
-        #[0] 
-        #[1][x][x][x]                                                [x]
-        #[2]
-        #[3]
-        #[4][x]   [x]
-        #[5][x][x][x][x][x]
-        #[6]
-        #[7]
-        #[8]
-        #[9]
-        #----------------------------------------------------------------
-        startCord = Point(0, 1)
-        finishCord = Point(10, 1)
-
-        self.__enviroment__ = Enviroment(startCord, finishCord, tiles)
-        self.__screen__ = Point(screenWidth, screenHeight)
-        self.__spriteManager__ = ISpriteManager()
-        self.__soundManager__ = ISoundManager()
-
-    def test_GetPotatoSprite(self):
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-        spriteMock = MagicMock()
-        spriteMock.Description = "Sprite Mockeado"
-        self.__spriteManager__.getSprite = MagicMock(return_value=spriteMock)
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-
-        sprite = target.getSprite()
-
+        startCords = Point(0,0)
+        self.enviroment.getStartCords.return_value = startCords
+        
+        self.target = Potato(self.screen, self.spriteManager, 
+            self.enviroment, self.soundManager)
+        
         pathDeathSound = os.path.join('..', 'bin','Resources', 'sounds', 'death.wav')
         pathJumpSound = os.path.join('..', 'bin','Resources', 'sounds', 'jump.wav')
         pathCheckpointSound = os.path.join('..', 'bin','Resources', 'sounds', 'checkpoint.wav')
+        
+        self.enviromentExpected = []
+        self.spriteManagerExpected = []
+        self.soundManagerExpected = [call.getSound(pathDeathSound), 
+            call.getSound(pathJumpSound), 
+            call.getSound(pathCheckpointSound)]
+        
+    def tearDown(self):
+        self.assertEqual(self.spriteManager.mock_calls, self.spriteManagerExpected)
+        self.assertEqual(self.enviroment.mock_calls, self.enviromentExpected)
+        self.assertEqual(self.soundManager.mock_calls, self.soundManagerExpected)
 
+    def test_GetPotatoSprite(self):
+        spriteMock = NonCallableMock()
+        
+        self.spriteManager.getSprite.return_value = spriteMock
+        
+        sprite = self.target.getSprite()
+
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, '../bin/Resources/potatoStanding.png'))
+        self.spriteManagerExpected.append(call.getSprite())
+        self.enviromentExpected.append(call.getStartCords())
+    
         self.assertIsNotNone(spriteMock)
-        self.assertEqual(sprite.Description, "Sprite Mockeado")
-        calls = [call(pathDeathSound),call(pathJumpSound),call(pathCheckpointSound)]
-        self.__soundManager__.getSound.assert_has_calls(calls)
+        self.assertEqual(sprite, spriteMock)
 
     def test_MovePotatoLeftInTheEdgeOfTheScreen(self):
-        expectedPosition = Point(600, 8)
+        startCord = Point(0,0)
+        expectedPosition = Point(600, 0)
 
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-        self.__spriteManager__.updateSpriteImage = MagicMock()
+        self.enviroment.isTile.side_effect = [False, True, True]
 
-        spriteMock = MagicMock()
-        spriteMock.Description = "Sprite Mockeado"
-        self.__spriteManager__.updateSprite = MagicMock(return_value=spriteMock)
+        keysPressed = [Key.A]
 
-        keysPressed = []
-        keysPressed.append(Key.A)
+        self.target.setActualPosition(startCord)
+        sprite = self.target.motion(keysPressed)
+        
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoWalking.png')))
+        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
+        
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.isTile(Point(1,0)))
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(20,1)))
 
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-        target.setActualPosition(Point(0,0))
-        sprite = target.motion(keysPressed)
-
-        pathDeathSound = os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'death.wav')
-        pathJumpSound = os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'jump.wav')
-        pathCheckpointSound = os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'checkpoint.wav')
-
-        self.assertTrue(target.isGoingLeft)
-        self.assertFalse(target.isStanding)
-        self.__spriteManager__.updateSprite.assert_called_with(expectedPosition.X, expectedPosition.Y)
+        self.assertTrue(self.target.isGoingLeft)
+        self.assertFalse(self.target.isStanding)
 
     def test_MovePotatoRightInTheEdgeOfTheScreen(self):
-        expectedPosition = Point(572, 0)
+        startCord = Point(20,0)
+        expectedPosition = Point(0, 0)
+        
+        self.enviroment.isTile.side_effect = [False, True]
 
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-        self.__spriteManager__.updateSpriteImage = MagicMock()
-        self.__spriteManager__.flipSpriteImage = MagicMock()
+        keysPressed = [Key.D]
 
-        spriteMock = MagicMock()
-        spriteMock.Description = "Sprite Mockeado"
-        self.__spriteManager__.updateSprite = MagicMock(return_value=spriteMock)
-
-        keysPressed = []
-        keysPressed.append(Key.D)
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-        target.setActualPosition(Point(19,0))
-        sprite = target.motion(keysPressed)
-
-        pathDeathSound = os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'death.wav')
-        pathJumpSound = os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'jump.wav')
-        pathCheckpointSound = os.path.join('..', 'Jumper.Core','Resources', 'sounds', 'checkpoint.wav')
-
-        self.assertFalse(target.isGoingLeft)
-        self.assertFalse(target.isStanding)
-        self.__spriteManager__.updateSprite.assert_called_with(expectedPosition.X, expectedPosition.Y)
+        self.target.setActualPosition(startCord)
+        sprite = self.target.motion(keysPressed)
+        
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoWalking.png')))
+        self.spriteManagerExpected.append(call.flipSpriteImage())
+        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
+        
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.isTile(Point(19,0)))
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(0,1)))
+        
+        self.assertFalse(self.target.isGoingLeft)
+        self.assertFalse(self.target.isStanding)
 
     def test_MovePotato(self):
+        startPosition = Point(1,0)
         keysPressed = []
+        
+        self.enviroment.isTile.side_effect = [True]
+        
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSprite(startPosition.X*30, startPosition.Y))
+        
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(1,1)))
+        
+        self.target.setActualPosition(startPosition)
+        self.target.motion(keysPressed)
 
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-
-        self.__spriteManager__.updateSpriteImage = MagicMock()
-        self.__spriteManager__.updateSprite = MagicMock()
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-        target.setActualPosition(Point(1,0))
-        expectedPosition = target.ActualPosition
-
-        target.motion(keysPressed)
-
-        actualPosition = target.ActualPosition
-
-        self.assertEqual(expectedPosition, actualPosition)
-        self.assertTrue(target.isStanding)
+        self.assertTrue(self.target.isStanding)
 
     def test_MovePotatoLeft(self):
-        keysPressed = []
-        keysPressed.append(Key.A)
+        keysPressed = [Key.A]
+        startPosition = Point(1,0)
+        expectedPosition = Point(startPosition.X*30 - self.target.__SPEED__.X,
+            startPosition.Y)
+        
+        self.enviroment.isTile.side_effect = [False, True]
 
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoWalking.png')))
+        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
+        
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.isTile(Point(2,0)))
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(0,1)))
+        
+        self.target.setActualPosition(startPosition)
+        self.target.isGoingLeft = False
+        self.target.motion(keysPressed)
 
-        self.__spriteManager__.updateSpriteImage = MagicMock()
-        spriteMock = MagicMock()
-        spriteMock.Description = "Sprite Mockeado"
-        self.__spriteManager__.updateSprite = MagicMock(return_value=spriteMock)
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-
-        target.setActualPosition(Point(1,0))
-        target.isGoingLeft = False
-        expectedPosition = Point(target.ActualPosition.X - target.__SPEED__.X,
-            target.ActualPosition.Y)
-        sprite = target.motion(keysPressed)
-
-        self.assertTrue(target.isGoingLeft)
-        self.assertFalse(target.isStanding)
-        self.__spriteManager__.updateSprite.assert_called_with(expectedPosition.X, expectedPosition.Y)
+        self.assertTrue(self.target.isGoingLeft)
+        self.assertFalse(self.target.isStanding)
 
     def test_MovePotatoRight(self):
-        keysPressed = []
-        keysPressed.append(Key.D)
+        keysPressed = [Key.D]
+        startPosition = Point(1,0)
+        expectedPosition = Point(startPosition.X*30 + self.target.__SPEED__.X,
+            startPosition.Y)
+            
+        self.enviroment.isTile.side_effect = [False, True]
+        
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoWalking.png')))
+        self.spriteManagerExpected.append(call.flipSpriteImage())
+        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
+        
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.isTile(Point(0,0)))
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(1,1)))
 
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
+        self.target.setActualPosition(startPosition)
+        self.target.isGoingRight = True
+        self.target.motion(keysPressed)
 
-        self.__spriteManager__.updateSpriteImage = MagicMock()
-        self.__spriteManager__.flipSpriteImage = MagicMock()
-        spriteMock = MagicMock()
-        spriteMock.Description = "Sprite Mockeado"
-        self.__spriteManager__.updateSprite = MagicMock(return_value=spriteMock)
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-
-        target.setActualPosition(Point(1,0))
-        expectedPosition = Point(target.ActualPosition.X + target.__SPEED__.X,
-            target.ActualPosition.Y)
-        sprite = target.motion(keysPressed)
-
-        self.assertFalse(target.isGoingLeft)
-        self.assertFalse(target.isStanding)
-        self.__spriteManager__.updateSprite.assert_called_with(expectedPosition.X, expectedPosition.Y)
+        self.assertFalse(self.target.isGoingLeft)
+        self.assertFalse(self.target.isStanding)
 
     def test_MovePotatoJump(self):
-        keysPressed = []
-        keysPressed.append(Key.Space)
+        keysPressed = [Key.Space]
+        startPosition = Point(1,0)
+        expectedPosition = Point(startPosition.X*30,
+            startPosition.Y*30 - self.target.__SPEED__.Y)
+            
+        self.enviroment.isTile.side_effect = [False, True]
 
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-
-        self.__spriteManager__.updateSpriteImage = MagicMock()
-        self.__spriteManager__.flipSpriteImage = MagicMock()
-        spriteMock = MagicMock()
-        spriteMock.Description = "Sprite Mockeado"
-        self.__spriteManager__.updateSprite = MagicMock(return_value=spriteMock)
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-        target.setActualPosition(Point(1,0))
-        expectedPosition = Point(target.ActualPosition.X,
-            target.ActualPosition.Y - target.__SPEED__.Y)
-        target.motion(keysPressed)
-
-        self.assertFalse(target.isStanding)
-        self.__spriteManager__.updateSprite.assert_called_with(expectedPosition.X, expectedPosition.Y)
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatojumping.png')))
+        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
         
-    def test_newLevel(self):
-        keysPressed = []
-        keysPressed.append(Key.Space)
-
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-        newMockEnviroment = MagicMock()
-        newMockEnviroment.Description = "Nuevo Enviroment"
-        newMockEnviroment.getStartCords = MagicMock(return_value=Point(5,5))
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-        target.newLevel(newMockEnviroment)
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(1,0)))
         
-        self.assertEqual(target.ActualPosition.X, 5*30)
-        self.assertEqual(target.ActualPosition.Y, 5*30)
-        self.assertFalse(target.isJumping)
-        self.assertTrue(target.isGoingLeft)
-        self.assertFalse(target.isGoingDown)
-        self.assertTrue(target.isStanding)
-        self.assertFalse(target.reachCheckpoint)
-        self.assertEqual(0, target.actualImageIndex)
-        self.assertNotEqual(newMockEnviroment, self.__enviroment__)
+        self.soundManagerExpected.append(call.getSound().play())
+
+        self.target.setActualPosition(startPosition)
+        self.target.motion(keysPressed)
+
+        self.assertFalse(self.target.isStanding)
+        
+    def test_NewLevel(self):
+        startPosition = Point(1,0)
+        keysPressed = [Key.Space]
+        newLevelStartCords = Point(5,5)
+        expectedPosition = Point(newLevelStartCords.X*30, newLevelStartCords.Y*30)
+
+        newMockEnviroment = Mock(spec=Enviroment)
+        newMockEnviroment.getStartCords.return_value = newLevelStartCords
+
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.enviromentExpected.append(call.getStartCords())
+
+        self.target.setActualPosition(startPosition)
+        self.target.newLevel(newMockEnviroment)
+        
+        self.assertEqual(self.target.ActualPosition, expectedPosition)
+        self.assertFalse(self.target.isJumping)
+        self.assertTrue(self.target.isGoingLeft)
+        self.assertFalse(self.target.isGoingDown)
+        self.assertTrue(self.target.isStanding)
+        self.assertFalse(self.target.reachCheckpoint)
+        self.assertEqual(0, self.target.actualImageIndex)
+        self.assertNotEqual(newMockEnviroment, self.enviroment)
 
     def test_PotatoReachCheckpointFalse(self):
+        startPosition = Point(2,5)
+        expectedPosition = Point(startPosition.X*30,startPosition.Y*30)
         keysPressed = []
 
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
+        self.enviroment.isTile.side_effect = [True]
 
-        self.__spriteManager__.updateSpriteImage = MagicMock()
-        self.__spriteManager__.updateSprite = MagicMock()
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, 
+            os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(
+            os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, 
+            expectedPosition.Y))
 
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(2,6)))
 
-        target.setActualPosition(Point(2,5))
-        target.motion(keysPressed)
+        self.target.setActualPosition(startPosition)
+        self.target.motion(keysPressed)
 
-        self.assertFalse(target.reachCheckpoint)
+        self.assertFalse(self.target.reachCheckpoint)
 
     def test_PotatoReachCheckpointTrue(self):
+        startPosition = Point(10,1)
+        finishCord = startPosition
+        expectedPosition = Point(startPosition.X*30,startPosition.Y*30)
         keysPressed = []
 
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
+        self.enviroment.getFinishCords.return_value = finishCord
+        self.enviroment.isTile.side_effect = [True]
 
-        self.__spriteManager__.updateSpriteImage = MagicMock()
-        self.__spriteManager__.updateSprite = MagicMock()
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, 
+            os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(
+            os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, 
+            expectedPosition.Y))
 
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-
-        target.setActualPosition(Point(10,1))
-        target.motion(keysPressed)
-
-        self.assertTrue(target.reachCheckpoint)
-
-    def test_PotatoRebootScreenEnding(self):
-        keysPressed = []
-        keysPressed.append(Key.D)
-
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-
-        self.__spriteManager__.updateSpriteImage = MagicMock()
-        self.__spriteManager__.updateSprite = MagicMock()
-        self.__spriteManager__.flipSpriteImage = MagicMock()
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-
-        target.ActualPosition.X = target.__SCREEN__.X + 1
-        target.ActualPosition.Y = 0
-
-        sprite = target.motion(keysPressed)
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(10,2)))
         
-        self.__spriteManager__.updateSprite.assert_called_with(0, target.ActualPosition.Y)
+        self.soundManagerExpected.append(call.getSound().play())
 
-    def test_PotatoRebootScreenStart(self):
-        keysPressed = []
-        keysPressed.append(Key.A)
+        self.target.setActualPosition(startPosition)
+        self.target.motion(keysPressed)
 
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-
-        self.__spriteManager__.updateSpriteImage = MagicMock()
-        self.__spriteManager__.updateSprite = MagicMock()
-        self.__spriteManager__.flipSpriteImage = MagicMock()
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-
-        target.ActualPosition.X = 0
-        target.ActualPosition.Y = 0
-
-        sprite = target.motion(keysPressed)
-
-        self.__spriteManager__.updateSprite.assert_called_with(600, target.ActualPosition.Y)
+        self.assertTrue(self.target.reachCheckpoint)
 
     def test_PotatoDie(self):
+        startPosition = Point(1,20)
+        startCords = Point(0,1)
+        expectedPosition = Point(startCords.X*30,startCords.Y*30)
         keysPressed = []
-
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-
-        self.__spriteManager__.updateSpriteImage = MagicMock()
-        self.__spriteManager__.updateSprite = MagicMock()
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-
-        target.setActualPosition(Point(1,20))
-        target.isJumping = True
-        target.isGoingDown = True
         
-        target.motion(keysPressed)
+        self.enviroment.getStartCords.return_value = startCords
+        self.enviroment.isTile.side_effect = [False]
+        
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, 
+            os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(
+            os.path.join('..', 'bin','Resources', 'potatojumping.png')))
+        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, 
+            expectedPosition.Y))
+            
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(1,21)))
+        self.enviromentExpected.append(call.getStartCords())
+        
+        self.soundManagerExpected.append(call.getSound().play())
 
-        self.assertEqual(Point(0,30), target.ActualPosition)
+        self.target.setActualPosition(startPosition)
+        self.target.isJumping = True
+        self.target.isGoingDown = True
+        
+        self.target.motion(keysPressed)
 
-    def test_PotatoInitializeJumpWhenJumping(self):
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-        target.isJumping = True
-        expectedStartJumpingCord = target.startJumpingCord
-
-        target.jumpInitialize()
-
-        self.assertTrue(target.isJumping)
-        self.assertEqual(expectedStartJumpingCord, target.startJumpingCord)
-
-    def test_PotatoInitializeJumpWhenNotJumping(self):
-        expectedStartJumpingCord = 99
-
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-
-        target.isJumping = False
-        target.ActualPosition.Y = expectedStartJumpingCord
-
-        target.jumpInitialize()
-
-        self.assertTrue(target.isJumping)
-        self.assertEqual(expectedStartJumpingCord, target.startJumpingCord)
-
-    def test_PotatoJumpCycle(self):
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-
-        target.setActualPosition(Point(3,4))
-
-        expectedPosition = Point(target.ActualPosition.X,
-            112)
-
-        target.jumpInitialize()
-        target.jump()
-
-        actualPosition = target.ActualPosition
-
-        self.assertEqual(expectedPosition.X, actualPosition.X)
-        self.assertEqual(expectedPosition.Y, actualPosition.Y)
-
-    def test_SetPotatoActualPosition(self):
-        x = 3
-        y = 4
-
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-        target.setActualPosition(Point(x, y))
-
-        self.assertEqual(target.ActualPosition, Point(x*30,y*30))
+        self.assertEqual(expectedPosition, self.target.ActualPosition)
 
     def test_ShouldNotMoveIfThereIsTileGoingRight(self):
-        keysPressed = []
-        keysPressed.append(Key.A)
+        startPosition = Point(2,4)
+        expectedPosition = Point(58, startPosition.Y*30)
+        keysPressed = [Key.A]
+        
+        self.enviroment.isTile.side_effect = [False, True]
 
-        self.__spriteManager__.updateSpriteImage = MagicMock()
-        self.__spriteManager__.updateSprite = MagicMock()
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoWalking.png')))
+        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
+        
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.isTile(Point(3,4)))
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(1,5)))
 
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
+        self.target.setActualPosition(startPosition)
 
-        target.setActualPosition(Point(2,4))
-        expectedPosition = Point(target.ActualPosition.X, target.ActualPosition.Y)
-
-        target.motion(keysPressed)
-        self.assertEqual(target.ActualPosition, expectedPosition)
+        self.target.motion(keysPressed)
+        
+        self.assertEqual(self.target.ActualPosition, expectedPosition)
         
     def test_ShouldNotMoveIfThereIsTileGoingLeft(self):
-        keysPressed = []
-        keysPressed.append(Key.D)
+        startPosition = Point(2,4)
+        expectedPosition = Point(62, startPosition.Y*30)
+        keysPressed = [Key.D]
+        
+        self.enviroment.isTile.side_effect = [False, True]
 
-        self.__spriteManager__.updateSpriteImage = MagicMock()
-        self.__spriteManager__.updateSprite = MagicMock()
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoWalking.png')))
+        self.spriteManagerExpected.append(call.flipSpriteImage())
+        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
+        
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.isTile(Point(1,4)))
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(2,5)))
 
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-        self.__spriteManager__.flipSpriteImage = MagicMock()
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
+        self.target.setActualPosition(startPosition)
 
-        target.setActualPosition(Point(1,4))
-        expectedPosition = Point(target.ActualPosition.X, target.ActualPosition.Y)
-
-        target.motion(keysPressed)
-
-        self.assertEqual(target.ActualPosition, expectedPosition)
+        self.target.motion(keysPressed)
+        
+        self.assertEqual(self.target.ActualPosition, expectedPosition)
 
     def test_PotatoShouldDescendIfThereIsNotTileBehind(self):
+        startPosition = Point(2,4)
+        expectedPosition = Point(startPosition.X*30,
+            128)
         keysPressed = []
-
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-
-        self.__spriteManager__.updateSpriteImage = MagicMock()
-        self.__spriteManager__.updateSprite = MagicMock()
-        self.__spriteManager__.flipSpriteImage = MagicMock()
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-
-        target.setActualPosition(Point(1,1))
-        expectedPosition = Point(target.ActualPosition.X,
-            target.ActualPosition.Y + target.__SPEED__.Y)
-
-        target.motion(keysPressed)
-
-        actualPosition = target.ActualPosition
-
-        self.assertEqual(expectedPosition.Y, actualPosition.Y)
-        self.assertEqual(expectedPosition, actualPosition)
-        self.assertFalse(target.isStanding)
-        self.assertTrue(target.isGoingDown)
-        self.assertTrue(target.isJumping)
-
-    def test_ThereIsTileBehindTrue(self):
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-
-        target.setActualPosition(Point(1,0))
         
-        thereIsTileBehind = target.thereIsTileBehind()
+        self.enviroment.isTile.side_effect = [False, False]
 
-        self.assertTrue(thereIsTileBehind)
-
-    def test_ThereIsTileBehindFalse(self):
-        self.__soundManager__.getSound = MagicMock()
-        self.__spriteManager__.createSprite = MagicMock()
-
-        target = Potato(self.__screen__,
-            self.__spriteManager__,
-            self.__enviroment__,
-            self.__soundManager__)
-
-        target.setActualPosition(Point(1,1))
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
         
-        thereIsTileBehind = target.thereIsTileBehind()
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(2,5)))
+        self.enviromentExpected.append(call.isTile(Point(2,5)))
+        
+        self.soundManagerExpected.append(call.getSound().play())
 
-        self.assertFalse(thereIsTileBehind)
+        self.target.setActualPosition(startPosition)
+
+        self.target.motion(keysPressed)
+        
+        self.assertEqual(self.target.ActualPosition, expectedPosition)
+        self.assertFalse(self.target.isStanding)
+        self.assertTrue(self.target.isGoingDown)
+        self.assertTrue(self.target.isJumping)
 
 if __name__ == "__main__":
     unittest.main()

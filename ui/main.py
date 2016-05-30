@@ -7,6 +7,8 @@ import sys
 lib_path = os.path.abspath(os.path.join('..', 'bin'))
 sys.path.append(lib_path)
 
+from Tile import *
+from Checkpoint import *
 from Potato import *
 from LevelManager import *
 from Point import *
@@ -33,7 +35,10 @@ potatoPygameSpriteManager = PygameSpriteManager()
 pygameImageManager = PygameImageManager()
 pygameSourceManager = PygameSurfaceManager()
 
-levelManager = LevelManager(pygameImageManager, pygameSourceManager, levelManagerPygameSpriteManager)
+tile = Tile(pygameImageManager)
+checkpoint = (pygameImageManager)
+
+levelManager = LevelManager(pygameImageManager, pygameSourceManager, levelManagerPygameSpriteManager, tile, checkpoint)
 levelSprite = levelManager.GetRenderedLevel()
 enviroment = levelManager.GetEnviroment()
 
@@ -93,11 +98,11 @@ def Logic():
 	if(keys[pygame.K_SPACE]):
 		keysPressed.append(Key.Space)
 
-	potato.Motion(keysPressed)
+	potato.motion(keysPressed)
 	if(potato.reachCheckpoint):
-		levelManager.GoToNextLevel()
-		enviroment = levelManager.GetEnviroment()
-		potato.NewLevel(enviroment)
+		levelManager.goToNextLevel()
+		enviroment = levelManager.getEnviroment()
+		potato.newLevel(enviroment)
 
 while True:
 	CheckQuitEvent()
