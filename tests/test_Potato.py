@@ -194,7 +194,7 @@ class test_Potato(unittest.TestCase):
         self.enviroment.isTile.side_effect = [False, True]
 
         self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
-        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatojumping.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoJumping.png')))
         self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
         
         self.enviromentExpected.append(call.getStartCords())
@@ -294,7 +294,7 @@ class test_Potato(unittest.TestCase):
         self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, 
             os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
         self.spriteManagerExpected.append(call.updateSpriteImage(
-            os.path.join('..', 'bin','Resources', 'potatojumping.png')))
+            os.path.join('..', 'bin','Resources', 'potatoJumping.png')))
         self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, 
             expectedPosition.Y))
             

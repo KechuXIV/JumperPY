@@ -17,13 +17,13 @@ class PygameSpriteManager(ISpriteManager):
 		self.__width__ = None
 		self.__height__ = None
 
-	def CreateSprite(self, xPosition, yPosition, width, height, imagePath):
+	def createSprite(self, xPosition, yPosition, width, height, imagePath):
 		sourceface = pygame.transform.scale(pygame.image.load(imagePath), (width, height))
-		self.CreateSpriteFromSurface(xPosition, yPosition, width, height, sourceface)
+		self.createSpriteFromSurface(xPosition, yPosition, width, height, sourceface)
 
 		return self.__sprite__
 
-	def CreateSpriteFromSurface(self, xPosition, yPosition, width, height, sourceface):
+	def createSpriteFromSurface(self, xPosition, yPosition, width, height, sourceface):
 		self.__sprite__ = pygame.sprite.Sprite()
 		self.__sprite__.image = sourceface
 		self.__width__ = width
@@ -32,7 +32,7 @@ class PygameSpriteManager(ISpriteManager):
 
 		return self.__sprite__
 
-	def GetSprite(self):
+	def getSprite(self):
 		sprite = None
 
 		if(self.__sprite__ is not None):
@@ -42,10 +42,10 @@ class PygameSpriteManager(ISpriteManager):
 			
 		return sprite
 
-	def FlipSpriteImage(self):
+	def flipSpriteImage(self):
 		self.__sprite__.image = pygame.transform.flip(self.__sprite__.image, True, False)
 
-	def UpdateSprite(self, xPosition, yPosition, width = None, height = None, imagePath = None):
+	def updateSprite(self, xPosition, yPosition, width = None, height = None, imagePath = None):
 		self.__sprite__.rect.x = xPosition
 		self.__sprite__.rect.y = yPosition
 
@@ -58,7 +58,7 @@ class PygameSpriteManager(ISpriteManager):
 
 		return self.__sprite__
 
-	def UpdateSpriteFromSurface(self, xPosition, yPosition, width, height, sourceface):
+	def updateSpriteFromSurface(self, xPosition, yPosition, width, height, sourceface):
 		self.__sprite__.rect.x = xPosition
 		self.__sprite__.rect.y = yPosition
 		self.__sprite__.image = sourceface
@@ -67,7 +67,7 @@ class PygameSpriteManager(ISpriteManager):
 
 		return self.__sprite__
 
-	def UpdateSpriteImage(self, imagePath):
+	def updateSpriteImage(self, imagePath):
 		self.__sprite__.image = pygame.transform.scale(pygame.image.load(imagePath), (self.__width__, self.__height__))
 
 		return self.__sprite__

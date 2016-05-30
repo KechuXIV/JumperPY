@@ -14,5 +14,5 @@ class PygameSoundManager(ISoundManager):
 	def __init__(self):
 		pygame.init()
 
-	def GetSound(self, soundPath):
+	def getSound(self, soundPath):
 		return pygame.mixer.Sound(soundPath)

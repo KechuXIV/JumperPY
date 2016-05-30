@@ -15,32 +15,32 @@ class PygameImageManager(IImageManager):
 	def __init__(self):
 		self.__image__ = None
 
-	def CreateImage(self, width, height, imagePath):
+	def createImage(self, width, height, imagePath):
 		image = pygame.image.load(imagePath)
 		self.__image__ = pygame.transform.scale(image, (width, height))
 		return self.__image__
 
-	def LoadImage(self, imagePath):
+	def loadImage(self, imagePath):
 		self.__image__ = pygame.image.load(imagePath)
 
-	def GetImage(self):
+	def getImage(self):
 		if(self.__image__ is not None):
 			return self.__image__
 		else:
 			raise Exception("Not loaded image")
 
-	def GetImageWidth(self):
+	def getImageWidth(self):
 		return self.__image__.get_width()
 
-	def GetImageHeight(self):
+	def getImageHeight(self):
 		return self.__image__.get_height()
 
-	def GetImageColor(self, r, g, b):
+	def getImageColor(self, r, g, b):
 		mapRGB = self.__image__.map_rgb((r, g, b))
 		return pygame.Color(mapRGB)
 
-	def GetPixelArray(self):
+	def getPixelArray(self):
 		return pygame.PixelArray(self.__image__)
 
-	def GetPixelArrayItemColor(self, pixelArrayItem):
+	def getPixelArrayItemColor(self, pixelArrayItem):
 		return pygame.Color(pixelArrayItem)

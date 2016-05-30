@@ -18,7 +18,7 @@ class Potato():
 
 		self.setPotatoOnStartPosition()
 
-		self.images = ['potatoStanding.png', 'potatoWalking.png', 'potatojumping.png']
+		self.images = ['potatoStanding.png', 'potatoWalking.png', 'potatoJumping.png']
 		self.isJumping = False
 		self.isGoingLeft = True
 		self.isGoingDown = False
