@@ -19,10 +19,6 @@ from mock import Mock, MagicMock, call, NonCallableMock
 from ISoundManager import *
 from ISpriteManager import *
 
-# class C(object):
-    
-#     def __getitem__(self, k):
-#         return 5
 
 class test_Potato(unittest.TestCase):
 
