@@ -86,7 +86,7 @@ class test_Potato(unittest.TestCase):
         self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
         
         self.enviromentExpected.append(call.getStartCords())
-        self.enviromentExpected.append(call.isTile(Point(1,0)))
+        self.enviromentExpected.append(call.isTile(Point(-1,0)))
         self.enviromentExpected.append(call.getFinishCords())
         self.enviromentExpected.append(call.isTile(Point(20,1)))
 
@@ -110,7 +110,7 @@ class test_Potato(unittest.TestCase):
         self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
         
         self.enviromentExpected.append(call.getStartCords())
-        self.enviromentExpected.append(call.isTile(Point(19,0)))
+        self.enviromentExpected.append(call.isTile(Point(21,0)))
         self.enviromentExpected.append(call.getFinishCords())
         self.enviromentExpected.append(call.isTile(Point(0,1)))
         
@@ -149,7 +149,7 @@ class test_Potato(unittest.TestCase):
         self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
         
         self.enviromentExpected.append(call.getStartCords())
-        self.enviromentExpected.append(call.isTile(Point(2,0)))
+        self.enviromentExpected.append(call.isTile(Point(0,0)))
         self.enviromentExpected.append(call.getFinishCords())
         self.enviromentExpected.append(call.isTile(Point(0,1)))
         
@@ -174,7 +174,7 @@ class test_Potato(unittest.TestCase):
         self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
         
         self.enviromentExpected.append(call.getStartCords())
-        self.enviromentExpected.append(call.isTile(Point(0,0)))
+        self.enviromentExpected.append(call.isTile(Point(2,0)))
         self.enviromentExpected.append(call.getFinishCords())
         self.enviromentExpected.append(call.isTile(Point(1,1)))
 
@@ -325,7 +325,7 @@ class test_Potato(unittest.TestCase):
         self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
         
         self.enviromentExpected.append(call.getStartCords())
-        self.enviromentExpected.append(call.isTile(Point(3,4)))
+        self.enviromentExpected.append(call.isTile(Point(1,4)))
         self.enviromentExpected.append(call.getFinishCords())
         self.enviromentExpected.append(call.isTile(Point(1,5)))
 
@@ -348,7 +348,7 @@ class test_Potato(unittest.TestCase):
         self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
         
         self.enviromentExpected.append(call.getStartCords())
-        self.enviromentExpected.append(call.isTile(Point(1,4)))
+        self.enviromentExpected.append(call.isTile(Point(3,4)))
         self.enviromentExpected.append(call.getFinishCords())
         self.enviromentExpected.append(call.isTile(Point(2,5)))
 
