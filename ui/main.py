@@ -22,7 +22,7 @@ from PygameSoundManager import *
 
 pygame.init()
 sountrack = pygame.mixer.Sound(os.path.join('..', 'bin','Resources', 'sounds', 'killingtime.ogg'))
-sountrack.play(-1)
+#sountrack.play(-1)
 
 screenCords = Point(600, 360)
 screen = pygame.display.set_mode((screenCords.X, screenCords.Y))
@@ -50,7 +50,8 @@ allSprites.add(levelSprite)
 
 clock = pygame.time.Clock()
 
-FPS = 120
+#FPS = 120
+FPS = 5
 
 def CheckQuitEvent():
 	for event in pygame.event.get():

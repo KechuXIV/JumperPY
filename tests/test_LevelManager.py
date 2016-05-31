@@ -11,26 +11,12 @@ sys.path.append(lib_path)
 
 from LevelManager import *
 from mock import MagicMock, Mock, call, NonCallableMock, NonCallableMagicMock
+from MockClass import MockPixelArray, getColor
 from Point import *
 from IImageManager import *
 from ISurfaceManager import *
 from ISpriteManager import *
 
-
-def getColor(r, g, b):
-	if((0,0,0) == (r,g,b)):
-		return "Black"
-	elif((255, 0, 0) == (r,g,b)):
-		return "Red"
-	elif((76, 255, 0) == (r,g,b)):
-		return "Green"
-	else:
-		return "Color"
-		
-class mockPixelArray(object):
-	
-	def __getitem__(self, k):
-		return 5
 
 class test_LevelManager(unittest.TestCase):
 
@@ -91,8 +77,7 @@ class test_LevelManager(unittest.TestCase):
 		self.tile.Width = 30
 		self.tile.Height = 30
 		
-		pixelArray = mockPixelArray()
-		#pixelArray.__getitem__ = Mock(return_value = 5)
+		pixelArray = MockPixelArray()
 		sourceface = Mock()
 		
 		self.imageManager.getPixelArray.return_value = pixelArray
@@ -127,8 +112,7 @@ class test_LevelManager(unittest.TestCase):
 		self.tile.Width = 30
 		self.tile.Height = 30
 		
-		pixelArray = Mock()
-		pixelArray.__getitem__ = Mock(return_value=5)
+		pixelArray = MockPixelArray()
 		sourceface = Mock()
 		
 		self.imageManager.getPixelArray.return_value = pixelArray
@@ -141,17 +125,24 @@ class test_LevelManager(unittest.TestCase):
 		self.surfaceManagerExpects.append(call.getSurface())
 		self.spriteManagerExpects.append(call.updateSpriteFromSurface(0, 0, 600, 360, sourceface))
 		self.spriteManagerExpects.append(call.getSprite())
+
+		self.imageManagerExpects.append(call.loadImage(os.path.join('..', 'bin','Resources','levels', 'jumpering.png')))
+		self.imageManagerExpects.append(call.getImageWidth())
+		self.imageManagerExpects.append(call.getImageHeight())
+		self.imageManagerExpects.append(call.getPixelArray())
+		self.imageManagerExpects.append(call.getImageColor(0, 0, 0))
+		self.imageManagerExpects.append(call.getImageColor(255, 0, 0))
+		self.imageManagerExpects.append(call.getImageColor(76, 255, 0))
+		
+		for i in range(0,240):
+			self.imageManagerExpects.append(call.getPixelArrayItemColor(5))
+			
+		self.imageManagerExpects.append(call.getImageWidth())
+		self.imageManagerExpects.append(call.getImageHeight())	
 		
 		renderedLevel = self.target.goToNextLevel()
-		
-		# No se como hacer para generar el call de pixel array
-		self.imageManagerExpects.extend(self.imageManager.mock_calls)
 		
 		self.assertIsNotNone(renderedLevel)
 
 if __name__ == "__main__":
     unittest.main()
-    
-class C(object):
-    def __getitem__(self, k):
-        return k

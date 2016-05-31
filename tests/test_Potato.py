@@ -356,8 +356,7 @@ class test_Potato(unittest.TestCase):
 
     def test_PotatoShouldDescendIfThereIsNotTileBehind(self):
         startPosition = Point(2,4)
-        expectedPosition = Point(startPosition.X*30,
-            128)
+        expectedPosition = Point(60, 128)
         keysPressed = []
         
         self.enviroment.isTile.side_effect = [False, False]

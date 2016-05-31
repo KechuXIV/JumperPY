@@ -10,11 +10,11 @@ class Potato():
 
 	def __init__(self, screenCords, spriteManager, enviroment, soundManager):
 		self.__SPEED__ = Point(2, 8)
-		self.__SPRITEMANAGER__ = spriteManager
-		self.__SCREEN__ = screenCords
-		self.__WIDTH__ = 30
-		self.__HEIGHT__ = 30
-		self.__ENVIROMENT__ = enviroment
+		self.__spriteManager__ = spriteManager
+		self.__screen__ = screenCords
+		self.__width__ = 30
+		self.__height__ = 30
+		self.__enviroment__ = enviroment
 
 		self.setPotatoOnStartPosition()
 
@@ -50,20 +50,20 @@ class Potato():
 		return self.images[self.actualImageIndex]
 
 	def getSprite(self):
-		return self.__SPRITEMANAGER__.getSprite()
+		return self.__spriteManager__.getSprite()
 
 	def createSprite(self):
 		imagePath = self.getImagePath(self.images[0])
 
-		self.__SPRITEMANAGER__.createSprite(self.ActualPosition.X, self.ActualPosition.Y,
-			self.__WIDTH__, self.__HEIGHT__, imagePath)
+		self.__spriteManager__.createSprite(self.ActualPosition.X, self.ActualPosition.Y,
+			self.__width__, self.__height__, imagePath)
 
 	def endjumpCycle(self):
 		self.isJumping = False
 		self.isGoingDown = False
 
 	def flipSpriteImage(self):
-		return self.__SPRITEMANAGER__.flipSpriteImage()
+		return self.__spriteManager__.flipSpriteImage()
 
 	def jump(self):
 		if(self.isJumping):
@@ -81,7 +81,7 @@ class Potato():
 				self.endjumpCycle()
 				self.stabilizeYPosition()
 			else:
-				if(self.ActualPosition.Y >= self.__SCREEN__.Y):
+				if(self.ActualPosition.Y >= self.__screen__.Y):
 					self.endjumpCycle()
 					self.deathSound.play()
 					self.setPotatoOnStartPosition()
@@ -111,6 +111,7 @@ class Potato():
 			if(not self.isGoingLeft):
 				self.isGoingLeft = True
 			if(not self.thereIsTileLeft()):
+				print(self.ActualPosition.X)
 				self.ActualPosition.X -= self.__SPEED__.X
 				
 		elif(Key.D in keysPressed):
@@ -131,7 +132,7 @@ class Potato():
 			self.isGoingDown = True
 
 	def newLevel(self, enviroment):
-		self.__ENVIROMENT__ = enviroment
+		self.__enviroment__ = enviroment
 
 		self.setPotatoOnStartPosition()
 		self.isJumping = False
@@ -143,12 +144,12 @@ class Potato():
 
 	def hasReachCheckpoint(self):
 		actualCord = Point(abs(self.ActualPosition.X/30), abs(self.ActualPosition.Y/30))
-		self.reachCheckpoint = actualCord == self.__ENVIROMENT__.getFinishCords()
+		self.reachCheckpoint = actualCord == self.__enviroment__.getFinishCords()
 		if(self.reachCheckpoint):
 			self.checkpointSound.play()
 
 	def setPotatoOnStartPosition(self):
-		startCord = self.__ENVIROMENT__.getStartCords()
+		startCord = self.__enviroment__.getStartCords()
 		self.setActualPosition(startCord)
 
 	def setActualPosition(self, point):
@@ -159,26 +160,32 @@ class Potato():
 
 	def stayOnScreen(self):
 		if(self.ActualPosition.X < 0):
-			self.ActualPosition.X = self.__SCREEN__.X
-		elif(self.ActualPosition.X > self.__SCREEN__.X):
+			self.ActualPosition.X = self.__screen__.X
+		elif(self.ActualPosition.X > self.__screen__.X):
 			self.ActualPosition.X = 0
 
 	def thereIsTileBehind(self):
 		behindPosition = Point(round(self.ActualPosition.X/30), round(self.ActualPosition.Y/30) + 1)
-		isTileBehind = self.__ENVIROMENT__.isTile(behindPosition)
-		#print ("isTileBehind: {0}".format(isTileBehind))
+		isTileBehind = self.__enviroment__.isTile(behindPosition)
+		print("ActualPosition {0}".format(self.ActualPosition))
+		print("behindPosition {0}".format(behindPosition))
+		print ("isTileBehind: {0}".format(isTileBehind))
 		return isTileBehind
 		
 	def thereIsTileLeft(self):
 		leftPosition = Point(round(self.ActualPosition.X/30) - 1, round(self.ActualPosition.Y/30))
-		isTileLeft = self.__ENVIROMENT__.isTile(leftPosition)
+		isTileLeft = self.__enviroment__.isTile(leftPosition)
+		print("ActualPosition {0}".format(self.ActualPosition))
+		print("leftPosition {0}".format(leftPosition))
 		print ("isTileLeft: {0}".format(isTileLeft))
 		return isTileLeft
 		
 	def thereIsTileRight(self):
 		rightPosition = Point(round((self.ActualPosition.X/30)) + 1, round(self.ActualPosition.Y/30))
-		isTileRight = self.__ENVIROMENT__.isTile(rightPosition)
-		#print ("isTileRight: {0}".format(isTileRight))
+		isTileRight = self.__enviroment__.isTile(rightPosition)
+		print("ActualPosition {0}".format(self.ActualPosition))
+		print("rightPosition {0}".format(rightPosition))
+		print ("isTileRight: {0}".format(isTileRight))
 		return isTileRight
 
 	def updateImage(self):
@@ -192,7 +199,7 @@ class Potato():
 			self.flipSpriteImage()
 
 	def updateSpriteImage(self, imagePath):
-		return self.__SPRITEMANAGER__.updateSpriteImage(imagePath)
+		return self.__spriteManager__.updateSpriteImage(imagePath)
 
 	def updateSpritePosition(self):
-		return self.__SPRITEMANAGER__.updateSprite(self.ActualPosition.X, self.ActualPosition.Y)
+		return self.__spriteManager__.updateSprite(self.ActualPosition.X, self.ActualPosition.Y)
