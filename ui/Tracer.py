@@ -5,13 +5,13 @@ import os
 from ITracer import ITracer
 
 
-class NullTracer(ITracer):
+class Tracer(ITracer):
 	
 	def __init__(self):
-		super(NullTracer, self).__init__()
+		super(Tracer, self).__init__()
 	
 	def push(self, strToFormat, *args):
-		pass
+		print(strToFormat.format(*list(args)))
 
-	def cls():
-		pass
+	def cls(self):
+		os.system('clear')

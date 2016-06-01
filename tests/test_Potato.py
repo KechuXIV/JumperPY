@@ -18,6 +18,7 @@ from Potato import *
 from mock import Mock, MagicMock, call, NonCallableMock
 from ISoundManager import *
 from ISpriteManager import *
+from NullTracer import *
 
 
 class test_Potato(unittest.TestCase):
@@ -30,12 +31,13 @@ class test_Potato(unittest.TestCase):
         self.spriteManager = Mock(spec=ISpriteManager)
         self.enviroment = Mock(spec=Enviroment)
         self.soundManager = Mock(spec=ISoundManager)
+        self.trace = NullTracer()
         
         startCords = Point(0,0)
         self.enviroment.getStartCords.return_value = startCords
         
         self.target = Potato(self.screen, self.spriteManager, 
-            self.enviroment, self.soundManager)
+            self.enviroment, self.soundManager, self.trace)
         
         pathDeathSound = os.path.join('..', 'bin','Resources', 'sounds', 'death.wav')
         pathJumpSound = os.path.join('..', 'bin','Resources', 'sounds', 'jump.wav')
@@ -132,11 +134,32 @@ class test_Potato(unittest.TestCase):
 
         self.assertTrue(self.target.isStanding)
 
+    def test_MovePotatoJump(self):
+        keysPressed = [Key.Space]
+        startPosition = Point(1,0)
+        expectedPosition = Point(startPosition.X*30, -8)
+            
+        self.enviroment.isTile.side_effect = [False, True]
+
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoJumping.png')))
+        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
+        
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(1,0)))
+        
+        self.soundManagerExpected.append(call.getSound().play())
+
+        self.target.setActualPosition(startPosition)
+        self.target.motion(keysPressed)
+
+        self.assertFalse(self.target.isStanding)
+
     def test_MovePotatoLeft(self):
         keysPressed = [Key.A]
         startPosition = Point(1,0)
-        expectedPosition = Point(startPosition.X*30 - self.target.__SPEED__.X,
-            startPosition.Y)
+        expectedPosition = Point(26, startPosition.Y)
         
         self.enviroment.isTile.side_effect = [False, True]
 
@@ -147,7 +170,7 @@ class test_Potato(unittest.TestCase):
         self.enviromentExpected.append(call.getStartCords())
         self.enviromentExpected.append(call.isTile(Point(0,0)))
         self.enviromentExpected.append(call.getFinishCords())
-        self.enviromentExpected.append(call.isTile(Point(0,1)))
+        self.enviromentExpected.append(call.isTile(Point(1,1)))
         
         self.target.setActualPosition(startPosition)
         self.target.isGoingLeft = False
@@ -179,29 +202,6 @@ class test_Potato(unittest.TestCase):
         self.target.motion(keysPressed)
 
         self.assertFalse(self.target.isGoingLeft)
-        self.assertFalse(self.target.isStanding)
-
-    def test_MovePotatoJump(self):
-        keysPressed = [Key.Space]
-        startPosition = Point(1,0)
-        expectedPosition = Point(startPosition.X*30,
-            startPosition.Y*30 - self.target.__SPEED__.Y)
-            
-        self.enviroment.isTile.side_effect = [False, True]
-
-        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
-        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoJumping.png')))
-        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
-        
-        self.enviromentExpected.append(call.getStartCords())
-        self.enviromentExpected.append(call.getFinishCords())
-        self.enviromentExpected.append(call.isTile(Point(1,0)))
-        
-        self.soundManagerExpected.append(call.getSound().play())
-
-        self.target.setActualPosition(startPosition)
-        self.target.motion(keysPressed)
-
         self.assertFalse(self.target.isStanding)
         
     def test_NewLevel(self):
@@ -309,31 +309,9 @@ class test_Potato(unittest.TestCase):
 
         self.assertEqual(expectedPosition, self.target.ActualPosition)
 
-    def test_ShouldNotMoveIfThereIsTileGoingRight(self):
-        startPosition = Point(2,4)
-        expectedPosition = Point(58, startPosition.Y*30)
-        keysPressed = [Key.A]
-        
-        self.enviroment.isTile.side_effect = [False, True]
-
-        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
-        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoWalking.png')))
-        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
-        
-        self.enviromentExpected.append(call.getStartCords())
-        self.enviromentExpected.append(call.isTile(Point(1,4)))
-        self.enviromentExpected.append(call.getFinishCords())
-        self.enviromentExpected.append(call.isTile(Point(1,5)))
-
-        self.target.setActualPosition(startPosition)
-
-        self.target.motion(keysPressed)
-        
-        self.assertEqual(self.target.ActualPosition, expectedPosition)
-        
     def test_ShouldNotMoveIfThereIsTileGoingLeft(self):
         startPosition = Point(2,4)
-        expectedPosition = Point(62, startPosition.Y*30)
+        expectedPosition = Point(64, startPosition.Y*30)
         keysPressed = [Key.D]
         
         self.enviroment.isTile.side_effect = [False, True]
@@ -354,6 +332,28 @@ class test_Potato(unittest.TestCase):
         
         self.assertEqual(self.target.ActualPosition, expectedPosition)
 
+    def test_ShouldNotMoveIfThereIsTileGoingRight(self):
+        startPosition = Point(2,4)
+        expectedPosition = Point(56, startPosition.Y*30)
+        keysPressed = [Key.A]
+        
+        self.enviroment.isTile.side_effect = [False, True]
+
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
+        self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoWalking.png')))
+        self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
+        
+        self.enviromentExpected.append(call.getStartCords())
+        self.enviromentExpected.append(call.isTile(Point(1,4)))
+        self.enviromentExpected.append(call.getFinishCords())
+        self.enviromentExpected.append(call.isTile(Point(2,5)))
+
+        self.target.setActualPosition(startPosition)
+
+        self.target.motion(keysPressed)
+        
+        self.assertEqual(self.target.ActualPosition, expectedPosition)
+        
     def test_PotatoShouldDescendIfThereIsNotTileBehind(self):
         startPosition = Point(2,4)
         expectedPosition = Point(60, 128)

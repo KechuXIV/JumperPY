@@ -8,13 +8,14 @@ from Key import *
 
 class Potato():
 
-	def __init__(self, screenCords, spriteManager, enviroment, soundManager):
-		self.__SPEED__ = Point(2, 8)
+	def __init__(self, screenCords, spriteManager, enviroment, soundManager, tracer):
+		self.__SPEED__ = Point(4, 6)
 		self.__spriteManager__ = spriteManager
 		self.__screen__ = screenCords
 		self.__width__ = 30
 		self.__height__ = 30
 		self.__enviroment__ = enviroment
+		self.__tracer__ = tracer
 
 		self.setPotatoOnStartPosition()
 
@@ -108,16 +109,13 @@ class Potato():
 	def moveOnXAxis(self, keysPressed):
 		if(Key.A in keysPressed):
 			self.isStanding = False
-			if(not self.isGoingLeft):
-				self.isGoingLeft = True
+			self.isGoingLeft = True
 			if(not self.thereIsTileLeft()):
-				print(self.ActualPosition.X)
 				self.ActualPosition.X -= self.__SPEED__.X
 				
 		elif(Key.D in keysPressed):
 			self.isStanding = False
-			if(self.isGoingLeft):
-				self.isGoingLeft = False
+			self.isGoingLeft = False
 			if(not self.thereIsTileRight()):
 				self.ActualPosition.X += self.__SPEED__.X
 				
@@ -143,7 +141,7 @@ class Potato():
 		self.actualImageIndex = 0
 
 	def hasReachCheckpoint(self):
-		actualCord = Point(abs(self.ActualPosition.X/30), abs(self.ActualPosition.Y/30))
+		actualCord = Point(round(self.ActualPosition.X/30), round(self.ActualPosition.Y/30))
 		self.reachCheckpoint = actualCord == self.__enviroment__.getFinishCords()
 		if(self.reachCheckpoint):
 			self.checkpointSound.play()
@@ -165,27 +163,24 @@ class Potato():
 			self.ActualPosition.X = 0
 
 	def thereIsTileBehind(self):
-		behindPosition = Point(round(self.ActualPosition.X/30), round(self.ActualPosition.Y/30) + 1)
+		behindPosition = Point(round((self.ActualPosition.X+10)/30), round(self.ActualPosition.Y/30) + 1)
 		isTileBehind = self.__enviroment__.isTile(behindPosition)
-		print("ActualPosition {0}".format(self.ActualPosition))
-		print("behindPosition {0}".format(behindPosition))
-		print ("isTileBehind: {0}".format(isTileBehind))
+		self.__tracer__.push("ActualPosition: {0}\n\rBehindPosition: {1}\n\risTileBehind: {2}",
+			self.ActualPosition, behindPosition, isTileBehind)
 		return isTileBehind
 		
 	def thereIsTileLeft(self):
-		leftPosition = Point(round(self.ActualPosition.X/30) - 1, round(self.ActualPosition.Y/30))
+		leftPosition = Point(round((self.ActualPosition.X-2)/30), round(self.ActualPosition.Y/30))
 		isTileLeft = self.__enviroment__.isTile(leftPosition)
-		print("ActualPosition {0}".format(self.ActualPosition))
-		print("leftPosition {0}".format(leftPosition))
-		print ("isTileLeft: {0}".format(isTileLeft))
+		self.__tracer__.push("ActualPosition: {0}\n\rLeftPosition: {1}\n\rIsTileLeft: {2}",
+			self.ActualPosition, leftPosition, isTileLeft)
 		return isTileLeft
 		
 	def thereIsTileRight(self):
 		rightPosition = Point(round((self.ActualPosition.X/30)) + 1, round(self.ActualPosition.Y/30))
 		isTileRight = self.__enviroment__.isTile(rightPosition)
-		print("ActualPosition {0}".format(self.ActualPosition))
-		print("rightPosition {0}".format(rightPosition))
-		print ("isTileRight: {0}".format(isTileRight))
+		self.__tracer__.push("ActualPosition: {0}\n\rRightPosition: {1}\n\rIsTileRight: {2}",
+			self.ActualPosition, rightPosition, isTileRight)
 		return isTileRight
 
 	def updateImage(self):

@@ -13,6 +13,7 @@ from Potato import *
 from LevelManager import *
 from Point import *
 from Key import *
+from Tracer import *
 
 from PygameSpriteManager import *
 from PygameImageManager import *
@@ -41,8 +42,9 @@ checkpoint = Checkpoint(pygameImageManager)
 levelManager = LevelManager(pygameImageManager, pygameSourceManager, levelManagerPygameSpriteManager, tile, checkpoint)
 levelSprite = levelManager.getRenderedLevel()
 enviroment = levelManager.getEnviroment()
+tracer = Tracer()
 
-potato = Potato(screenCords, potatoPygameSpriteManager, enviroment, pygameSoundManager)
+potato = Potato(screenCords, potatoPygameSpriteManager, enviroment, pygameSoundManager, tracer)
 
 allSprites = pygame.sprite.Group()
 allSprites.add(potato.getSprite())
@@ -50,8 +52,8 @@ allSprites.add(levelSprite)
 
 clock = pygame.time.Clock()
 
-#FPS = 120
-FPS = 5
+FPS = 60
+#FPS = 5
 
 def CheckQuitEvent():
 	for event in pygame.event.get():
@@ -106,6 +108,8 @@ def Logic():
 		potato.newLevel(enviroment)
 
 while True:
+	tracer.cls()
+
 	CheckQuitEvent()
 
 	Logic()
