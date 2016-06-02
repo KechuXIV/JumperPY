@@ -5,7 +5,7 @@ import os
 from Point import *
 
 
-class Enviroment():
+class Enviroment(object):
 
 	def __init__(self, starCords, finishCords, tiles):
 		self.starCords = starCords

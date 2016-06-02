@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-class Key():
+class Key(object):
 
 	A = 0
 	D = 1

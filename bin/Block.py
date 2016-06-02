@@ -3,7 +3,6 @@
 
 
 class Block(object):
-    __slot__ = ['Width', 'Height', 'Image']
     
     def __init__(self, imageManager, path):
         self.Width = 30

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
+from ITracer import ITracer
 
 class Tracer(ITracer):
 	
@@ -9,8 +10,8 @@ class Tracer(ITracer):
 		super(Tracer, self).__init__()
 	
 	def push(self, strToFormat, *args):
-		cls()
+		self.cls()
 		print(strToFormat.format(*list(args)))
 
-	def cls():
+	def cls(self):
 		os.system('cls' if os.name=='nt' else 'clear')

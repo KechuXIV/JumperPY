@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-class ISpriteManager():
+class ISpriteManager(object):
 
 	def createSprite(self, xPosition, yPosition, width, height, imagePath):
 		raise NotImplementedError("Should have implemented this")

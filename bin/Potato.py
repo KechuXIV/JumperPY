@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 import os
 
-from Point import *
-from Key import *
+from Point import Point
+from Key import Key
 
 
-class Potato():
+class Potato(object):
 
 	def __init__(self, screenCords, spriteManager, enviroment, soundManager, tracer):
 		self.__SPEED__ = Point(4, 6)

@@ -11,14 +11,14 @@ sys.path.append(lib_path)
 lib_path = os.path.abspath(os.path.join('..', 'ui'))
 sys.path.append(lib_path)
 
-from Enviroment import *
-from Key import *
-from Point import *
-from Potato import *
+from Enviroment import Enviroment
+from Key import Key
+from Point import Point
+from Potato import Potato
 from mock import Mock, MagicMock, call, NonCallableMock
-from ISoundManager import *
-from ISpriteManager import *
-from NullTracer import *
+from ISoundManager import ISoundManager
+from ISpriteManager import ISpriteManager
+from NullTracer import NullTracer
 
 
 class test_Potato(unittest.TestCase):
@@ -77,7 +77,7 @@ class test_Potato(unittest.TestCase):
         keysPressed = [Key.A]
 
         self.target.setActualPosition(startCord)
-        sprite = self.target.motion(keysPressed)
+        self.target.motion(keysPressed)
         
         self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
         self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoWalking.png')))
@@ -100,7 +100,7 @@ class test_Potato(unittest.TestCase):
         keysPressed = [Key.D]
 
         self.target.setActualPosition(startCord)
-        sprite = self.target.motion(keysPressed)
+        self.target.motion(keysPressed)
         
         self.spriteManagerExpected.append(call.createSprite(0, 0, 30, 30, os.path.join('..', 'bin','Resources', 'potatoStanding.png')))
         self.spriteManagerExpected.append(call.updateSpriteImage(os.path.join('..', 'bin','Resources', 'potatoWalking.png')))
@@ -206,7 +206,6 @@ class test_Potato(unittest.TestCase):
         
     def test_NewLevel(self):
         startPosition = Point(1,0)
-        keysPressed = [Key.Space]
         newLevelStartCords = Point(5,5)
         expectedPosition = Point(newLevelStartCords.X*30, newLevelStartCords.Y*30)
 

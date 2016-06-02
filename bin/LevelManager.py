@@ -2,12 +2,10 @@
 # -*- coding: utf-8 -*-
 import os
 
-from Checkpoint import *
-from Enviroment import *
-from Tile import *
+from Enviroment import Enviroment
 
 
-class LevelManager():
+class LevelManager(object):
 
 	def __init__(self, imageManager, surcefaceManager,
 		spriteManager, tile, checkpoint):

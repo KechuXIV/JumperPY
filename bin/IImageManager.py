@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-class IImageManager():
+class IImageManager(object):
 
 	def createImage(self, width, height, imagePath):
 		raise NotImplementedError("Should have implemented this")

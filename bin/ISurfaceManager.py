@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-class ISurfaceManager():
+class ISurfaceManager(object):
 
 	def createSurface(self, width, height):
 		raise NotImplementedError("Should have implemented this")
