@@ -4,13 +4,11 @@ import sys
 import os
 import unittest
 
-lib_path = os.path.abspath(os.path.join('bin'))
-sys.path.append(lib_path)
-lib_path = os.path.abspath(os.path.join('..', 'bin'))
-sys.path.append(lib_path)
+sys.path.append(os.path.abspath(os.path.join('bin')))
+sys.path.append(os.path.abspath(os.path.join('..','bin')))
 
-from Enviroment import *
-from Point import *
+from Enviroment import Enviroment
+from Point import Point
 
 class test_Enviroment(unittest.TestCase):
 

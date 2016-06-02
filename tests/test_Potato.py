@@ -4,12 +4,8 @@ import sys
 import os
 import unittest
 
-lib_path = os.path.abspath(os.path.join('bin'))
-sys.path.append(lib_path)
-lib_path = os.path.abspath(os.path.join('..', 'bin'))
-sys.path.append(lib_path)
-lib_path = os.path.abspath(os.path.join('..', 'ui'))
-sys.path.append(lib_path)
+sys.path.append(os.path.abspath(os.path.join('bin')))
+sys.path.append(os.path.abspath(os.path.join('..','bin')))
 
 from Enviroment import Enviroment
 from Key import Key
@@ -24,10 +20,7 @@ from NullTracer import NullTracer
 class test_Potato(unittest.TestCase):
 
     def setUp(self):
-        screenWidth = 600
-        screenHeight = 300
-
-        self.screen = Point(screenWidth, screenHeight)
+        self.screen = Point(600, 300)
         self.spriteManager = Mock(spec=ISpriteManager)
         self.enviroment = Mock(spec=Enviroment)
         self.soundManager = Mock(spec=ISoundManager)

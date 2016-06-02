@@ -4,10 +4,8 @@ import sys
 import os
 import unittest
 
-lib_path = os.path.abspath(os.path.join('..', 'bin'))
-sys.path.append(lib_path)
-lib_path = os.path.abspath(os.path.join('..', 'ui'))
-sys.path.append(lib_path)
+sys.path.append(os.path.abspath(os.path.join('bin')))
+sys.path.append(os.path.abspath(os.path.join('..','bin')))
 
 from LevelManager import *
 from mock import MagicMock, Mock, call, NonCallableMock, NonCallableMagicMock
