@@ -4,10 +4,7 @@ import pygame
 import os
 import sys
 
-lib_path = os.path.abspath(os.path.join('..', 'bin'))
-sys.path.append(lib_path)
-
-from ISurfaceManager import *
+from ..bin import ISurfaceManager
 
 
 class PygameSurfaceManager(ISurfaceManager):

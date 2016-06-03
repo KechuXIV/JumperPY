@@ -4,9 +4,6 @@ import sys
 import os
 import unittest
 
-#sys.path.append(os.path.abspath(os.path.join('bin')))
-#sys.path.append(os.path.abspath(os.path.join('..','bin')))
-
 from ..bin import IImageManager, Tile
 from mock import MagicMock, Mock, call
 

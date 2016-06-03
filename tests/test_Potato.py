@@ -4,11 +4,8 @@ import sys
 import os
 import unittest
 
-#sys.path.append(os.path.abspath(os.path.join('bin')))
-#sys.path.append(os.path.abspath(os.path.join('..','bin')))
-
-from ..bin import Enviroment, Key, Point, Potato, ISoundManager, ISpriteManager, NullTracer
 from mock import Mock, MagicMock, call, NonCallableMock
+from ..bin import Enviroment, Key, Point, Potato, ISoundManager, ISpriteManager, NullTracer
 
 
 class test_Potato(unittest.TestCase):
@@ -366,6 +363,3 @@ class test_Potato(unittest.TestCase):
         self.assertFalse(self.target.isStanding)
         self.assertTrue(self.target.isGoingDown)
         self.assertTrue(self.target.isJumping)
-
-if __name__ == "__main__":
-    unittest.main()

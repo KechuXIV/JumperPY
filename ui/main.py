@@ -9,7 +9,6 @@ from PygameImageManager import PygameImageManager
 from PygameSoundManager import PygameSoundManager
 from PygameSpriteManager import PygameSpriteManager
 from PygameSurfaceManager import PygameSurfaceManager
-from Tracer import Tracer
 
 
 pygame.init()
