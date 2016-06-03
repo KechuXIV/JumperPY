@@ -4,16 +4,9 @@ import sys
 import os
 import unittest
 
-sys.path.append(os.path.abspath(os.path.join('bin')))
-sys.path.append(os.path.abspath(os.path.join('..','bin')))
-
-from LevelManager import *
+from . import MockPixelArray, getColor
+from ..bin import LevelManager, Point, IImageManager, ISurfaceManager, ISpriteManager
 from mock import MagicMock, Mock, call, NonCallableMock, NonCallableMagicMock
-from MockClass import MockPixelArray, getColor
-from Point import *
-from IImageManager import *
-from ISurfaceManager import *
-from ISpriteManager import *
 
 
 class test_LevelManager(unittest.TestCase):

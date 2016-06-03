@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-from Point import Point
-from Key import Key
+from . import Point, Key
 
 class Intro(object):
     

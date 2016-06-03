@@ -4,22 +4,12 @@ import pygame
 import os
 import sys
 
-lib_path = os.path.abspath(os.path.join('..', 'bin'))
-sys.path.append(lib_path)
-
-from Checkpoint import Checkpoint
-from Intro import Intro
-from Key import Key
-from LevelManager import LevelManager
-from Point import Point
-from Potato import Potato
-from Tile import Tile
-from Tracer import Tracer
-
-from PygameSpriteManager import PygameSpriteManager
+from ..bin import Checkpoint, Intro, Key, LevelManager, Point, Potato, Tile, Tracer
 from PygameImageManager import PygameImageManager
-from PygameSurfaceManager import PygameSurfaceManager
 from PygameSoundManager import PygameSoundManager
+from PygameSpriteManager import PygameSpriteManager
+from PygameSurfaceManager import PygameSurfaceManager
+from Tracer import Tracer
 
 
 pygame.init()
@@ -49,14 +39,11 @@ intro = Intro(screenCords, potatoPygameSpriteManager)
 gameStart = False
 
 allSprites = pygame.sprite.Group()
-#allSprites.add(potato.getSprite())
-#allSprites.add(levelSprite)
 allSprites.add(intro)
 
 clock = pygame.time.Clock()
 
 FPS = 60
-#FPS = 5
 
 def CheckQuitEvent():
 	for event in pygame.event.get():

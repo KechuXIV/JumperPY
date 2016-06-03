@@ -7,10 +7,8 @@ import unittest
 sys.path.append(os.path.abspath(os.path.join('bin')))
 sys.path.append(os.path.abspath(os.path.join('..','bin')))
 
-from Intro import Intro
-from ISpriteManager import ISpriteManager
+from ..bin import Intro, ISpriteManager, Point
 from mock import Mock, MagicMock, call, NonCallableMock
-from Point import Point
 
 class test_Intro(unittest.TestCase):
     

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-from Enviroment import Enviroment
+from . import Enviroment
 
 
 class LevelManager(object):

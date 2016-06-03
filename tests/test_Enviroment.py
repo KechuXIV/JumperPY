@@ -7,8 +7,7 @@ import unittest
 sys.path.append(os.path.abspath(os.path.join('bin')))
 sys.path.append(os.path.abspath(os.path.join('..','bin')))
 
-from Enviroment import Enviroment
-from Point import Point
+from ..bin import Enviroment, Point
 
 class test_Enviroment(unittest.TestCase):
 

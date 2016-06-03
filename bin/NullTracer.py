@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-from ITracer import ITracer
+from . import ITracer
 
 
 class NullTracer(ITracer):
@@ -13,5 +13,5 @@ class NullTracer(ITracer):
 	def push(self, strToFormat, *args):
 		pass
 
-	def cls():
+	def cls(self):
 		pass

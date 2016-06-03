@@ -4,10 +4,7 @@ import sys
 import os
 import unittest
 
-sys.path.append(os.path.abspath(os.path.join('bin')))
-sys.path.append(os.path.abspath(os.path.join('..','bin')))
-
-from Point import *
+from ..bin import Point
 
 
 class test_Point(unittest.TestCase):

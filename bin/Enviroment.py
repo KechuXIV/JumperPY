@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-from Point import *
+from . import Point
 
 
 class Enviroment(object):

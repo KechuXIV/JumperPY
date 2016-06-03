@@ -4,17 +4,11 @@ import sys
 import os
 import unittest
 
-sys.path.append(os.path.abspath(os.path.join('bin')))
-sys.path.append(os.path.abspath(os.path.join('..','bin')))
+#sys.path.append(os.path.abspath(os.path.join('bin')))
+#sys.path.append(os.path.abspath(os.path.join('..','bin')))
 
-from Enviroment import Enviroment
-from Key import Key
-from Point import Point
-from Potato import Potato
+from ..bin import Enviroment, Key, Point, Potato, ISoundManager, ISpriteManager, NullTracer
 from mock import Mock, MagicMock, call, NonCallableMock
-from ISoundManager import ISoundManager
-from ISpriteManager import ISpriteManager
-from NullTracer import NullTracer
 
 
 class test_Potato(unittest.TestCase):
