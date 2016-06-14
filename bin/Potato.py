@@ -2,20 +2,19 @@
 # -*- coding: utf-8 -*-
 import os
 
-from . import Point, Key
+from . import Point, Key, ResourcePath as rs
 
 
 class Potato(object):
 
 	def __init__(self, screenCords, spriteManager, enviroment, soundManager, tracer):
-		self.__SPEED = Point(4, 6)
+		self.__speed = Point(4, 6)
 		self.__spriteManager = spriteManager
 		self.__screen = screenCords
-		self.__width = 30
-		self.__height = 30
+		self.__measure = Point(30, 30)
 		self.__enviroment = enviroment
 		self.__tracer = tracer
-		self.__images = ['potatoStanding.png', 'potatoWalking.png', 'potatoJumping.png']
+		self.__images = [rs.POTATO_STANDING, rs.POTATO_WALKING, rs.POTATO_JUMPING]
 
 		self.setPotatoOnStartPosition()
 
@@ -25,15 +24,12 @@ class Potato(object):
 		self.isStanding = True
 		self.reachCheckpoint = False
 		self.actualImageIndex = 0
-
-		self.__deathSound = soundManager.getSound(os.path.join('JumperPY','bin','Resources', 'sounds', 'death.wav'))
-		self.__jumpSound = soundManager.getSound(os.path.join('JumperPY','bin','Resources', 'sounds', 'jump.wav'))
-		self.__checkpointSound = soundManager.getSound(os.path.join('JumperPY','bin','Resources', 'sounds', 'checkpoint.wav'))
+				
+		self.__deathSound = soundManager.getSound(rs.POTATO_DEATHSOUND)
+		self.__jumpSound = soundManager.getSound(rs.POTATO_JUMPSOUND)				
+		self.__checkpointSound = soundManager.getSound(rs.POTATO_CHECKPOINTSOUND)
 
 		self.createSprite()
-		
-	def getImagePath(self, image):
-		return os.path.join('JumperPY', 'bin','Resources', image)
 
 	def getImageToShow(self):
 		image = None
@@ -53,10 +49,10 @@ class Potato(object):
 		return self.__spriteManager.getSprite()
 
 	def createSprite(self):
-		imagePath = self.getImagePath(self.__images[0])
+		imagePath = self.__images[0]
 
 		self.__spriteManager.createSprite(self.ActualPosition.X, self.ActualPosition.Y,
-			self.__width, self.__height, imagePath)
+			self.__measure.X, self.__measure.Y, imagePath)
 
 	def endjumpCycle(self):
 		self.isJumping = False
@@ -68,14 +64,14 @@ class Potato(object):
 	def jump(self):
 		if(self.isJumping):
 			if(self.isGoingDown):
-				self.ActualPosition.Y += self.__SPEED.Y
-				self.__SPEED.Y += 0.4
+				self.ActualPosition.Y += self.__speed.Y
+				self.__speed.Y += 0.4
 			else:
-				if(self.__SPEED.Y <= 0):
+				if(self.__speed.Y <= 0):
 					self.isGoingDown = True
 				else:
-					self.ActualPosition.Y -= self.__SPEED.Y
-					self.__SPEED.Y -= 0.4
+					self.ActualPosition.Y -= self.__speed.Y
+					self.__speed.Y -= 0.4
 
 			if(self.thereIsTileBehind() and self.isGoingDown):
 				self.endjumpCycle()
@@ -92,7 +88,7 @@ class Potato(object):
 			self.__jumpSound.play()
 			self.isStanding = False
 			self.isJumping = True
-			self.__SPEED.Y = 8
+			self.__speed.Y = 8
 
 	def motion(self, keysPressed):
 		self.isStanding = True
@@ -110,13 +106,13 @@ class Potato(object):
 			self.isStanding = False
 			self.isGoingLeft = True
 			if(not self.thereIsTileLeft()):
-				self.ActualPosition.X -= self.__SPEED.X
+				self.ActualPosition.X -= self.__speed.X
 				
 		elif(Key.D in keysPressed):
 			self.isStanding = False
 			self.isGoingLeft = False
 			if(not self.thereIsTileRight()):
-				self.ActualPosition.X += self.__SPEED.X
+				self.ActualPosition.X += self.__speed.X
 				
 		self.hasReachCheckpoint()
 		self.updateImage()
@@ -183,10 +179,8 @@ class Potato(object):
 		return isTileRight
 
 	def updateImage(self):
-		image = self.getImageToShow()
+		imagePath = self.getImageToShow()
 		
-		imagePath = self.getImagePath(image)
-
 		self.updateSpriteImage(imagePath)
 
 		if(not self.isGoingLeft):
@@ -197,3 +191,4 @@ class Potato(object):
 
 	def updateSpritePosition(self):
 		return self.__spriteManager.updateSprite(self.ActualPosition.X, self.ActualPosition.Y)
+		

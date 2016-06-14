@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 import os
 
-from . import Block
+from . import Block, ResourcePath as rs
 
 
 class Tile(Block):
 
 	def __init__(self, imageManager):
-		Block.__init__(self, imageManager, os.path.join('JumperPY','bin','Resources', 'tile.png'))
+		Block.__init__(self, imageManager, rs.TILE_IMAGE)

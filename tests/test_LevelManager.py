@@ -5,7 +5,7 @@ import os
 import unittest
 
 from . import MockPixelArray, getColor
-from ..bin import LevelManager, Point, IImageManager, ISurfaceManager, ISpriteManager
+from ..bin import LevelManager, Point, IImageManager, ISurfaceManager, ISpriteManager, ResourcePath as rs
 from mock import MagicMock, Mock, call, NonCallableMock, NonCallableMagicMock
 
 
@@ -52,18 +52,11 @@ class test_LevelManager(unittest.TestCase):
 		self.assertEqual(cm.exception.message, "Level not rendered")
 
 	def test_GetLevel(self):
-		expectedLevel = "leap_of_faith"
+		expectedLevel = rs.LEVEL_LEAP_OF_FAITH
 		
 		actualLevel = self.target.getLevel()
 
 		self.assertEqual(actualLevel, expectedLevel)
-
-	def test_GetLevelPath(self):
-		expectedPath = "JumperPY/bin/Resources/levels/leap_of_faith.png"
-		
-		path = self.target.getLevelPath()
-
-		self.assertEqual(path, expectedPath)
 		
 	def test_GetRenderedLevel(self):
 		self.tile.Width = 30
@@ -78,7 +71,7 @@ class test_LevelManager(unittest.TestCase):
 		self.imageManager.getImageColor.side_effect = getColor
 		self.surfaceManager.getSurface.return_value = sourceface
 		
-		self.imageManagerExpects.append(call.loadImage(os.path.join('JumperPY', 'bin','Resources','levels', 'leap_of_faith.png')))
+		self.imageManagerExpects.append(call.loadImage(rs.LEVEL_LEAP_OF_FAITH))
 		self.imageManagerExpects.append(call.getImageWidth())
 		self.imageManagerExpects.append(call.getImageHeight())
 		self.imageManagerExpects.append(call.getPixelArray())
@@ -118,7 +111,7 @@ class test_LevelManager(unittest.TestCase):
 		self.spriteManagerExpects.append(call.updateSpriteFromSurface(0, 0, 600, 360, sourceface))
 		self.spriteManagerExpects.append(call.getSprite())
 
-		self.imageManagerExpects.append(call.loadImage(os.path.join('JumperPY', 'bin','Resources','levels', 'jumpering.png')))
+		self.imageManagerExpects.append(call.loadImage(rs.LEVEL_JUMPERING))
 		self.imageManagerExpects.append(call.getImageWidth())
 		self.imageManagerExpects.append(call.getImageHeight())
 		self.imageManagerExpects.append(call.getPixelArray())

@@ -4,7 +4,7 @@ import pygame
 import os
 import sys
 
-from ..bin import Checkpoint, Intro, Key, LevelManager, Point, Potato, Tile, Tracer, NullTracer
+from ..bin import Checkpoint, Intro, Key, LevelManager, Point, Potato, Tile, Tracer, NullTracer, ResourcePath as rs
 from PygameImageManager import PygameImageManager
 from PygameSoundManager import PygameSoundManager
 from PygameSpriteManager import PygameSpriteManager
@@ -12,8 +12,8 @@ from PygameSurfaceManager import PygameSurfaceManager
 
 
 pygame.init()
-sountrack = pygame.mixer.Sound(os.path.join('..', 'bin','Resources', 'sounds', 'killingtime.ogg'))
-#sountrack.play(-1)
+sountrack = pygame.mixer.Sound(rs.SOUNDTRACK)
+sountrack.play(-1)
 
 screenCords = Point(600, 360)
 screen = pygame.display.set_mode((screenCords.X, screenCords.Y))

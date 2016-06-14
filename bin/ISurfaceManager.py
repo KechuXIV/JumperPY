@@ -11,4 +11,4 @@ class ISurfaceManager(object):
 		raise NotImplementedError("Should have implemented this")
 
 	def blitIntoSurface(self, image, width, height):
-		raise NotImplementedError("Should have implemented this")	
+		raise NotImplementedError("Should have implemented this")

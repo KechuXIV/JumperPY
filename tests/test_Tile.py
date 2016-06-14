@@ -4,7 +4,7 @@ import sys
 import os
 import unittest
 
-from ..bin import IImageManager, Tile
+from ..bin import IImageManager, Tile, ResourcePath as rs
 from mock import MagicMock, Mock, call
 
 
@@ -24,7 +24,7 @@ class test_Tile(unittest.TestCase):
 		expectedHeight = 30
 		expectedWidth = 30
 
-		self.imageManagerExpects.append(call.createImage(30, 30, os.path.join('JumperPY', 'bin','Resources', 'tile.png')))
+		self.imageManagerExpects.append(call.createImage(30, 30, rs.TILE_IMAGE))
 
 		height = self.target.Height
 		witdh = self.target.Width
@@ -33,7 +33,7 @@ class test_Tile(unittest.TestCase):
 		self.assertEqual(witdh, expectedWidth)
 
 	def test_GetTileImage(self):
-		self.imageManagerExpects.append(call.createImage(30, 30, os.path.join('JumperPY', 'bin','Resources', 'tile.png')))
+		self.imageManagerExpects.append(call.createImage(30, 30, rs.TILE_IMAGE))
 
 		image = self.target.Image
 		

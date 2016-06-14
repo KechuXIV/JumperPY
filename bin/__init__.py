@@ -14,3 +14,4 @@ from Point import Point
 from Potato import Potato
 from Tile import Tile
 from Tracer import Tracer
+from ResourcePath import *

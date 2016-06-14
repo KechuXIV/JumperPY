@@ -16,3 +16,4 @@ class MockPixelArray(object):
 	
 	def __getitem__(self, k):
 		return 5
+		
