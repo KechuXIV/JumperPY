@@ -28,7 +28,7 @@ class test_Intro(unittest.TestCase):
         
         sprite = self.target.getSprite()
 
-        self.spriteManagerExpected.append(call.createSprite(0, 0, 600, 300, '../bin/Resources/menu.png'))
+        self.spriteManagerExpected.append(call.createSprite(0, 0, 600, 300, 'JumperPY/bin/Resources/menu.png'))
         self.spriteManagerExpected.append(call.getSprite())
     
         self.assertIsNotNone(spriteMock)

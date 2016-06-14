@@ -24,7 +24,7 @@ class test_Tile(unittest.TestCase):
 		expectedHeight = 30
 		expectedWidth = 30
 
-		self.imageManagerExpects.append(call.createImage(30, 30, os.path.join('..', 'bin','Resources', 'tile.png')))
+		self.imageManagerExpects.append(call.createImage(30, 30, os.path.join('JumperPY', 'bin','Resources', 'tile.png')))
 
 		height = self.target.Height
 		witdh = self.target.Width
@@ -33,7 +33,7 @@ class test_Tile(unittest.TestCase):
 		self.assertEqual(witdh, expectedWidth)
 
 	def test_GetTileImage(self):
-		self.imageManagerExpects.append(call.createImage(30, 30, os.path.join('..', 'bin','Resources', 'tile.png')))
+		self.imageManagerExpects.append(call.createImage(30, 30, os.path.join('JumperPY', 'bin','Resources', 'tile.png')))
 
 		image = self.target.Image
 		

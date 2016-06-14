@@ -3,6 +3,7 @@
 import os
 
 from . import Enviroment
+from .Point import Point
 
 
 class LevelManager(object):
@@ -14,7 +15,7 @@ class LevelManager(object):
 		self.surfaceManager = surcefaceManager
 		self.__actualLevel = 0
 		self.__sprite = None
-		self.__enviroment = None
+		self.enviroment = None
 
 		self.__levels = self.getLevels()
 		self.__tile = tile
@@ -27,15 +28,16 @@ class LevelManager(object):
 		self.spriteManager.createSpriteFromSurface(0, 0, width*self.__tile.Width, height*self.__tile.Height, sourceface)
 
 	def getEnviroment(self):
-		if self.__enviroment is None:
+		print("Cosa{0}".format(self.enviroment is None))
+		if self.enviroment is None:
 			raise Exception("Level not rendered")
-		return self.__enviroment
+		return self.enviroment
 
 	def getLevel(self):
 		return self.__levels[self.__actualLevel]
 
 	def getLevelPath(self):
-		return os.path.join('..', 'bin','Resources','levels', self.getLevel() + '.png')
+		return os.path.join('JumperPY', 'bin','Resources','levels', self.getLevel() + '.png')
 
 	def getLevels(self):
 		levels = []
@@ -133,7 +135,7 @@ class LevelManager(object):
 						self.surfaceManager.blitIntoSurface(self.__checkpoint.Image, x*self.__tile.Width, y*self.__tile.Height)
 						finishCord = Point(x, y)
 
-		self.__enviroment = Enviroment(startCord, finishCord, tilesCords)
+		self.enviroment = Enviroment(startCord, finishCord, tilesCords)
 
 	def updateSpriteFromSurface(self):
 		sourceface = self.surfaceManager.getSurface()

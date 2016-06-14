@@ -8,4 +8,4 @@ from . import Block
 class Checkpoint(Block):
 
 	def __init__(self, imageManager):
-		Block.__init__(self, imageManager, os.path.join('..', 'bin','Resources', 'checkpoint.png'))
+		Block.__init__(self, imageManager, os.path.join('JumperPY','bin','Resources', 'checkpoint.png'))

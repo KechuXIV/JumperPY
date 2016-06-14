@@ -4,7 +4,7 @@ import pygame
 import os
 import sys
 
-from ..bin import Checkpoint, Intro, Key, LevelManager, Point, Potato, Tile, Tracer
+from ..bin import Checkpoint, Intro, Key, LevelManager, Point, Potato, Tile, Tracer, NullTracer
 from PygameImageManager import PygameImageManager
 from PygameSoundManager import PygameSoundManager
 from PygameSpriteManager import PygameSpriteManager
@@ -20,25 +20,26 @@ screen = pygame.display.set_mode((screenCords.X, screenCords.Y))
 
 pygameSoundManager = PygameSoundManager()
 potatoPygameSpriteManager = PygameSpriteManager()
+levelManagerPygameSpriteManager = PygameSpriteManager()
+introPygameSpriteManager = PygameSpriteManager()
 pygameImageManager = PygameImageManager()
 pygameSourceManager = PygameSurfaceManager()
 
 checkpoint = Checkpoint(pygameImageManager)
-levelManagerPygameSpriteManager = PygameSpriteManager()
 tile = Tile(pygameImageManager)
 
 levelManager = LevelManager(pygameImageManager, pygameSourceManager, levelManagerPygameSpriteManager, tile, checkpoint)
 levelSprite = levelManager.getRenderedLevel()
 enviroment = levelManager.getEnviroment()
-tracer = Tracer()
+tracer = NullTracer()
 potato = Potato(screenCords, potatoPygameSpriteManager, enviroment, pygameSoundManager, tracer)
-intro = Intro(screenCords, potatoPygameSpriteManager)
+intro = Intro(screenCords, introPygameSpriteManager)
 
-
-gameStart = False
+introSprite = intro.getSprite()
+potatoSprite = potato.getSprite()
 
 allSprites = pygame.sprite.Group()
-allSprites.add(intro)
+allSprites.add(introSprite)
 
 clock = pygame.time.Clock()
 
@@ -79,15 +80,15 @@ def UpdateWindow():
 	pygame.display.flip()
 	
 def startGame():
-	gameStart = True
-	allSprites = pygame.sprite.Group()
-	allSprites.add(potato.getSprite())
+	intro.gameStart = True
+	allSprites.remove(introSprite)
 	allSprites.add(levelSprite)
+	allSprites.add(potatoSprite)
 
 def Logic():
 	keys = pygame.key.get_pressed()
 
-	if(not gameStart):
+	if(not intro.gameStart):
 		if(keys[pygame.K_SPACE]):
 			startGame()		
 	else:

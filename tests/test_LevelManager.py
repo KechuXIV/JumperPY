@@ -39,6 +39,7 @@ class test_LevelManager(unittest.TestCase):
 		self.imageManager.createImage.return_value = mockSurface
  		
 		self.target.enviroment = mockEnviroment
+		print("Cosa{0}".format(self.target.enviroment is None))
 		enviroment = self.target.getEnviroment()
 
 		self.assertIsNotNone(enviroment)
@@ -58,7 +59,7 @@ class test_LevelManager(unittest.TestCase):
 		self.assertEqual(actualLevel, expectedLevel)
 
 	def test_GetLevelPath(self):
-		expectedPath = "../bin/Resources/levels/leap_of_faith.png"
+		expectedPath = "JumperPY/bin/Resources/levels/leap_of_faith.png"
 		
 		path = self.target.getLevelPath()
 
@@ -77,7 +78,7 @@ class test_LevelManager(unittest.TestCase):
 		self.imageManager.getImageColor.side_effect = getColor
 		self.surfaceManager.getSurface.return_value = sourceface
 		
-		self.imageManagerExpects.append(call.loadImage(os.path.join('..', 'bin','Resources','levels', 'leap_of_faith.png')))
+		self.imageManagerExpects.append(call.loadImage(os.path.join('JumperPY', 'bin','Resources','levels', 'leap_of_faith.png')))
 		self.imageManagerExpects.append(call.getImageWidth())
 		self.imageManagerExpects.append(call.getImageHeight())
 		self.imageManagerExpects.append(call.getPixelArray())
@@ -117,7 +118,7 @@ class test_LevelManager(unittest.TestCase):
 		self.spriteManagerExpects.append(call.updateSpriteFromSurface(0, 0, 600, 360, sourceface))
 		self.spriteManagerExpects.append(call.getSprite())
 
-		self.imageManagerExpects.append(call.loadImage(os.path.join('..', 'bin','Resources','levels', 'jumpering.png')))
+		self.imageManagerExpects.append(call.loadImage(os.path.join('JumperPY', 'bin','Resources','levels', 'jumpering.png')))
 		self.imageManagerExpects.append(call.getImageWidth())
 		self.imageManagerExpects.append(call.getImageHeight())
 		self.imageManagerExpects.append(call.getPixelArray())

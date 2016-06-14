@@ -26,14 +26,14 @@ class Potato(object):
 		self.reachCheckpoint = False
 		self.actualImageIndex = 0
 
-		self.__deathSound = soundManager.getSound(os.path.join('..', 'bin','Resources', 'sounds', 'death.wav'))
-		self.__jumpSound = soundManager.getSound(os.path.join('..', 'bin','Resources', 'sounds', 'jump.wav'))
-		self.__checkpointSound = soundManager.getSound(os.path.join('..', 'bin','Resources', 'sounds', 'checkpoint.wav'))
+		self.__deathSound = soundManager.getSound(os.path.join('JumperPY','bin','Resources', 'sounds', 'death.wav'))
+		self.__jumpSound = soundManager.getSound(os.path.join('JumperPY','bin','Resources', 'sounds', 'jump.wav'))
+		self.__checkpointSound = soundManager.getSound(os.path.join('JumperPY','bin','Resources', 'sounds', 'checkpoint.wav'))
 
 		self.createSprite()
 		
 	def getImagePath(self, image):
-		return os.path.join('..', 'bin','Resources', image)
+		return os.path.join('JumperPY', 'bin','Resources', image)
 
 	def getImageToShow(self):
 		image = None
