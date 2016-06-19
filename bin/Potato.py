@@ -45,10 +45,8 @@ class Potato(object):
 		return self.__spriteManager.getSprite()
 
 	def createSprite(self):
-		imagePath = self.__images[0]
-
 		self.__spriteManager.createSprite(self.ActualPosition.X, self.ActualPosition.Y,
-			self.__measure.X, self.__measure.Y, imagePath)
+			self.__measure.X, self.__measure.Y)
 
 	def endjumpCycle(self):
 		self.isJumping = False

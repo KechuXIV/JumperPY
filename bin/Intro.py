@@ -16,7 +16,7 @@ class Intro(object):
 		self.__createSprite()
 
 	def __createSprite(self):
-		self.__spriteManager.createSprite(0, 0,
+		self.__spriteManager.createSpriteFromImagePath(0, 0,
 			self.__screen.X, self.__screen.Y, self.__imagePath)
 
 	def getSprite(self):

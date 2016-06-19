@@ -29,7 +29,6 @@ class LevelManager(object):
 			width*self.__tile.Width, height*self.__tile.Height, sourceface)
 
 	def getEnviroment(self):
-		print("Cosa{0}".format(self.enviroment is None))
 		if self.enviroment is None:
 			raise Exception("Level not rendered")
 		return self.enviroment

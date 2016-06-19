@@ -39,7 +39,6 @@ class test_LevelManager(unittest.TestCase):
 		self.imageManager.createImage.return_value = mockSurface
 
 		self.target.enviroment = mockEnviroment
-		print("Cosa{0}".format(self.target.enviroment is None))
 		enviroment = self.target.getEnviroment()
 
 		self.assertIsNotNone(enviroment)
