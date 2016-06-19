@@ -11,7 +11,7 @@ class test_Point(unittest.TestCase):
 
 	def setUp(self):
 		self.target = Point()
-		
+
 	def tearDown(self):
 		pass
 
@@ -37,6 +37,3 @@ class test_Point(unittest.TestCase):
 		self.target.Y = 5
 
 		self.assertNotEqual(self.target, notPoint)
-
-if __name__ == "__main__":
-    unittest.main()

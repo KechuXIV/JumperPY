@@ -120,7 +120,7 @@ class LevelManager(object):
 
 		for x in xrange(0,width):
 			for y in xrange(0,height):
- 				color = self.__imageManager.getPixelArrayItemColor(pixelArray[x, y])
+				color = self.__imageManager.getPixelArrayItemColor(pixelArray[x, y])
 				if color == black:
 					if(x != 20):
 						self.__surfaceManager.blitIntoSurface(self.__tile.Image,

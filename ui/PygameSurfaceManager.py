@@ -20,4 +20,3 @@ class PygameSurfaceManager(ISurfaceManager):
 
 	def getSurface(self):
 		return self.surceface
-	

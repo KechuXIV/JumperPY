@@ -9,26 +9,19 @@ class Potato(object):
 
 	def __init__(self, screenCords, spriteManager, enviroment, soundManager, tracer):
 		self.__speed = Point(4, 6)
-		self.__spriteManager = spriteManager
-		self.__screen = screenCords
 		self.__measure = Point(30, 30)
-		self.__enviroment = enviroment
+		self.__screen = screenCords
+		self.__spriteManager = spriteManager
+		self.__soundManager = soundManager
 		self.__tracer = tracer
+		self.__enviroment = enviroment
+
 		self.__images = [rs.POTATO_STANDING, rs.POTATO_WALKING, rs.POTATO_JUMPING]
+		self.__deathSound = self.getSound(rs.POTATO_DEATHSOUND)
+		self.__jumpSound = self.getSound(rs.POTATO_JUMPSOUND)
+		self.__checkpointSound = self.getSound(rs.POTATO_CHECKPOINTSOUND)
 
 		self.setPotatoOnStartPosition()
-
-		self.isJumping = False
-		self.isGoingLeft = True
-		self.isGoingDown = False
-		self.isStanding = True
-		self.reachCheckpoint = False
-		self.actualImageIndex = 0
-				
-		self.__deathSound = soundManager.getSound(rs.POTATO_DEATHSOUND)
-		self.__jumpSound = soundManager.getSound(rs.POTATO_JUMPSOUND)				
-		self.__checkpointSound = soundManager.getSound(rs.POTATO_CHECKPOINTSOUND)
-
 		self.createSprite()
 
 	def getImageToShow(self):
@@ -44,6 +37,9 @@ class Potato(object):
 			self.actualImageIndex = 0
 
 		return self.__images[self.actualImageIndex]
+
+	def getSound(self, path):
+		return self.__soundManager.getSound(path)
 
 	def getSprite(self):
 		return self.__spriteManager.getSprite()
@@ -128,12 +124,6 @@ class Potato(object):
 		self.__enviroment = enviroment
 
 		self.setPotatoOnStartPosition()
-		self.isJumping = False
-		self.isGoingLeft = True
-		self.isGoingDown = False
-		self.isStanding = True
-		self.reachCheckpoint = False
-		self.actualImageIndex = 0
 
 	def hasReachCheckpoint(self):
 		actualCord = Point(round(self.ActualPosition.X/30), round(self.ActualPosition.Y/30))
@@ -142,6 +132,12 @@ class Potato(object):
 			self.__checkpointSound.play()
 
 	def setPotatoOnStartPosition(self):
+		self.isJumping = False
+		self.isGoingLeft = True
+		self.isGoingDown = False
+		self.isStanding = True
+		self.reachCheckpoint = False
+		self.actualImageIndex = 0
 		startCord = self.__enviroment.getStartCords()
 		self.setActualPosition(startCord)
 
@@ -191,4 +187,3 @@ class Potato(object):
 
 	def updateSpritePosition(self):
 		return self.__spriteManager.updateSprite(self.ActualPosition.X, self.ActualPosition.Y)
-		

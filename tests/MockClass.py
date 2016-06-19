@@ -10,10 +10,9 @@ def getColor(r, g, b):
 		return "Green"
 	else:
 		return "Color"
-		
-		
+
+
 class MockPixelArray(object):
 	
 	def __getitem__(self, k):
 		return 5
-		

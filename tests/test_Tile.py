@@ -12,11 +12,11 @@ class test_Tile(unittest.TestCase):
 
 	def setUp(self):
 		self.imageManager = Mock(spec=IImageManager)
-		
+
 		self.target = Tile(self.imageManager)
-		
+
 		self.imageManagerExpects = []
-		
+
 	def tearDown(self):
 		self.assertEqual(self.imageManager.mock_calls, self.imageManagerExpects)
 
@@ -36,8 +36,5 @@ class test_Tile(unittest.TestCase):
 		self.imageManagerExpects.append(call.createImage(30, 30, rs.TILE_IMAGE))
 
 		image = self.target.Image
-		
-		self.assertIsNotNone(image)
 
-if __name__ == "__main__":
-    unittest.main()
+		self.assertIsNotNone(image)

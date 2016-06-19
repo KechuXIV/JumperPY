@@ -45,6 +45,3 @@ class test_Enviroment(unittest.TestCase):
 		isTile = self.target.isTile(point)
 
 		self.assertFalse(isTile)
-		
-if __name__ == "__main__":
-    unittest.main()
