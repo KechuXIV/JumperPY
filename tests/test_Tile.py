@@ -4,7 +4,7 @@ import sys
 import os
 import unittest
 
-from ..bin import IImageManager, Tile, ResourcePath as rs
+from ..bin import IImageManager, Tile, resourcePath as rs
 from mock import MagicMock, Mock, call
 
 

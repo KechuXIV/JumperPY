@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-import ResourcePath as rs
+import resourcePath as rs
 
 from . import Point, Key
 

@@ -1,2 +1,2 @@
-from MockClass import MockPixelArray
-from MockClass import getColor
+from mockedClass import MockPixelArray
+from mockedClass import getColor

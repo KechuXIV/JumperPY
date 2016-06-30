@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-from . import Block, ResourcePath as rs
+from . import Block, resourcePath as rs
 
 
 class Checkpoint(Block):

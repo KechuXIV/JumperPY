@@ -5,7 +5,7 @@ import os
 import unittest
 
 from . import MockPixelArray, getColor
-from ..bin import LevelManager, Point, IImageManager, ISurfaceManager, ISpriteManager, ResourcePath as rs
+from ..bin import LevelManager, Point, IImageManager, ISurfaceManager, ISpriteManager, resourcePath as rs
 from mock import MagicMock, Mock, call, NonCallableMock, NonCallableMagicMock
 
 

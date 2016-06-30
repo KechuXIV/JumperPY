@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-from . import Enviroment, ResourcePath as rs
-from .Point import Point
+from . import Point, resourcePath as rs, Enviroment
 
 
 class LevelManager(object):

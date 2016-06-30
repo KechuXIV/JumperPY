@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-from . import Point, Key, ResourcePath as rs
+from . import Point, Key, resourcePath as rs
 
 
 class Potato(object):

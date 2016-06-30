@@ -4,11 +4,11 @@ import pygame
 import os
 import sys
 
-from ..bin import Checkpoint, Intro, Key, LevelManager, Point, Potato, Tile, Tracer, NullTracer, ResourcePath as rs
-from PygameImageManager import PygameImageManager
-from PygameSoundManager import PygameSoundManager
-from PygameSpriteManager import PygameSpriteManager
-from PygameSurfaceManager import PygameSurfaceManager
+from ..bin import Checkpoint, Intro, Key, LevelManager, Point, Potato, Tile, Tracer, NullTracer, resourcePath as rs
+from pygameImageManager import PygameImageManager
+from pygameSoundManager import PygameSoundManager
+from pygameSpriteManager import PygameSpriteManager
+from pygameSurfaceManager import PygameSurfaceManager
 
 
 pygame.init()
