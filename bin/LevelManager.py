@@ -9,23 +9,23 @@ class LevelManager(object):
 
 	def __init__(self, imageManager, surcefaceManager,
 		spriteManager, tile, checkpoint):
-		self.__imageManager = imageManager
-		self.__spriteManager = spriteManager
-		self.__surfaceManager = surcefaceManager
-		self.__actualLevel = 0
-		self.__sprite = None
+		self._imageManager = imageManager
+		self._spriteManager = spriteManager
+		self._surfaceManager = surcefaceManager
+		self._actualLevel = 0
+		self._sprite = None
 		self.enviroment = None
 
-		self.__levels = self.getLevels()
-		self.__tile = tile
-		self.__checkpoint = checkpoint
+		self._levels = self.getLevels()
+		self._tile = tile
+		self._checkpoint = checkpoint
 
 	def createSpriteFromSurface(self):
-		sourceface = self.__surfaceManager.getSurface()
-		width = self.__imageManager.getImageWidth()
-		height = self.__imageManager.getImageHeight()
-		self.__spriteManager.createSpriteFromSurface(0, 0,
-			width*self.__tile.Width, height*self.__tile.Height, sourceface)
+		sourceface = self._surfaceManager.getSurface()
+		width = self._imageManager.getImageWidth()
+		height = self._imageManager.getImageHeight()
+		self._spriteManager.createSpriteFromSurface(0, 0,
+			width*self._tile.Width, height*self._tile.Height, sourceface)
 
 	def getEnviroment(self):
 		if self.enviroment is None:
@@ -33,7 +33,7 @@ class LevelManager(object):
 		return self.enviroment
 
 	def getLevel(self):
-		return self.__levels[self.__actualLevel]
+		return self._levels[self._actualLevel]
 
 	def getLevels(self):
 		levels = []
@@ -79,38 +79,38 @@ class LevelManager(object):
 		self.createSpriteFromSurface()
 		self.getSprite()
 
-		return self.__sprite
+		return self._sprite
 
 	def getSprite(self):
-		self.__sprite = self.__spriteManager.getSprite()
+		self._sprite = self._spriteManager.getSprite()
 
 	def goToNextLevel(self):
-		if(self.__actualLevel >= (len(self.__levels)-1)):
-			self.__actualLevel = 0	
-		self.__actualLevel += 1
+		if(self._actualLevel >= (len(self._levels)-1)):
+			self._actualLevel = 0	
+		self._actualLevel += 1
 
 		self.loadAndRenderLevel()
 		self.updateSpriteFromSurface()
 		self.getSprite()
 		
-		return self.__sprite 
+		return self._sprite 
 
 	def loadAndRenderLevel(self):
 		level = self.getLevel()
 
-		self.__imageManager.loadImage(level)
+		self._imageManager.loadImage(level)
 		
-		width = self.__imageManager.getImageWidth()
-		height = self.__imageManager.getImageHeight()
+		width = self._imageManager.getImageWidth()
+		height = self._imageManager.getImageHeight()
 
-		pixelArray = self.__imageManager.getPixelArray()
+		pixelArray = self._imageManager.getPixelArray()
 
-		black = self.__imageManager.getImageColor(0, 0, 0)
-		red = self.__imageManager.getImageColor(255, 0, 0)
-		green = self.__imageManager.getImageColor(76, 255, 0)
+		black = self._imageManager.getImageColor(0, 0, 0)
+		red = self._imageManager.getImageColor(255, 0, 0)
+		green = self._imageManager.getImageColor(76, 255, 0)
 
-		self.__surfaceManager.createSurface(width*self.__tile.Width,
-			height*self.__tile.Height)
+		self._surfaceManager.createSurface(width*self._tile.Width,
+			height*self._tile.Height)
 
 		startCord = None
 		finishCord = None
@@ -118,26 +118,26 @@ class LevelManager(object):
 
 		for x in xrange(0,width):
 			for y in xrange(0,height):
-				color = self.__imageManager.getPixelArrayItemColor(pixelArray[x, y])
+				color = self._imageManager.getPixelArrayItemColor(pixelArray[x, y])
 				if color == black:
 					if(x != 20):
-						self.__surfaceManager.blitIntoSurface(self.__tile.Image,
-							x*self.__tile.Width, y*self.__tile.Height)
+						self._surfaceManager.blitIntoSurface(self._tile.Image,
+							x*self._tile.Width, y*self._tile.Height)
 						tilesCords.append(Point(x, y))
 				elif color == red:
 					if(x != 20): 
 						startCord = Point(x, y)
 				elif color == green:
 					if(x != 20): 
-						self.__surfaceManager.blitIntoSurface(self.__checkpoint.Image,
-							x*self.__tile.Width, y*self.__tile.Height)
+						self._surfaceManager.blitIntoSurface(self._checkpoint.Image,
+							x*self._tile.Width, y*self._tile.Height)
 						finishCord = Point(x, y)
 
 		self.enviroment = Enviroment(startCord, finishCord, tilesCords)
 
 	def updateSpriteFromSurface(self):
-		sourceface = self.__surfaceManager.getSurface()
-		width = self.__imageManager.getImageWidth()
-		height = self.__imageManager.getImageHeight()
-		self.__spriteManager.updateSpriteFromSurface(0, 0, width*self.__tile.Width,
-			height*self.__tile.Height, sourceface)
+		sourceface = self._surfaceManager.getSurface()
+		width = self._imageManager.getImageWidth()
+		height = self._imageManager.getImageHeight()
+		self._spriteManager.updateSpriteFromSurface(0, 0, width*self._tile.Width,
+			height*self._tile.Height, sourceface)

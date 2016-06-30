@@ -8,15 +8,15 @@ from . import Point
 class Enviroment(object):
 
 	def __init__(self, starCords, finishCords, tiles):
-		self.__starCords = starCords
-		self.__finishCords = finishCords
-		self.__tiles = tiles
+		self._starCords = starCords
+		self._finishCords = finishCords
+		self._tiles = tiles
 
 	def getStartCords(self):
-		return self.__starCords
+		return self._starCords
 
 	def getFinishCords(self):
-		return self.__finishCords
+		return self._finishCords
 
 	def isTile(self, point):
-		return point in self.__tiles
+		return point in self._tiles

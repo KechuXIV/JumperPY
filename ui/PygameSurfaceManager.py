@@ -10,13 +10,13 @@ from ..bin import ISurfaceManager
 class PygameSurfaceManager(ISurfaceManager):
 
 	def __init__(self):
-		self.surceface = None
+		self._surceface = None
 
 	def createSurface(self, width, height):
-		self.surceface = pygame.Surface([width, height], pygame.SRCALPHA, 32)
+		self._surceface = pygame.Surface([width, height], pygame.SRCALPHA, 32)
 
 	def blitIntoSurface(self, image, width, height):
-		self.surceface.blit(image, (width, height))
+		self._surceface.blit(image, (width, height))
 
 	def getSurface(self):
-		return self.surceface
+		return self._surceface

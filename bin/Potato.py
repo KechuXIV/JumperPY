@@ -91,7 +91,7 @@ class Potato(object):
 
 		self.moveOnXAxis(keysPressed)
 		self.moveOnYAxis()
-	
+
 		self.jump()
 		return self.updateSpritePosition()
 
@@ -101,13 +101,13 @@ class Potato(object):
 			self.isGoingLeft = True
 			if(not self.thereIsTileLeft()):
 				self.ActualPosition.X -= self.__speed.X
-				
+
 		elif(Key.D in keysPressed):
 			self.isStanding = False
 			self.isGoingLeft = False
 			if(not self.thereIsTileRight()):
 				self.ActualPosition.X += self.__speed.X
-				
+
 		self.hasReachCheckpoint()
 		self.updateImage()
 
@@ -120,7 +120,6 @@ class Potato(object):
 
 	def newLevel(self, enviroment):
 		self.__enviroment = enviroment
-
 		self.setPotatoOnStartPosition()
 
 	def hasReachCheckpoint(self):
@@ -157,14 +156,14 @@ class Potato(object):
 		self.__tracer.push("ActualPosition: {0}\n\rBehindPosition: {1}\n\risTileBehind: {2}",
 			self.ActualPosition, behindPosition, isTileBehind)
 		return isTileBehind
-		
+
 	def thereIsTileLeft(self):
 		leftPosition = Point(round((self.ActualPosition.X-2)/30), round(self.ActualPosition.Y/30))
 		isTileLeft = self.__enviroment.isTile(leftPosition)
 		self.__tracer.push("ActualPosition: {0}\n\rLeftPosition: {1}\n\rIsTileLeft: {2}",
 			self.ActualPosition, leftPosition, isTileLeft)
 		return isTileLeft
-		
+
 	def thereIsTileRight(self):
 		rightPosition = Point(round((self.ActualPosition.X/30)) + 1, round(self.ActualPosition.Y/30))
 		isTileRight = self.__enviroment.isTile(rightPosition)
@@ -174,7 +173,7 @@ class Potato(object):
 
 	def updateImage(self):
 		imagePath = self.getImageToShow()
-		
+
 		self.updateSpriteImage(imagePath)
 
 		if(not self.isGoingLeft):

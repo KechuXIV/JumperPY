@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
 class gameElement(object):
 
 	def __init__(self, spriteManager, soundManager, enviroment, screenCords):
@@ -6,5 +10,3 @@ class gameElement(object):
 		self.__soundManager = soundManager
 		self.__enviroment = enviroment
 		self.__screenCords = screenCords
-
-			

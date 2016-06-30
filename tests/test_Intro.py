@@ -23,14 +23,12 @@ class test_Intro(unittest.TestCase):
 
 	def test_GetSprite(self):
 		spriteMock = NonCallableMock()
-
 		self.spriteManager.getSprite.return_value = spriteMock
 
 		sprite = self.target.getSprite()
 
 		self.spriteManagerExpected.append(call.createSpriteFromImagePath(0, 0, 600, 300,
 			os.path.join('JumperPY', 'bin','Resources', 'menu.png')))
-		
 		self.spriteManagerExpected.append(call.getSprite())
 
 		self.assertIsNotNone(spriteMock)

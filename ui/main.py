@@ -78,7 +78,7 @@ def ClearScreen():
 
 def UpdateWindow():
 	pygame.display.flip()
-	
+
 def startGame():
 	intro.gameStart = True
 	allSprites.remove(introSprite)
@@ -93,7 +93,7 @@ def Logic():
 			startGame()		
 	else:
 		keysPressed = []
-		
+
 		if(keys[pygame.K_d]):
 			keysPressed.append(Key.D)
 		if(keys[pygame.K_a]):
@@ -102,7 +102,7 @@ def Logic():
 			keysPressed.append(Key.Space)
 
 		potato.motion(keysPressed)
-	
+
 		if(potato.reachCheckpoint):
 			levelManager.goToNextLevel()
 			enviroment = levelManager.getEnviroment()

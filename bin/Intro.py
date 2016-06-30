@@ -8,16 +8,16 @@ from . import Point, Key
 class Intro(object):
 
 	def __init__(self, screen, spriteManager):
-		self.__screen = screen
-		self.__spriteManager = spriteManager
-		self.__imagePath = rs.INTRO_IMAGE
+		self._screen = screen
+		self._spriteManager = spriteManager
+		self._imagePath = rs.INTRO_IMAGE
 		self.gameStart = False
 
-		self.__createSprite()
+		self._createSprite()
 
-	def __createSprite(self):
-		self.__spriteManager.createSpriteFromImagePath(0, 0,
-			self.__screen.X, self.__screen.Y, self.__imagePath)
+	def _createSprite(self):
+		self._spriteManager.createSpriteFromImagePath(0, 0,
+			self._screen.X, self._screen.Y, self._imagePath)
 
 	def getSprite(self):
-		return self.__spriteManager.getSprite()
+		return self._spriteManager.getSprite()

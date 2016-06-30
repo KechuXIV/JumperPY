@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from block import Block
 from key import Key
 from resourcePath import *
