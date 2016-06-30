@@ -6,7 +6,7 @@ class gameElement(object):
 
 	def __init__(self, spriteManager, soundManager, enviroment, screenCords):
 		super(gameElement, self).__init__()
-		self.__spriteManager = spriteManager
-		self.__soundManager = soundManager
-		self.__enviroment = enviroment
-		self.__screenCords = screenCords
+		self._spriteManager = spriteManager
+		self._soundManager = soundManager
+		self._enviroment = enviroment
+		self._screenCords = screenCords
