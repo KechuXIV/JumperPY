@@ -32,13 +32,13 @@ class test_LevelManager(unittest.TestCase):
 		self.assertEqual(self.surfaceManager.mock_calls, self.surfaceManagerExpects)
 		self.assertEqual(self.spriteManager.mock_calls, self.spriteManagerExpects)
 
-	def test_getEnviroment(self):
+	def test_GetEnviroment(self):
 		mockEnviroment = MagicMock()
 		mockSurface = MagicMock()
 
 		self.imageManager.createImage.return_value = mockSurface
+		self.target._enviroment = mockEnviroment
 
-		self.target.enviroment = mockEnviroment
 		enviroment = self.target.getEnviroment()
 
 		self.assertIsNotNone(enviroment)

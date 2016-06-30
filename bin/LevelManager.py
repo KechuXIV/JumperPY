@@ -14,7 +14,7 @@ class LevelManager(object):
 		self._surfaceManager = surcefaceManager
 		self._actualLevel = 0
 		self._sprite = None
-		self.enviroment = None
+		self._enviroment = None
 
 		self._levels = self.getLevels()
 		self._tile = tile
@@ -28,9 +28,9 @@ class LevelManager(object):
 			width*self._tile.Width, height*self._tile.Height, sourceface)
 
 	def getEnviroment(self):
-		if self.enviroment is None:
+		if self._enviroment is None:
 			raise Exception("Level not rendered")
-		return self.enviroment
+		return self._enviroment
 
 	def getLevel(self):
 		return self._levels[self._actualLevel]
@@ -86,7 +86,7 @@ class LevelManager(object):
 
 	def goToNextLevel(self):
 		if(self._actualLevel >= (len(self._levels)-1)):
-			self._actualLevel = 0	
+			self._actualLevel = 0
 		self._actualLevel += 1
 
 		self.loadAndRenderLevel()
@@ -133,7 +133,7 @@ class LevelManager(object):
 							x*self._tile.Width, y*self._tile.Height)
 						finishCord = Point(x, y)
 
-		self.enviroment = Enviroment(startCord, finishCord, tilesCords)
+		self._enviroment = Enviroment(startCord, finishCord, tilesCords)
 
 	def updateSpriteFromSurface(self):
 		sourceface = self._surfaceManager.getSurface()
