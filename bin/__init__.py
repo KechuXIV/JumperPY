@@ -15,6 +15,7 @@ from iSpriteManager import ISpriteManager
 from iSurfaceManager import ISurfaceManager
 from levelManager import LevelManager
 from intro import Intro
+from gameElement import GameElement
 from potato import Potato
 from tile import Tile
 from tracer import Tracer

@@ -2,27 +2,25 @@
 # -*- coding: utf-8 -*-
 import os
 
-from . import Point, Key, resourcePath as rs
+from . import Point, Key, GameElement, resourcePath as rs
 
 
-class Potato(object):
+class Potato(GameElement):
 
 	def __init__(self, screenCords, spriteManager, enviroment, soundManager, tracer):
-		self._speed = Point(4, 6)
-		self._measure = Point(30, 30)
-		self._screen = screenCords
-		self._spriteManager = spriteManager
-		self._soundManager = soundManager
+		GameElement.__init__(self, spriteManager, soundManager, enviroment, screenCords, Point(30, 30))
 		self._tracer = tracer
+		self._speed = Point(4, 6)
 		self._enviroment = enviroment
+		self.__screenCords = screenCords
 
 		self._images = [rs.POTATO_STANDING, rs.POTATO_WALKING, rs.POTATO_JUMPING]
-		self._deathSound = self.getSound(rs.POTATO_DEATHSOUND)
-		self._jumpSound = self.getSound(rs.POTATO_JUMPSOUND)
-		self._checkpointSound = self.getSound(rs.POTATO_CHECKPOINTSOUND)
+		self._deathSound = self._getSound(rs.POTATO_DEATHSOUND)
+		self._jumpSound = self._getSound(rs.POTATO_JUMPSOUND)
+		self._checkpointSound = self._getSound(rs.POTATO_CHECKPOINTSOUND)
 
 		self.setPotatoOnStartPosition()
-		self.createSprite()
+		self._createSprite(self.ActualPosition)
 
 	def getImageToShow(self):
 		image = None
@@ -38,22 +36,22 @@ class Potato(object):
 
 		return self._images[self.actualImageIndex]
 
-	def getSound(self, path):
-		return self._soundManager.getSound(path)
+	# def getSound(self, path):
+	# 	return self._soundManager.getSound(path)
 
 	def getSprite(self):
-		return self._spriteManager.getSprite()
+		return self._getSprite()
 
-	def createSprite(self):
-		self._spriteManager.createSprite(self.ActualPosition.X, self.ActualPosition.Y,
-			self._measure.X, self._measure.Y)
+	# def createSprite(self):
+	# 	self._spriteManager.createSprite(self.ActualPosition.X, self.ActualPosition.Y,
+	# 		self._measure.X, self._measure.Y)
 
 	def endjumpCycle(self):
 		self.isJumping = False
 		self.isGoingDown = False
 
-	def flipSpriteImage(self):
-		return self._spriteManager.flipSpriteImage()
+	# def flipSpriteImage(self):
+	# 	return self._spriteManager.flipSpriteImage()
 
 	def jump(self):
 		if(self.isJumping):
@@ -71,7 +69,7 @@ class Potato(object):
 				self.endjumpCycle()
 				self.stabilizeYPosition()
 			else:
-				if(self.ActualPosition.Y >= self._screen.Y):
+				if(self.ActualPosition.Y >= self.__screenCords.Y):
 					self.endjumpCycle()
 					self._deathSound.play()
 					self.setPotatoOnStartPosition()
@@ -93,7 +91,7 @@ class Potato(object):
 		self.moveOnYAxis()
 
 		self.jump()
-		return self.updateSpritePosition()
+		return self._updateSpritePosition(self.ActualPosition)
 
 	def moveOnXAxis(self, keysPressed):
 		if(Key.A in keysPressed):
@@ -109,7 +107,7 @@ class Potato(object):
 				self.ActualPosition.X += self._speed.X
 
 		self.hasReachCheckpoint()
-		self.updateImage()
+		self._updateImage(self.getImageToShow(), self.isGoingLeft)
 
 		self.stayOnScreen()
 
@@ -146,8 +144,8 @@ class Potato(object):
 
 	def stayOnScreen(self):
 		if(self.ActualPosition.X < 0):
-			self.ActualPosition.X = self._screen.X
-		elif(self.ActualPosition.X > self._screen.X):
+			self.ActualPosition.X = self.__screenCords.X
+		elif(self.ActualPosition.X > self.__screenCords.X):
 			self.ActualPosition.X = 0
 
 	def thereIsTileBehind(self):
@@ -171,16 +169,16 @@ class Potato(object):
 			self.ActualPosition, rightPosition, isTileRight)
 		return isTileRight
 
-	def updateImage(self):
-		imagePath = self.getImageToShow()
+	# def updateImage(self):
+	# 	imagePath = self.getImageToShow()
 
-		self.updateSpriteImage(imagePath)
+	# 	self.updateSpriteImage(imagePath)
 
-		if(not self.isGoingLeft):
-			self.flipSpriteImage()
+	# 	if(not self.isGoingLeft):
+	# 		self.flipSpriteImage()
 
-	def updateSpriteImage(self, imagePath):
-		return self._spriteManager.updateSpriteImage(imagePath)
+	# def updateSpriteImage(self, imagePath):
+	# 	return self._spriteManager.updateSpriteImage(imagePath)
 
-	def updateSpritePosition(self):
-		return self._spriteManager.updateSprite(self.ActualPosition.X, self.ActualPosition.Y)
+	# def updateSpritePosition(self):
+	# 	return self._spriteManager.updateSprite(self.ActualPosition.X, self.ActualPosition.Y)
