@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-from . import Point, Key, GameElement, resourcePath as rs
-
+from . import Point, Key, GameElement, Position, resourcePath as rs
 
 class Potato(GameElement):
 
@@ -12,7 +11,7 @@ class Potato(GameElement):
 		self._tracer = tracer
 		self._speed = Point(4, 6)
 		self._enviroment = enviroment
-		self.__screenCords = screenCords
+		self._screenCords = screenCords
 
 		self._images = [rs.POTATO_STANDING, rs.POTATO_WALKING, rs.POTATO_JUMPING]
 		self._deathSound = self._getSound(rs.POTATO_DEATHSOUND)
@@ -23,57 +22,47 @@ class Potato(GameElement):
 		self._createSprite(self.ActualPosition)
 
 	def getImageToShow(self):
-		image = None
-		if(self.isJumping | self.isGoingDown):
-			self.actualImageIndex = 2
-		elif(not self.isStanding):
-			if(self.actualImageIndex > 1):
-				self.actualImageIndex = 0
-			else:
-				self.actualImageIndex += 1
-		else:
-			self.actualImageIndex = 0
-
+		self.setActualImageIndex()
 		return self._images[self.actualImageIndex]
 
-	# def getSound(self, path):
-	# 	return self._soundManager.getSound(path)
+	def getPosition(self, position):
+		if(position == Position.BEHIND):
+			return Point(round((self.ActualPosition.X+10)/30), round(self.ActualPosition.Y/30) + 1)
+		elif(position == Position.LEFT):
+			return Point(round((self.ActualPosition.X-2)/30), round(self.ActualPosition.Y/30))
+		elif(position == Position.RIGHT):
+			return Point(round((self.ActualPosition.X/30)) + 1, round(self.ActualPosition.Y/30))
 
 	def getSprite(self):
 		return self._getSprite()
-
-	# def createSprite(self):
-	# 	self._spriteManager.createSprite(self.ActualPosition.X, self.ActualPosition.Y,
-	# 		self._measure.X, self._measure.Y)
 
 	def endjumpCycle(self):
 		self.isJumping = False
 		self.isGoingDown = False
 
-	# def flipSpriteImage(self):
-	# 	return self._spriteManager.flipSpriteImage()
-
 	def jump(self):
-		if(self.isJumping):
-			if(self.isGoingDown):
-				self.ActualPosition.Y += self._speed.Y
-				self._speed.Y += 0.4
-			else:
-				if(self._speed.Y <= 0):
-					self.isGoingDown = True
-				else:
-					self.ActualPosition.Y -= self._speed.Y
-					self._speed.Y -= 0.4
+		if(not self.isJumping):
+			return
 
-			if(self.thereIsTileBehind() and self.isGoingDown):
-				self.endjumpCycle()
-				self.stabilizeYPosition()
+		if(self.isGoingDown):
+			self.ActualPosition.Y += self._speed.Y
+			self._speed.Y += 0.4
+		else:
+			if(self._speed.Y <= 0):
+				self.isGoingDown = True
 			else:
-				if(self.ActualPosition.Y >= self.__screenCords.Y):
-					self.endjumpCycle()
-					self._deathSound.play()
-					self.setPotatoOnStartPosition()
-					self.isStanding = True
+				self.ActualPosition.Y -= self._speed.Y
+				self._speed.Y -= 0.4
+
+		if(self.thereIsTileBehind() and self.isGoingDown):
+			self.endjumpCycle()
+			self.stabilizeYPosition()
+		else:
+			if(self.ActualPosition.Y >= self._screenCords.Y):
+				self.endjumpCycle()
+				self._deathSound.play()
+				self.setPotatoOnStartPosition()
+				self.isStanding = True
 
 	def jumpInitialize(self):
 		if(not self.isJumping):
@@ -99,7 +88,6 @@ class Potato(GameElement):
 			self.isGoingLeft = True
 			if(not self.thereIsTileLeft()):
 				self.ActualPosition.X -= self._speed.X
-
 		elif(Key.D in keysPressed):
 			self.isStanding = False
 			self.isGoingLeft = False
@@ -136,6 +124,17 @@ class Potato(GameElement):
 		startCord = self._enviroment.getStartCords()
 		self.setActualPosition(startCord)
 
+	def setActualImageIndex(self):
+		if(self.isJumping | self.isGoingDown):
+			self.actualImageIndex = 2
+		elif(not self.isStanding):
+			if(self.actualImageIndex > 1):
+				self.actualImageIndex = 0
+			else:
+				self.actualImageIndex += 1
+		else:
+			self.actualImageIndex = 0
+
 	def setActualPosition(self, point):
 		self.ActualPosition = Point(point.X*30, point.Y*30)
 
@@ -144,41 +143,21 @@ class Potato(GameElement):
 
 	def stayOnScreen(self):
 		if(self.ActualPosition.X < 0):
-			self.ActualPosition.X = self.__screenCords.X
-		elif(self.ActualPosition.X > self.__screenCords.X):
+			self.ActualPosition.X = self._screenCords.X
+		elif(self.ActualPosition.X > self._screenCords.X):
 			self.ActualPosition.X = 0
 
 	def thereIsTileBehind(self):
-		behindPosition = Point(round((self.ActualPosition.X+10)/30), round(self.ActualPosition.Y/30) + 1)
+		behindPosition = self.getPosition(Position.BEHIND)
 		isTileBehind = self._enviroment.isTile(behindPosition)
-		self._tracer.push("ActualPosition: {0}\n\rBehindPosition: {1}\n\risTileBehind: {2}",
-			self.ActualPosition, behindPosition, isTileBehind)
 		return isTileBehind
 
 	def thereIsTileLeft(self):
-		leftPosition = Point(round((self.ActualPosition.X-2)/30), round(self.ActualPosition.Y/30))
+		leftPosition = self.getPosition(Position.LEFT)
 		isTileLeft = self._enviroment.isTile(leftPosition)
-		self._tracer.push("ActualPosition: {0}\n\rLeftPosition: {1}\n\rIsTileLeft: {2}",
-			self.ActualPosition, leftPosition, isTileLeft)
 		return isTileLeft
 
 	def thereIsTileRight(self):
-		rightPosition = Point(round((self.ActualPosition.X/30)) + 1, round(self.ActualPosition.Y/30))
+		rightPosition = self.getPosition(Position.RIGHT)
 		isTileRight = self._enviroment.isTile(rightPosition)
-		self._tracer.push("ActualPosition: {0}\n\rRightPosition: {1}\n\rIsTileRight: {2}",
-			self.ActualPosition, rightPosition, isTileRight)
 		return isTileRight
-
-	# def updateImage(self):
-	# 	imagePath = self.getImageToShow()
-
-	# 	self.updateSpriteImage(imagePath)
-
-	# 	if(not self.isGoingLeft):
-	# 		self.flipSpriteImage()
-
-	# def updateSpriteImage(self, imagePath):
-	# 	return self._spriteManager.updateSpriteImage(imagePath)
-
-	# def updateSpritePosition(self):
-	# 	return self._spriteManager.updateSprite(self.ActualPosition.X, self.ActualPosition.Y)

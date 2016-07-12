@@ -3,6 +3,7 @@
 
 from block import Block
 from key import Key
+from position import Position
 from resourcePath import *
 from checkpoint import Checkpoint
 from point import Point
