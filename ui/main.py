@@ -17,7 +17,7 @@ sountrack.play(-1)
 
 screenCords = Point(600, 360)
 screen = pygame.display.set_mode((screenCords.X, screenCords.Y))
-pygame.display.set_caption("JumerPY")
+pygame.display.set_caption("JumperPY")
 
 pygameSoundManager = PygameSoundManager()
 potatoPygameSpriteManager = PygameSpriteManager()

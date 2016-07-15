@@ -107,6 +107,7 @@ class test_Potato(unittest.TestCase):
 
 		self.spriteManagerExpected.append(call.updateSpriteImage(
 				os.path.join('JumperPY', 'bin','Resources', 'potatoStanding.png')))
+		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(startPosition.X*30, startPosition.Y))
 
 		self.enviromentExpected.append(call.getStartCords())
@@ -127,8 +128,8 @@ class test_Potato(unittest.TestCase):
 
 		self.spriteManagerExpected.append(call.updateSpriteImage(
 				os.path.join('JumperPY', 'bin','Resources', 'potatoJumping.png')))
+		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
-
 		self.enviromentExpected.append(call.getStartCords())
 		self.enviromentExpected.append(call.getFinishCords())
 
@@ -202,7 +203,7 @@ class test_Potato(unittest.TestCase):
 
 		self.assertEqual(self.target.ActualPosition, expectedPosition)
 		self.assertFalse(self.target.isJumping)
-		self.assertTrue(self.target.isGoingLeft)
+		self.assertFalse(self.target.isGoingLeft)
 		self.assertFalse(self.target.isGoingDown)
 		self.assertTrue(self.target.isStanding)
 		self.assertFalse(self.target.reachCheckpoint)
@@ -218,6 +219,7 @@ class test_Potato(unittest.TestCase):
 
 		self.spriteManagerExpected.append(call.updateSpriteImage(
 			os.path.join('JumperPY', 'bin','Resources', 'potatoStanding.png')))
+		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X,
 			expectedPosition.Y))
 
@@ -241,6 +243,7 @@ class test_Potato(unittest.TestCase):
 
 		self.spriteManagerExpected.append(call.updateSpriteImage(
 			os.path.join('JumperPY', 'bin','Resources', 'potatoStanding.png')))
+		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X,
 			expectedPosition.Y))
 
@@ -265,7 +268,8 @@ class test_Potato(unittest.TestCase):
 		self.enviroment.isTile.side_effect = [False]
 
 		self.spriteManagerExpected.append(call.updateSpriteImage(
-			os.path.join('JumperPY', 'bin','Resources', 'potatoJumping.png')))
+			os.path.join('JumperPY', 'bin','Resources', 'potatoStanding.png')))
+		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X,
 			expectedPosition.Y))
 
@@ -337,7 +341,8 @@ class test_Potato(unittest.TestCase):
 		self.enviroment.isTile.side_effect = [False, False]
 
 		self.spriteManagerExpected.append(call.updateSpriteImage(
-				os.path.join('JumperPY', 'bin','Resources', 'potatoStanding.png')))
+				os.path.join('JumperPY', 'bin','Resources', 'potatoJumping.png')))
+		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
 
 		self.enviromentExpected.append(call.getStartCords())

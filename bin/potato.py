@@ -70,11 +70,11 @@ class Potato(GameElement):
 
 	def motion(self, keysPressed):
 		self.isStanding = True
-		if(Key.Space in keysPressed):
-			self.jumpInitialize()
 
 		self.moveOnXAxis(keysPressed)
-		self.moveOnYAxis()
+		self.moveOnYAxis(keysPressed)
+
+		self._updateImage(self.getImageToShow(), self.isGoingLeft)
 
 		return self._updateSpritePosition(self.ActualPosition)
 
@@ -91,11 +91,12 @@ class Potato(GameElement):
 				self.ActualPosition.X += self._speed.X
 
 		self.hasReachCheckpoint()
-		self._updateImage(self.getImageToShow(), self.isGoingLeft)
-
 		self.stayOnScreen()
 
-	def moveOnYAxis(self):
+	def moveOnYAxis(self, keysPressed):
+		if(Key.Space in keysPressed):
+			self.jumpInitialize()
+
 		if((not self.isJumping) and (not self.thereIsTileBehind())):
 			self.jumpInitialize()
 			self.isGoingDown = True
@@ -121,7 +122,7 @@ class Potato(GameElement):
 
 	def setPotatoOnStartPosition(self):
 		self.isJumping = False
-		self.isGoingLeft = True
+		self.isGoingLeft = False
 		self.isGoingDown = False
 		self.isStanding = True
 		self.reachCheckpoint = False
