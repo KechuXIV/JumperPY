@@ -21,6 +21,20 @@ class Potato(GameElement):
 		self.setPotatoOnStartPosition()
 		self._createSprite(self.ActualPosition)
 
+	def freefall(self):
+		if(self.thereIsTileBehind()):
+			self.endjumpCycle()
+			self.stabilizeYPosition()
+		else:
+			self.ActualPosition.Y += self._speed.Y
+			self._speed.Y += 0.4
+
+		if(self.ActualPosition.Y >= self._screenCords.Y):
+			self.endjumpCycle()
+			self._deathSound.play()
+			self.setPotatoOnStartPosition()
+			self.isStanding = True
+
 	def getImageToShow(self):
 		self.setActualImageIndex()
 		return self._images[self.actualImageIndex]
@@ -41,28 +55,11 @@ class Potato(GameElement):
 		self.isGoingDown = False
 
 	def jump(self):
-		if(not self.isJumping):
-			return
-
-		if(self.isGoingDown):
-			self.ActualPosition.Y += self._speed.Y
-			self._speed.Y += 0.4
+		if(self._speed.Y <= 0):
+			self.isGoingDown = True
 		else:
-			if(self._speed.Y <= 0):
-				self.isGoingDown = True
-			else:
-				self.ActualPosition.Y -= self._speed.Y
-				self._speed.Y -= 0.4
-
-		if(self.thereIsTileBehind() and self.isGoingDown):
-			self.endjumpCycle()
-			self.stabilizeYPosition()
-		else:
-			if(self.ActualPosition.Y >= self._screenCords.Y):
-				self.endjumpCycle()
-				self._deathSound.play()
-				self.setPotatoOnStartPosition()
-				self.isStanding = True
+			self.ActualPosition.Y -= self._speed.Y
+			self._speed.Y -= 0.4
 
 	def jumpInitialize(self):
 		if(not self.isJumping):
@@ -79,7 +76,6 @@ class Potato(GameElement):
 		self.moveOnXAxis(keysPressed)
 		self.moveOnYAxis()
 
-		self.jump()
 		return self._updateSpritePosition(self.ActualPosition)
 
 	def moveOnXAxis(self, keysPressed):
@@ -103,6 +99,15 @@ class Potato(GameElement):
 		if((not self.isJumping) and (not self.thereIsTileBehind())):
 			self.jumpInitialize()
 			self.isGoingDown = True
+
+		if(not self.isJumping):
+			return
+
+		if(self.isGoingDown):
+			self.freefall()
+		else:
+			self.jump()
+
 
 	def newLevel(self, enviroment):
 		self._enviroment = enviroment

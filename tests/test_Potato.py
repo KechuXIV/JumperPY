@@ -131,7 +131,6 @@ class test_Potato(unittest.TestCase):
 
 		self.enviromentExpected.append(call.getStartCords())
 		self.enviromentExpected.append(call.getFinishCords())
-		self.enviromentExpected.append(call.isTile(Point(1,0)))
 
 		self.soundManagerExpected.append(call.getSound().play())
 
