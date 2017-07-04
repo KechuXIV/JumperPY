@@ -135,6 +135,45 @@ class LevelManager(object):
 
 		self._enviroment = Enviroment(startCord, finishCord, tilesCords)
 
+	def loadAndGetLevelSprites(self):
+		sprites = []
+
+		level = self.getLevel()
+
+		self._imageManager.loadImage(level)
+		
+		width = self._imageManager.getImageWidth()
+		height = self._imageManager.getImageHeight()
+
+		pixelArray = self._imageManager.getPixelArray()
+
+		black = self._imageManager.getImageColor(0, 0, 0)
+		red = self._imageManager.getImageColor(255, 0, 0)
+		green = self._imageManager.getImageColor(76, 255, 0)
+
+		self._surfaceManager.createSurface(width*self._tile.Width,
+			height*self._tile.Height)
+
+		startCord = None
+		finishCord = None
+		tilesCords = []
+
+		for x in xrange(0,width):
+			for y in xrange(0,height):
+				color = self._imageManager.getPixelArrayItemColor(pixelArray[x, y])
+				if color == black:
+					if(x != 20):
+						self._spriteManager.createSpriteFromImagePath(x*30, y*30, 30, 30, rs.TILE_IMAGE)
+						tilesCords.append(Point(x, y))
+				elif color == red:
+					if(x != 20): 
+						startCord = Point(x, y)
+				elif color == green:
+					if(x != 20): 
+						finishCord = Point(x, y)
+
+		self._enviroment = Enviroment(startCord, finishCord, tilesCords)
+
 	def updateSpriteFromSurface(self):
 		sourceface = self._surfaceManager.getSurface()
 		width = self._imageManager.getImageWidth()

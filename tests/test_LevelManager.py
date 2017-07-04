@@ -3,6 +3,7 @@
 import sys
 import os
 import unittest
+import uuid
 
 from . import MockPixelArray, getColor
 from ..bin import LevelManager, Point, IImageManager, ISurfaceManager, ISpriteManager, resourcePath as rs
@@ -127,3 +128,40 @@ class test_LevelManager(unittest.TestCase):
 		renderedLevel = self.target.goToNextLevel()
 
 		self.assertIsNotNone(renderedLevel)
+
+	def test_loadAndGetLevelSprites(self):
+
+		self.tile.Width = 30
+		self.tile.Height = 30
+
+		pixelArray = MockPixelArray()
+		sourceface = Mock()
+		sprite = str(uuid.uuid4())
+
+		self.imageManager.getPixelArray.return_value = pixelArray
+		self.imageManager.getImageWidth.return_value = 20
+		self.imageManager.getImageHeight.return_value = 12
+		self.imageManager.getImageColor.side_effect = getColor
+		self.surfaceManager.getSurface.return_value = sourceface
+		self.spriteManager.createSpriteFromImagePath.return_value = sprite
+		self.imageManager.getPixelArrayItemColor.return_value = "Black"
+
+		self.imageManagerExpects.append(call.loadImage(rs.LEVEL_LEAP_OF_FAITH))
+		self.imageManagerExpects.append(call.getImageWidth())
+		self.imageManagerExpects.append(call.getImageHeight())
+		self.imageManagerExpects.append(call.getPixelArray())
+		self.imageManagerExpects.append(call.getImageColor(0, 0, 0))
+		self.imageManagerExpects.append(call.getImageColor(255, 0, 0))
+		self.imageManagerExpects.append(call.getImageColor(76, 255, 0))
+
+		for x in range(0,20):
+			for y in range(0,12):
+				self.spriteManagerExpects.append(call
+					.createSpriteFromImagePath(x*30, y*30, 30, 30, rs.TILE_IMAGE))
+
+		for i in range(0,20*12):
+			self.imageManagerExpects.append(call.getPixelArrayItemColor(5))
+
+		self.surfaceManagerExpects.append(call.createSurface(30*20, 30*12))
+
+		renderedLevel = self.target.loadAndGetLevelSprites()
