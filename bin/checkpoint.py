@@ -7,5 +7,5 @@ from . import Block, resourcePath as rs
 
 class Checkpoint(Block):
 
-	def __init__(self, imageManager):
-		Block.__init__(self, imageManager, rs.CHECKPOINT_IMAGE)
+	def __init__(self, imageManager, spriteManager, position):
+		Block.__init__(self, imageManager, spriteManager, rs.CHECKPOINT_IMAGE, position)
