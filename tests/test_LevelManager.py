@@ -7,7 +7,7 @@ import uuid
 
 from . import MockPixelArray, getColor
 from ..bin import LevelManager, Point, IImageManager, ISurfaceManager, ISpriteManager, resourcePath as rs
-from mock import MagicMock, Mock, call, NonCallableMock, NonCallableMagicMock
+from mock import MagicMock, Mock, call, NonCallableMock, NonCallableMagicMock, patch
 
 
 class test_LevelManager(unittest.TestCase):
@@ -16,7 +16,6 @@ class test_LevelManager(unittest.TestCase):
 		self.imageManager = Mock(spec=IImageManager)
 		self.surfaceManager = Mock(spec=ISurfaceManager)
 		self.spriteManager = Mock(spec=ISpriteManager)
-		attrs = {'Width.return_value': 30, 'Height.return_value': 30}
 		self.tile = MagicMock()
 		self.checkpoint = MagicMock()
 
@@ -129,22 +128,23 @@ class test_LevelManager(unittest.TestCase):
 
 		self.assertIsNotNone(renderedLevel)
 
-	def test_loadAndGetLevelSprites(self):
-
+	def test_getLevelSprites(self):
 		self.tile.Width = 30
 		self.tile.Height = 30
 
 		pixelArray = MockPixelArray()
 		sourceface = Mock()
 		sprite = str(uuid.uuid4())
+		image = str(uuid.uuid4())
 
 		self.imageManager.getPixelArray.return_value = pixelArray
 		self.imageManager.getImageWidth.return_value = 20
 		self.imageManager.getImageHeight.return_value = 12
 		self.imageManager.getImageColor.side_effect = getColor
-		self.surfaceManager.getSurface.return_value = sourceface
-		self.spriteManager.createSpriteFromImagePath.return_value = sprite
 		self.imageManager.getPixelArrayItemColor.return_value = "Black"
+
+		self.spriteManager.createSprite.return_value = sprite
+		self.imageManager.createImage.return_value = image
 
 		self.imageManagerExpects.append(call.loadImage(rs.LEVEL_LEAP_OF_FAITH))
 		self.imageManagerExpects.append(call.getImageWidth())
@@ -156,12 +156,13 @@ class test_LevelManager(unittest.TestCase):
 
 		for x in range(0,20):
 			for y in range(0,12):
+				self.imageManagerExpects.append(call.getPixelArrayItemColor(5))
+				self.imageManagerExpects.append(call
+					.createImage(30, 30, rs.TILE_IMAGE))
 				self.spriteManagerExpects.append(call
-					.createSpriteFromImagePath(x*30, y*30, 30, 30, rs.TILE_IMAGE))
+					.createSprite(x*30, y*30, 30, 30, image))
 
-		for i in range(0,20*12):
-			self.imageManagerExpects.append(call.getPixelArrayItemColor(5))
+		tiles = self.target.getLevelSprites()
 
-		self.surfaceManagerExpects.append(call.createSurface(30*20, 30*12))
-
-		renderedLevel = self.target.loadAndGetLevelSprites()
+		for tile in tiles:
+			self.assertEqual(tile.Sprite, sprite)

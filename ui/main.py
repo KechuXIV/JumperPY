@@ -33,6 +33,8 @@ tile = Tile(pygameImageManager, blockPygameSpriteManager, Point(1,1))
 levelManager = LevelManager(pygameImageManager, pygameSourceManager, levelManagerPygameSpriteManager, tile, checkpoint)
 levelSprite = levelManager.getRenderedLevel()
 enviroment = levelManager.getEnviroment()
+#levelManager.getLevelSprites();
+
 tracer = NullTracer()
 potato = Potato(screenCords, potatoPygameSpriteManager, enviroment, pygameSoundManager, tracer)
 intro = Intro(screenCords, introPygameSpriteManager)
@@ -42,6 +44,9 @@ potatoSprite = potato.getSprite()
 
 allSprites = pygame.sprite.Group()
 allSprites.add(introSprite)
+
+#tilesGroup = pygame.sprite.Group()
+#for tile in tiles: tilesGroup.add(tile.Sprite)
 
 clock = pygame.time.Clock()
 

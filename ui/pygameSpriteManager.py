@@ -53,6 +53,7 @@ class PygameSpriteManager(ISpriteManager):
 
 	def flipSpriteImage(self):
 		self._sprite.image = pygame.transform.flip(self._sprite.image, True, False)
+		return self._sprite
 
 	def updateSprite(self, xPosition, yPosition, width = None, height = None, imagePath = None):
 		self._sprite.rect.x = xPosition

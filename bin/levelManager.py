@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-from . import Point, resourcePath as rs, Enviroment
+from . import Tile, Point, resourcePath as rs, Enviroment
 
 
 class LevelManager(object):
@@ -135,7 +135,7 @@ class LevelManager(object):
 
 		self._enviroment = Enviroment(startCord, finishCord, tilesCords)
 
-	def loadAndGetLevelSprites(self):
+	def getLevelSprites(self):
 		sprites = []
 
 		level = self.getLevel()
@@ -151,28 +151,21 @@ class LevelManager(object):
 		red = self._imageManager.getImageColor(255, 0, 0)
 		green = self._imageManager.getImageColor(76, 255, 0)
 
-		self._surfaceManager.createSurface(width*self._tile.Width,
-			height*self._tile.Height)
-
-		startCord = None
-		finishCord = None
-		tilesCords = []
-
+		tiles = []
 		for x in xrange(0,width):
 			for y in xrange(0,height):
 				color = self._imageManager.getPixelArrayItemColor(pixelArray[x, y])
 				if color == black:
 					if(x != 20):
-						self._spriteManager.createSpriteFromImagePath(x*30, y*30, 30, 30, rs.TILE_IMAGE)
-						tilesCords.append(Point(x, y))
+						tiles.append(Tile(self._imageManager, self._spriteManager, Point(x*30, y*30)))
 				elif color == red:
 					if(x != 20): 
-						startCord = Point(x, y)
+						pass#startCord
 				elif color == green:
 					if(x != 20): 
-						finishCord = Point(x, y)
+						pass#FinishCord
 
-		self._enviroment = Enviroment(startCord, finishCord, tilesCords)
+		return tiles
 
 	def updateSpriteFromSurface(self):
 		sourceface = self._surfaceManager.getSurface()

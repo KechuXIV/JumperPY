@@ -6,6 +6,7 @@ from key import Key
 from position import Position
 from resourcePath import *
 from checkpoint import Checkpoint
+from tile import Tile
 from point import Point
 from iTracer import ITracer
 from nullTracer import NullTracer
@@ -18,5 +19,4 @@ from levelManager import LevelManager
 from intro import Intro
 from gameElement import GameElement
 from potato import Potato
-from tile import Tile
 from tracer import Tracer
