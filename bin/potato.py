@@ -6,12 +6,13 @@ from . import Point, Key, GameElement, Position, resourcePath as rs
 
 class Potato(GameElement):
 
-	def __init__(self, screenCords, spriteManager, enviroment, soundManager, tracer):
+	def __init__(self, screenCords, spriteManager, enviroment, soundManager, collisionManager, tracer):
 		GameElement.__init__(self, spriteManager, soundManager, enviroment, screenCords, Point(30, 30))
 		self._tracer = tracer
 		self._speed = Point(4, 6)
 		self._enviroment = enviroment
 		self._screenCords = screenCords
+		self._collisionManager = collisionManager
 
 		self._images = [rs.POTATO_STANDING, rs.POTATO_WALKING, rs.POTATO_JUMPING]
 		self._deathSound = self._getSound(rs.POTATO_DEATHSOUND)
@@ -20,9 +21,10 @@ class Potato(GameElement):
 
 		self.setPotatoOnStartPosition()
 		self._createSprite(self.ActualPosition)
+		self.collision = None
 
 	def freefall(self):
-		if(self.thereIsTileBehind()):
+		if(self.collision[Position.BEHIND]):
 			self.endjumpCycle()
 			self.stabilizeYPosition()
 		else:
@@ -69,6 +71,7 @@ class Potato(GameElement):
 			self._speed.Y = 8
 
 	def motion(self, keysPressed):
+		self.collision = self._collisionManager.getCollisions()
 		self.isStanding = True
 
 		self.moveOnXAxis(keysPressed)
@@ -82,12 +85,12 @@ class Potato(GameElement):
 		if(Key.A in keysPressed):
 			self.isStanding = False
 			self.isGoingLeft = True
-			if(not self.thereIsTileLeft()):
+			if(not self.collision[Position.LEFT]):
 				self.ActualPosition.X -= self._speed.X
 		elif(Key.D in keysPressed):
 			self.isStanding = False
 			self.isGoingLeft = False
-			if(not self.thereIsTileRight()):
+			if(not self.collision[Position.RIGHT]):
 				self.ActualPosition.X += self._speed.X
 
 		self.hasReachCheckpoint()
@@ -97,7 +100,7 @@ class Potato(GameElement):
 		if(Key.Space in keysPressed):
 			self.jumpInitialize()
 
-		if((not self.isJumping) and (not self.thereIsTileBehind())):
+		if((not self.isJumping) and (not self.collision[Position.BEHIND])):
 			self.jumpInitialize()
 			self.isGoingDown = True
 
@@ -108,7 +111,6 @@ class Potato(GameElement):
 			self.freefall()
 		else:
 			self.jump()
-
 
 	def newLevel(self, enviroment):
 		self._enviroment = enviroment
@@ -154,9 +156,7 @@ class Potato(GameElement):
 			self.ActualPosition.X = 0
 
 	def thereIsTileBehind(self):
-		behindPosition = self.getPosition(Position.BEHIND)
-		isTileBehind = self._enviroment.isTile(behindPosition)
-		return isTileBehind
+		return self._collisionManager.getCollisions()[Position.BEHIND]
 
 	def thereIsTileLeft(self):
 		leftPosition = self.getPosition(Position.LEFT)

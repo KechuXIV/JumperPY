@@ -9,6 +9,7 @@ from pygameImageManager import PygameImageManager
 from pygameSoundManager import PygameSoundManager
 from pygameSpriteManager import PygameSpriteManager
 from pygameSurfaceManager import PygameSurfaceManager
+from pygameCollisionManager import PygameCollisionManager
 
 
 pygame.init()
@@ -26,6 +27,7 @@ blockPygameSpriteManager = PygameSpriteManager()
 introPygameSpriteManager = PygameSpriteManager()
 pygameImageManager = PygameImageManager()
 pygameSourceManager = PygameSurfaceManager()
+pygameCollisionManager = PygameCollisionManager()
 
 checkpoint = Checkpoint(pygameImageManager, blockPygameSpriteManager, Point(1,1))
 tile = Tile(pygameImageManager, blockPygameSpriteManager, Point(1,1))
@@ -33,10 +35,10 @@ tile = Tile(pygameImageManager, blockPygameSpriteManager, Point(1,1))
 levelManager = LevelManager(pygameImageManager, pygameSourceManager, levelManagerPygameSpriteManager, tile, checkpoint)
 levelSprite = levelManager.getRenderedLevel()
 enviroment = levelManager.getEnviroment()
-#levelManager.getLevelSprites();
+tiles = levelManager.getLevelSprites();
 
 tracer = NullTracer()
-potato = Potato(screenCords, potatoPygameSpriteManager, enviroment, pygameSoundManager, tracer)
+potato = Potato(screenCords, potatoPygameSpriteManager, enviroment, pygameSoundManager, pygameCollisionManager, tracer)
 intro = Intro(screenCords, introPygameSpriteManager)
 
 introSprite = intro.getSprite()
@@ -45,8 +47,9 @@ potatoSprite = potato.getSprite()
 allSprites = pygame.sprite.Group()
 allSprites.add(introSprite)
 
-#tilesGroup = pygame.sprite.Group()
-#for tile in tiles: tilesGroup.add(tile.Sprite)
+tilesGroup = pygame.sprite.Group()
+for tile in tiles: tilesGroup.add(tile.Sprite)
+pygameCollisionManager.setGroups(potatoSprite, tilesGroup)
 
 clock = pygame.time.Clock()
 
@@ -61,7 +64,7 @@ def CheckQuitEvent():
 def Draw():
 	ClearScreen()
 	allSprites.draw(screen)
-#	DrawLines()
+	#DrawLines()
 	UpdateWindow()
 
 def DrawLines():
@@ -69,16 +72,13 @@ def DrawLines():
 	y = 0
 
 	pygame.draw.line(screen, (0, 200, 200), (0, 0), (600, x), (1))
-	pygame.draw.line(screen, (0, 200, 200), (0, 0), (x, 300), (1))
+	pygame.draw.line(screen, (0, 200, 200), (0, 0), (x, 480), (1))
 
 	for i in xrange(1,40):
 		x += 15
 		y += 15
-
 		pygame.draw.line(screen, (0, 200, 200), (0, y), (600, x), (1))
-		pygame.draw.line(screen, (0, 200, 200), (x, 0), (x, 300), (1))
-
-	pygame.display.flip()
+		pygame.draw.line(screen, (0, 200, 200), (x, 0), (x, 480), (1))
 
 def ClearScreen():
 	screen.fill((0,0,0))
@@ -89,14 +89,15 @@ def UpdateWindow():
 def startGame():
 	intro.gameStart = True
 	allSprites.remove(introSprite)
-	allSprites.add(levelSprite)
+	#allSprites.add(levelSprite)
+	allSprites.add(tilesGroup)
 	allSprites.add(potatoSprite)
 
 def Logic():
 	keys = pygame.key.get_pressed()
 
 	if(not intro.gameStart):
-		if(keys[pygame.K_SPACE]):
+		if(keys[pygame.K_RETURN]):
 			startGame()		
 	else:
 		keysPressed = []
@@ -111,17 +112,24 @@ def Logic():
 		potato.motion(keysPressed)
 
 		if(potato.reachCheckpoint):
+			print("Paso")
+			allSprites.remove(tilesGroup)
 			levelManager.goToNextLevel()
 			enviroment = levelManager.getEnviroment()
+			tiles = levelManager.getLevelSprites()
+			tilesGroup.empty()
+
+			for tile in tiles: 
+				#tilesGroup = pygame.sprite.Group()
+				tilesGroup.add(tile.Sprite)
+				pygameCollisionManager.setGroups(potatoSprite, tilesGroup)
+				allSprites.add(tilesGroup)
+
 			potato.newLevel(enviroment)
 
 while True:
 	tracer.cls()
-
 	CheckQuitEvent()
-
 	Logic()
-
 	Draw()
-
 	clock.tick(FPS)

@@ -15,6 +15,7 @@ from iImageManager import IImageManager
 from iSoundManager import ISoundManager
 from iSpriteManager import ISpriteManager
 from iSurfaceManager import ISurfaceManager
+from iCollisionManager import ICollisionManager
 from levelManager import LevelManager
 from intro import Intro
 from gameElement import GameElement

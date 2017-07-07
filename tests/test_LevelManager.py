@@ -143,7 +143,7 @@ class test_LevelManager(unittest.TestCase):
 		self.imageManager.getImageColor.side_effect = getColor
 		self.imageManager.getPixelArrayItemColor.return_value = "Black"
 
-		self.spriteManager.createSprite.return_value = sprite
+		self.spriteManager.createNewSprite.return_value = sprite
 		self.imageManager.createImage.return_value = image
 
 		self.imageManagerExpects.append(call.loadImage(rs.LEVEL_LEAP_OF_FAITH))
@@ -160,7 +160,7 @@ class test_LevelManager(unittest.TestCase):
 				self.imageManagerExpects.append(call
 					.createImage(30, 30, rs.TILE_IMAGE))
 				self.spriteManagerExpects.append(call
-					.createSprite(x*30, y*30, 30, 30, image))
+					.createNewSprite(x*30, y*30, 30, 30, image))
 
 		tiles = self.target.getLevelSprites()
 
