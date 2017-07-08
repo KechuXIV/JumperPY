@@ -5,7 +5,8 @@ import os
 import unittest
 import uuid
 
-from . import MockPixelArray, getColor
+from itertools import chain, cycle
+from . import MockPixelArray
 from ..bin import LevelManager, Point, IImageManager, ISurfaceManager, ISpriteManager, resourcePath as rs
 from mock import MagicMock, Mock, call, NonCallableMock, NonCallableMagicMock, patch
 
@@ -16,18 +17,15 @@ class test_LevelManager(unittest.TestCase):
 		self.imageManager = Mock(spec=IImageManager)
 		self.surfaceManager = Mock(spec=ISurfaceManager)
 		self.spriteManager = Mock(spec=ISpriteManager)
-		self.tile = MagicMock()
-		self.checkpoint = MagicMock()
 
-		self.imageManager.getImageColor.side_effect = ["Black", "Red", "Green"]
+		self.imageManager.getColor.side_effect = ["Black", "Red", "Green"]
 
 		self.target = LevelManager(self.imageManager, 
-			self.surfaceManager, self.spriteManager,
-			self.tile, self.checkpoint)
+			self.surfaceManager, self.spriteManager)
 
-		self.imageManagerExpects = [call.getImageColor(0, 0, 0), 
-			call.getImageColor(255, 0, 0),
-			call.getImageColor(76, 255, 0)]
+		self.imageManagerExpects = [call.getColor(255, 0, 0, 0), 
+			call.getColor(255, 0, 0, 255),
+			call.getColor(255, 0, 255, 76)]
 
 		self.surfaceManagerExpects = []
 		self.spriteManagerExpects = []
@@ -37,24 +35,6 @@ class test_LevelManager(unittest.TestCase):
 		self.assertEqual(self.surfaceManager.mock_calls, self.surfaceManagerExpects)
 		self.assertEqual(self.spriteManager.mock_calls, self.spriteManagerExpects)
 
-	def test_GetEnviroment(self):
-		mockEnviroment = MagicMock()
-		mockSurface = MagicMock()
-
-		self.imageManager.createImage.return_value = mockSurface
-		self.target._enviroment = mockEnviroment
-
-		enviroment = self.target.getEnviroment()
-
-		self.assertIsNotNone(enviroment)
-		self.assertEqual(enviroment, mockEnviroment)
-
-	def test_GetEnviroment_ShouldRaiseExceptionIfNotRendered(self):
-		with self.assertRaises(Exception) as cm:
-			enviroment = self.target.getEnviroment()
-
-		self.assertEqual(cm.exception.message, "Level not rendered")
-
 	def test_GetLevel(self):
 		expectedLevel = rs.LEVEL_LEAP_OF_FAITH
 
@@ -62,109 +42,112 @@ class test_LevelManager(unittest.TestCase):
 
 		self.assertEqual(actualLevel, expectedLevel)
 
-	def test_GetRenderedLevel(self):
-		self.tile.Width = 30
-		self.tile.Height = 30
-
-		pixelArray = MockPixelArray()
-		sourceface = Mock()
-
-		self.imageManager.getPixelArray.return_value = pixelArray
-		self.imageManager.getImageWidth.return_value = 20
-		self.imageManager.getImageHeight.return_value = 12
-		self.imageManager.getImageColor.side_effect = getColor
-		self.surfaceManager.getSurface.return_value = sourceface
-
-		self.imageManagerExpects.append(call.loadImage(rs.LEVEL_LEAP_OF_FAITH))
-		self.imageManagerExpects.append(call.getImageWidth())
-		self.imageManagerExpects.append(call.getImageHeight())
-		self.imageManagerExpects.append(call.getPixelArray())
-		self.imageManagerExpects.append(call.getImageColor(0, 0, 0))
-		self.imageManagerExpects.append(call.getImageColor(255, 0, 0))
-		self.imageManagerExpects.append(call.getImageColor(76, 255, 0))
-
-		for i in range(0,240):
-			self.imageManagerExpects.append(call.getPixelArrayItemColor(5))
-
-		self.imageManagerExpects.append(call.getImageWidth())
-		self.imageManagerExpects.append(call.getImageHeight())
-		self.surfaceManagerExpects.append(call.createSurface(30*20, 30*12))
-		self.surfaceManagerExpects.append(call.getSurface())
-		self.spriteManagerExpects.append(call.createSpriteFromSurface(0, 0, 600, 360, sourceface))
-		self.spriteManagerExpects.append(call.getSprite())
-
-		renderedLevel = self.target.getRenderedLevel()
-
-		self.assertIsNotNone(renderedLevel)
-
 	def test_GoToNextLevel(self):
-		self.tile.Width = 30
-		self.tile.Height = 30
+		imageWidth = 5
+		imageHeight = 3
+		expectedStarCord = Point(0, 2)
 
 		pixelArray = MockPixelArray()
 		sourceface = Mock()
+		spriteTile = str(uuid.uuid4())
+		spriteCheckpoint = str(uuid.uuid4())
+		imageCheckpoint = str(uuid.uuid4())
+		imageTile = str(uuid.uuid4())
 
 		self.imageManager.getPixelArray.return_value = pixelArray
-		self.imageManager.getImageWidth.return_value = 20
-		self.imageManager.getImageHeight.return_value = 12
-		self.imageManager.getImageColor.side_effect = getColor
-		self.surfaceManager.getSurface.return_value = sourceface
+		self.imageManager.getImageWidth.return_value = imageWidth
+		self.imageManager.getImageHeight.return_value = imageHeight
+		self.imageManager.getPixelArrayItemColor.side_effect=chain(['Green','Green','Red'], cycle(['Black']))
 
-		self.surfaceManagerExpects.append(call.createSurface(30*20, 30*12))
-		self.surfaceManagerExpects.append(call.getSurface())
-		self.spriteManagerExpects.append(call.updateSpriteFromSurface(0, 0, 600, 360, sourceface))
-		self.spriteManagerExpects.append(call.getSprite())
+		self.spriteManager.createNewSprite.side_effect = chain([spriteCheckpoint, spriteCheckpoint], cycle([spriteTile]))
+		self.imageManager.createImage.return_value = imageCheckpoint
+		self.imageManager.createImage.return_value = imageTile
+		self.imageManager.createImage.side_effect=chain([imageCheckpoint, imageCheckpoint], cycle([imageTile]))
 
 		self.imageManagerExpects.append(call.loadImage(rs.LEVEL_JUMPERING))
 		self.imageManagerExpects.append(call.getImageWidth())
 		self.imageManagerExpects.append(call.getImageHeight())
 		self.imageManagerExpects.append(call.getPixelArray())
-		self.imageManagerExpects.append(call.getImageColor(0, 0, 0))
-		self.imageManagerExpects.append(call.getImageColor(255, 0, 0))
-		self.imageManagerExpects.append(call.getImageColor(76, 255, 0))
 
-		for i in range(0,240):
+
+		for j in range(0,2):
 			self.imageManagerExpects.append(call.getPixelArrayItemColor(5))
+			self.imageManagerExpects.append(call
+				.createImage(30, 30, rs.CHECKPOINT_IMAGE))
+			self.spriteManagerExpects.append(call
+				.createNewSprite(0, j*30, 30, 30, imageCheckpoint))
 
-		self.imageManagerExpects.append(call.getImageWidth())
-		self.imageManagerExpects.append(call.getImageHeight())
+		for x in range(0,imageWidth):
+			for y in range(0,imageHeight):
+				if(x != 0 or y > 1):
+					self.imageManagerExpects.append(call.getPixelArrayItemColor(5))
+				if(x != 0 or y > 2):
+					self.imageManagerExpects.append(call
+						.createImage(30, 30, rs.TILE_IMAGE))
+					self.spriteManagerExpects.append(call
+						.createNewSprite(x*30, y*30, 30, 30, imageTile))
 
-		renderedLevel = self.target.goToNextLevel()
+		enviroment = self.target.goToNextLevel()
 
-		self.assertIsNotNone(renderedLevel)
+		for tile in enviroment.getTiles():
+			self.assertEqual(tile.Sprite, spriteTile)
+
+		for checkpoint in enviroment.getCheckpoints():
+			self.assertEqual(checkpoint.Sprite, spriteCheckpoint)
+
+		self.assertEqual(enviroment.getStartCords(), expectedStarCord)
 
 	def test_getLevelSprites(self):
-		self.tile.Width = 30
-		self.tile.Height = 30
+		imageWidth = 5
+		imageHeight = 3
+		expectedStarCord = Point(0, 2)
 
 		pixelArray = MockPixelArray()
 		sourceface = Mock()
-		sprite = str(uuid.uuid4())
-		image = str(uuid.uuid4())
+		spriteTile = str(uuid.uuid4())
+		spriteCheckpoint = str(uuid.uuid4())
+		imageCheckpoint = str(uuid.uuid4())
+		imageTile = str(uuid.uuid4())
 
 		self.imageManager.getPixelArray.return_value = pixelArray
-		self.imageManager.getImageWidth.return_value = 20
-		self.imageManager.getImageHeight.return_value = 12
-		self.imageManager.getImageColor.side_effect = getColor
-		self.imageManager.getPixelArrayItemColor.return_value = "Black"
+		self.imageManager.getImageWidth.return_value = imageWidth
+		self.imageManager.getImageHeight.return_value = imageHeight
+		self.imageManager.getPixelArrayItemColor.side_effect=chain(['Green','Green','Red'], cycle(['Black']))
 
-		self.spriteManager.createNewSprite.return_value = sprite
-		self.imageManager.createImage.return_value = image
+		self.spriteManager.createNewSprite.side_effect = chain([spriteCheckpoint, spriteCheckpoint], cycle([spriteTile]))
+		self.imageManager.createImage.return_value = imageCheckpoint
+		self.imageManager.createImage.return_value = imageTile
+		self.imageManager.createImage.side_effect=chain([imageCheckpoint, imageCheckpoint], cycle([imageTile]))
 
 		self.imageManagerExpects.append(call.loadImage(rs.LEVEL_LEAP_OF_FAITH))
 		self.imageManagerExpects.append(call.getImageWidth())
 		self.imageManagerExpects.append(call.getImageHeight())
 		self.imageManagerExpects.append(call.getPixelArray())
 
-		for x in range(0,20):
-			for y in range(0,12):
-				self.imageManagerExpects.append(call.getPixelArrayItemColor(5))
-				self.imageManagerExpects.append(call
-					.createImage(30, 30, rs.TILE_IMAGE))
-				self.spriteManagerExpects.append(call
-					.createNewSprite(x*30, y*30, 30, 30, image))
 
-		tiles = self.target.getLevelSprites()
+		for j in range(0,2):
+			self.imageManagerExpects.append(call.getPixelArrayItemColor(5))
+			self.imageManagerExpects.append(call
+				.createImage(30, 30, rs.CHECKPOINT_IMAGE))
+			self.spriteManagerExpects.append(call
+				.createNewSprite(0, j*30, 30, 30, imageCheckpoint))
 
-		for tile in tiles:
-			self.assertEqual(tile.Sprite, sprite)
+		for x in range(0,imageWidth):
+			for y in range(0,imageHeight):
+				if(x != 0 or y > 1):
+					self.imageManagerExpects.append(call.getPixelArrayItemColor(5))
+				if(x != 0 or y > 2):
+					self.imageManagerExpects.append(call
+						.createImage(30, 30, rs.TILE_IMAGE))
+					self.spriteManagerExpects.append(call
+						.createNewSprite(x*30, y*30, 30, 30, imageTile))
+
+		enviroment = self.target.getEnviroment()
+
+		for tile in enviroment.getTiles():
+			self.assertEqual(tile.Sprite, spriteTile)
+
+		for checkpoint in enviroment.getCheckpoints():
+			self.assertEqual(checkpoint.Sprite, spriteCheckpoint)
+
+		self.assertEqual(enviroment.getStartCords(), expectedStarCord)

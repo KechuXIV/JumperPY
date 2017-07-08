@@ -32,9 +32,8 @@ class PygameImageManager(IImageManager):
 	def getImageHeight(self):
 		return self._image.get_height()
 
-	def getImageColor(self, r, g, b):
-		mapRGB = self._image.map_rgb((r, g, b))
-		return pygame.Color(mapRGB)
+	def getColor(self, r, g, b, a):
+		return pygame.Color(r,g,b,a)
 
 	def getPixelArray(self):
 		return pygame.PixelArray(self._image)

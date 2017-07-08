@@ -29,13 +29,8 @@ pygameImageManager = PygameImageManager()
 pygameSourceManager = PygameSurfaceManager()
 pygameCollisionManager = PygameCollisionManager()
 
-checkpoint = Checkpoint(pygameImageManager, blockPygameSpriteManager, Point(1,1))
-tile = Tile(pygameImageManager, blockPygameSpriteManager, Point(1,1))
-
-levelManager = LevelManager(pygameImageManager, pygameSourceManager, levelManagerPygameSpriteManager, tile, checkpoint)
-levelSprite = levelManager.getRenderedLevel()
+levelManager = LevelManager(pygameImageManager, pygameSourceManager, levelManagerPygameSpriteManager)
 enviroment = levelManager.getEnviroment()
-tiles = levelManager.getLevelSprites();
 
 tracer = NullTracer()
 potato = Potato(screenCords, potatoPygameSpriteManager, enviroment, pygameSoundManager, pygameCollisionManager, tracer)
@@ -48,8 +43,10 @@ allSprites = pygame.sprite.Group()
 allSprites.add(introSprite)
 
 tilesGroup = pygame.sprite.Group()
-for tile in tiles: tilesGroup.add(tile.Sprite)
-pygameCollisionManager.setGroups(potatoSprite, tilesGroup)
+checkpointGroup = pygame.sprite.Group()
+for checkpoint in enviroment.getCheckpoints(): checkpointGroup.add(checkpoint.Sprite)
+for tile in enviroment.getTiles(): tilesGroup.add(tile.Sprite)
+pygameCollisionManager.setGroups(potatoSprite, tilesGroup, checkpointGroup)
 
 clock = pygame.time.Clock()
 
@@ -89,9 +86,9 @@ def UpdateWindow():
 def startGame():
 	intro.gameStart = True
 	allSprites.remove(introSprite)
-	#allSprites.add(levelSprite)
 	allSprites.add(tilesGroup)
 	allSprites.add(potatoSprite)
+	allSprites.add(checkpointGroup)
 
 def Logic():
 	keys = pygame.key.get_pressed()
@@ -112,18 +109,22 @@ def Logic():
 		potato.motion(keysPressed)
 
 		if(potato.reachCheckpoint):
-			print("Paso")
-			allSprites.remove(tilesGroup)
-			levelManager.goToNextLevel()
-			enviroment = levelManager.getEnviroment()
-			tiles = levelManager.getLevelSprites()
-			tilesGroup.empty()
 
-			for tile in tiles: 
-				#tilesGroup = pygame.sprite.Group()
-				tilesGroup.add(tile.Sprite)
-				pygameCollisionManager.setGroups(potatoSprite, tilesGroup)
-				allSprites.add(tilesGroup)
+			allSprites.remove(checkpointGroup)
+			allSprites.remove(tilesGroup)
+
+			tilesGroup.empty()
+			checkpointGroup.empty()
+
+			enviroment = levelManager.goToNextLevel()
+
+			for checkpoint in enviroment.getCheckpoints(): checkpointGroup.add(checkpoint.Sprite)
+			for tile in enviroment.getTiles(): tilesGroup.add(tile.Sprite)
+
+			allSprites.add(checkpointGroup)
+			allSprites.add(tilesGroup)
+
+			pygameCollisionManager.setGroups(potatoSprite, tilesGroup, checkpointGroup)
 
 			potato.newLevel(enviroment)
 

@@ -41,14 +41,6 @@ class Potato(GameElement):
 		self.setActualImageIndex()
 		return self._images[self.actualImageIndex]
 
-	def getPosition(self, position):
-		if(position == Position.BEHIND):
-			return Point(round((self.ActualPosition.X+10)/30), round(self.ActualPosition.Y/30) + 1)
-		elif(position == Position.LEFT):
-			return Point(round((self.ActualPosition.X-2)/30), round(self.ActualPosition.Y/30))
-		elif(position == Position.RIGHT):
-			return Point(round((self.ActualPosition.X/30)) + 1, round(self.ActualPosition.Y/30))
-
 	def getSprite(self):
 		return self._getSprite()
 
@@ -118,7 +110,7 @@ class Potato(GameElement):
 
 	def hasReachCheckpoint(self):
 		actualCord = Point(round(self.ActualPosition.X/30), round(self.ActualPosition.Y/30))
-		self.reachCheckpoint = actualCord == self._enviroment.getFinishCords()
+		self.reachCheckpoint = self.collision[Position.CHECKPOINT]
 		if(self.reachCheckpoint):
 			self._checkpointSound.play()
 
@@ -129,8 +121,7 @@ class Potato(GameElement):
 		self.isStanding = True
 		self.reachCheckpoint = False
 		self.actualImageIndex = 0
-		startCord = self._enviroment.getStartCords()
-		self.setActualPosition(startCord)
+		self.setActualPosition(self._enviroment.getStartCords())
 
 	def setActualImageIndex(self):
 		if(self.isJumping | self.isGoingDown):
@@ -154,16 +145,3 @@ class Potato(GameElement):
 			self.ActualPosition.X = self._screenCords.X
 		elif(self.ActualPosition.X > self._screenCords.X):
 			self.ActualPosition.X = 0
-
-	def thereIsTileBehind(self):
-		return self._collisionManager.getCollisions()[Position.BEHIND]
-
-	def thereIsTileLeft(self):
-		leftPosition = self.getPosition(Position.LEFT)
-		isTileLeft = self._enviroment.isTile(leftPosition)
-		return isTileLeft
-
-	def thereIsTileRight(self):
-		rightPosition = self.getPosition(Position.RIGHT)
-		isTileRight = self._enviroment.isTile(rightPosition)
-		return isTileRight

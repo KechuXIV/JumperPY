@@ -2,13 +2,12 @@
 # -*- coding: utf-8 -*-
 import os
 
-from . import Tile, Point, resourcePath as rs, Enviroment
+from . import Checkpoint, Tile, Point, resourcePath as rs, Enviroment
 
 
 class LevelManager(object):
 
-	def __init__(self, imageManager, surcefaceManager,
-		spriteManager, tile, checkpoint):
+	def __init__(self, imageManager, surcefaceManager, spriteManager):
 		self._imageManager = imageManager
 		self._spriteManager = spriteManager
 		self._surfaceManager = surcefaceManager
@@ -16,25 +15,11 @@ class LevelManager(object):
 		self._sprite = None
 		self._enviroment = None
 
-		self._colorBlack = self._imageManager.getImageColor(0, 0, 0)
-		self._colorRed = self._imageManager.getImageColor(255, 0, 0)
-		self._colorGreen = self._imageManager.getImageColor(76, 255, 0)
+		self._colorBlack = self._imageManager.getColor(255, 0, 0, 0)
+		self._colorRed = self._imageManager.getColor(255, 0, 0, 255)
+		self._colorGreen = self._imageManager.getColor(255, 0, 255, 76)
 
 		self._levels = self.getLevels()
-		self._tile = tile
-		self._checkpoint = checkpoint
-
-	def createSpriteFromSurface(self):
-		sourceface = self._surfaceManager.getSurface()
-		width = self._imageManager.getImageWidth()
-		height = self._imageManager.getImageHeight()
-		self._spriteManager.createSpriteFromSurface(0, 0,
-			width*self._tile.Width, height*self._tile.Height, sourceface)
-
-	def getEnviroment(self):
-		if self._enviroment is None:
-			raise Exception("Level not rendered")
-		return self._enviroment
 
 	def getLevel(self):
 		return self._levels[self._actualLevel]
@@ -78,68 +63,14 @@ class LevelManager(object):
 
 		return levels
 
-	def getRenderedLevel(self):
-		self.loadAndRenderLevel()
-		self.createSpriteFromSurface()
-		self.getSprite()
-
-		return self._sprite
-
-	def getSprite(self):
-		self._sprite = self._spriteManager.getSprite()
-
 	def goToNextLevel(self):
 		if(self._actualLevel >= (len(self._levels)-1)):
 			self._actualLevel = 0
 		self._actualLevel += 1
 
-		self.loadAndRenderLevel()
-		self.updateSpriteFromSurface()
-		self.getSprite()
-		
-		return self._sprite 
+		return self.getEnviroment()
 
-	def loadAndRenderLevel(self):
-		level = self.getLevel()
-
-		self._imageManager.loadImage(level)
-		
-		width = self._imageManager.getImageWidth()
-		height = self._imageManager.getImageHeight()
-
-		pixelArray = self._imageManager.getPixelArray()
-
-		black = self._imageManager.getImageColor(0, 0, 0)
-		red = self._imageManager.getImageColor(255, 0, 0)
-		green = self._imageManager.getImageColor(76, 255, 0)
-
-		self._surfaceManager.createSurface(width*self._tile.Width,
-			height*self._tile.Height)
-
-		startCord = None
-		finishCord = None
-		tilesCords = []
-
-		for x in xrange(0,width):
-			for y in xrange(0,height):
-				color = self._imageManager.getPixelArrayItemColor(pixelArray[x, y])
-				if color == black:
-					if(x != 20):
-						self._surfaceManager.blitIntoSurface(self._tile.Image,
-							x*self._tile.Width, y*self._tile.Height)
-						tilesCords.append(Point(x, y))
-				elif color == red:
-					if(x != 20): 
-						startCord = Point(x, y)
-				elif color == green:
-					if(x != 20): 
-						self._surfaceManager.blitIntoSurface(self._checkpoint.Image,
-							x*self._tile.Width, y*self._tile.Height)
-						finishCord = Point(x, y)
-
-		self._enviroment = Enviroment(startCord, finishCord, tilesCords)
-
-	def getLevelSprites(self):
+	def getEnviroment(self):
 		level = self.getLevel()
 
 		self._imageManager.loadImage(level)
@@ -153,27 +84,29 @@ class LevelManager(object):
 
 	def getTilesFromPixelArray(self, width, height, pixelArray):
 		tiles = []
-
+		checkpoints = []
+		startCord = None
 		for x in xrange(0,width):
 			for y in xrange(0,height):
 				block = self.getBlockByColorInPixelArray(pixelArray, x, y)
-				if(block != None):
+				if(type(block) == Checkpoint):
+					checkpoints.append(block)
+				elif(type(block) == Tile):
 					tiles.append(block)
+				elif(type(block) == Point):
+					startCord = block
 
-		return tiles
+		return Enviroment(startCord, checkpoints, tiles)
 
 	def getBlockByColorInPixelArray(self, pixelArray, x, y):
 		color = self._imageManager.getPixelArrayItemColor(pixelArray[x, y])
 		block = None
 		if color == self._colorBlack:
-			if(x != 20):
-				block = Tile(self._imageManager, self._spriteManager, Point(x*30, y*30))
+			block = Tile(self._imageManager, self._spriteManager, Point(x*30, y*30))
 		elif color == self._colorRed:
-			if(x != 20): 
-				pass#startCord
+			block = Point(x, y)
 		elif color == self._colorGreen:
-			if(x != 20): 
-				pass#FinishCord
+			block = Checkpoint(self._imageManager, self._spriteManager, Point(x*30, y*30))
 
 		return block
 

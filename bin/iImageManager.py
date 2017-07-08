@@ -19,7 +19,7 @@ class IImageManager(object):
 	def getImageHeight(self):
 		raise NotImplementedError("Should have implemented this")
 
-	def getImageColor(self, r, g, b):
+	def getColor(self, r, g, b, a):
 		raise NotImplementedError("Should have implemented this")
 
 	def getPixelArray(self):

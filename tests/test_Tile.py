@@ -22,12 +22,12 @@ class test_Tile(unittest.TestCase):
 		self.height = 30
 
 		self.imageManager.createImage.return_value = self.image
-		self.spriteManager.createSprite.return_value = self.sprite
+		self.spriteManager.createNewSprite.return_value = self.sprite
 
 		self.target = Tile(self.imageManager, self.spriteManager, self.position)
 
 		self.imageManagerExpects= [call.createImage(self.width, self.height, rs.TILE_IMAGE)]
-		self.spriteManagerExpects = [call.createSprite(self.position.X, 
+		self.spriteManagerExpects = [call.createNewSprite(self.position.X, 
 			self.position.Y, self.width, self.height, self.image)]
 
 

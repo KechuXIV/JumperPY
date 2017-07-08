@@ -59,7 +59,7 @@ class test_Potato(unittest.TestCase):
 		startCord = Point(0,0)
 		expectedPosition = Point(600, 0)
 		keysPressed = [Key.A]
-		collision = { Position.BEHIND : True, Position.LEFT : False }
+		collision = { Position.BEHIND : True, Position.LEFT : False , Position.CHECKPOINT : False}
 
 		self.collisionManager.getCollisions.return_value = collision
 
@@ -69,7 +69,6 @@ class test_Potato(unittest.TestCase):
 		self.spriteManagerExpected.append(call.updateSpriteImage(
 				os.path.join('JumperPY', 'bin','Resources', 'potatoWalking.png')))
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
-		self.enviromentExpected.append(call.getFinishCords())
 		self.collisionManagerExpected.append(call.getCollisions())
 
 		self.assertTrue(self.target.isGoingLeft)
@@ -78,7 +77,7 @@ class test_Potato(unittest.TestCase):
 	def test_MovePotatoRightInTheEdgeOfTheScreen(self):
 		startCord = Point(20,0)
 		expectedPosition = Point(0, 0)
-		collision = { Position.BEHIND : True, Position.RIGHT : False }
+		collision = { Position.BEHIND : True, Position.RIGHT : False, Position.CHECKPOINT : False }
 		keysPressed = [Key.D]
 
 		self.collisionManager.getCollisions.return_value = collision
@@ -91,7 +90,6 @@ class test_Potato(unittest.TestCase):
 		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
 		self.collisionManagerExpected.append(call.getCollisions())
-		self.enviromentExpected.append(call.getFinishCords())
 
 		self.assertFalse(self.target.isGoingLeft)
 		self.assertFalse(self.target.isStanding)
@@ -99,7 +97,7 @@ class test_Potato(unittest.TestCase):
 	def test_MovePotato(self):
 		startPosition = Point(1,0)
 		keysPressed = []
-		collision = { Position.BEHIND : True }
+		collision = { Position.BEHIND : True, Position.CHECKPOINT : False }
 
 		self.collisionManager.getCollisions.return_value = collision
 
@@ -108,7 +106,6 @@ class test_Potato(unittest.TestCase):
 		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(startPosition.X*30, startPosition.Y))
 		self.collisionManagerExpected.append(call.getCollisions())
-		self.enviromentExpected.append(call.getFinishCords())
 
 		self.target.setActualPosition(startPosition)
 		self.target.motion(keysPressed)
@@ -119,12 +116,14 @@ class test_Potato(unittest.TestCase):
 		keysPressed = [Key.Space]
 		startPosition = Point(1,0)
 		expectedPosition = Point(startPosition.X*30, -8)
+		collision = { Position.CHECKPOINT : False }
+
+		self.collisionManager.getCollisions.return_value = collision
 
 		self.spriteManagerExpected.append(call.updateSpriteImage(
 				os.path.join('JumperPY', 'bin','Resources', 'potatoJumping.png')))
 		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
-		self.enviromentExpected.append(call.getFinishCords())
 		self.soundManagerExpected.append(call.getSound().play())
 		self.collisionManagerExpected.append(call.getCollisions())
 		
@@ -136,7 +135,7 @@ class test_Potato(unittest.TestCase):
 	def test_MovePotatoLeft(self):
 		startPosition = Point(1,0)
 		expectedPosition = Point(startPosition.X*30 - 4, startPosition.Y)
-		collision = { Position.BEHIND : True, Position.LEFT : False }
+		collision = { Position.BEHIND : True, Position.LEFT : False, Position.CHECKPOINT : False }
 		keysPressed = [Key.A]
 
 		self.collisionManager.getCollisions.return_value = collision
@@ -144,7 +143,6 @@ class test_Potato(unittest.TestCase):
 		self.spriteManagerExpected.append(call.updateSpriteImage(
 				os.path.join('JumperPY', 'bin','Resources', 'potatoWalking.png')))
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
-		self.enviromentExpected.append(call.getFinishCords())
 		self.collisionManagerExpected.append(call.getCollisions())
 
 		self.target.setActualPosition(startPosition)
@@ -158,7 +156,7 @@ class test_Potato(unittest.TestCase):
 		startPosition = Point(1,0)
 		expectedPosition = Point(startPosition.X*30 + 4,
 			startPosition.Y)
-		collision = { Position.BEHIND : True, Position.RIGHT : False }
+		collision = { Position.BEHIND : True, Position.RIGHT : False, Position.CHECKPOINT : False }
 		keysPressed = [Key.D]
 
 		self.collisionManager.getCollisions.return_value = collision
@@ -168,7 +166,6 @@ class test_Potato(unittest.TestCase):
 		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
 		self.collisionManagerExpected.append(call.getCollisions())
-		self.enviromentExpected.append(call.getFinishCords())
 
 		self.target.setActualPosition(startPosition)
 		self.target.isGoingRight = True
@@ -200,7 +197,7 @@ class test_Potato(unittest.TestCase):
 	def test_PotatoReachCheckpointFalse(self):
 		startPosition = Point(2,5)
 		expectedPosition = Point(startPosition.X*30,startPosition.Y*30)
-		collision = { Position.BEHIND : True }
+		collision = { Position.BEHIND : True, Position.CHECKPOINT : False }
 		keysPressed = []
 
 		self.collisionManager.getCollisions.return_value = collision
@@ -210,7 +207,6 @@ class test_Potato(unittest.TestCase):
 		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X,
 			expectedPosition.Y))
-		self.enviromentExpected.append(call.getFinishCords())
 		self.collisionManagerExpected.append(call.getCollisions())
 
 		self.target.setActualPosition(startPosition)
@@ -222,10 +218,9 @@ class test_Potato(unittest.TestCase):
 		startPosition = Point(10,1)
 		finishCord = startPosition
 		expectedPosition = Point(startPosition.X*30,startPosition.Y*30)
-		collision = { Position.BEHIND : True }
+		collision = { Position.BEHIND : True, Position.CHECKPOINT : True }
 		keysPressed = []
 
-		self.enviroment.getFinishCords.return_value = finishCord
 		self.collisionManager.getCollisions.return_value = collision
 
 		self.spriteManagerExpected.append(call.updateSpriteImage(
@@ -233,7 +228,6 @@ class test_Potato(unittest.TestCase):
 		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X,
 			expectedPosition.Y))
-		self.enviromentExpected.append(call.getFinishCords())
 		self.soundManagerExpected.append(call.getSound().play())
 		self.collisionManagerExpected.append(call.getCollisions())
 
@@ -246,7 +240,7 @@ class test_Potato(unittest.TestCase):
 		startPosition = Point(1,20)
 		startCords = Point(0,1)
 		expectedPosition = Point(startCords.X*30,startCords.Y*30)
-		collision = { Position.BEHIND : False }
+		collision = { Position.BEHIND : False, Position.CHECKPOINT : False }
 		keysPressed = []
 
 		self.enviroment.getStartCords.return_value = startCords
@@ -258,7 +252,6 @@ class test_Potato(unittest.TestCase):
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X,
 			expectedPosition.Y))
 		self.collisionManagerExpected.append(call.getCollisions())
-		self.enviromentExpected.append(call.getFinishCords())
 		self.enviromentExpected.append(call.getStartCords())
 
 		self.soundManagerExpected.append(call.getSound().play())
@@ -273,7 +266,7 @@ class test_Potato(unittest.TestCase):
 	def test_ShouldNotMoveIfThereIsTileGoingRight(self):
 		startPosition = Point(2,4)
 		expectedPosition = Point(startPosition.X*30, startPosition.Y*30)
-		collision = { Position.BEHIND : True, Position.RIGHT : True }
+		collision = { Position.BEHIND : True, Position.RIGHT : True, Position.CHECKPOINT : False }
 		keysPressed = [Key.D]
 
 		self.collisionManager.getCollisions.return_value = collision
@@ -283,7 +276,6 @@ class test_Potato(unittest.TestCase):
 		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
 		self.collisionManagerExpected.append(call.getCollisions())
-		self.enviromentExpected.append(call.getFinishCords())
 
 		self.target.setActualPosition(startPosition)
 		self.target.motion(keysPressed)
@@ -293,7 +285,7 @@ class test_Potato(unittest.TestCase):
 	def test_ShouldNotMoveIfThereIsTileGoingLeft(self):
 		startPosition = Point(2,4)
 		expectedPosition = Point(startPosition.X*30, startPosition.Y*30)
-		collision = { Position.BEHIND : True, Position.LEFT : True }
+		collision = { Position.BEHIND : True, Position.LEFT : True, Position.CHECKPOINT : False }
 		keysPressed = [Key.A]
 
 		self.collisionManager.getCollisions.return_value = collision
@@ -302,7 +294,6 @@ class test_Potato(unittest.TestCase):
 				os.path.join('JumperPY', 'bin','Resources', 'potatoWalking.png')))
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
 		self.collisionManagerExpected.append(call.getCollisions())
-		self.enviromentExpected.append(call.getFinishCords())
 
 		self.target.setActualPosition(startPosition)
 		self.target.motion(keysPressed)
@@ -312,7 +303,7 @@ class test_Potato(unittest.TestCase):
 	def test_PotatoShouldDescendIfThereIsNotTileBehind(self):
 		startPosition = Point(2,4)
 		expectedPosition = Point(60, 128)
-		collision = { Position.BEHIND : False }
+		collision = { Position.BEHIND : False, Position.CHECKPOINT : False }
 		keysPressed = []
 
 		self.collisionManager.getCollisions.return_value = collision
@@ -321,7 +312,6 @@ class test_Potato(unittest.TestCase):
 				os.path.join('JumperPY', 'bin','Resources', 'potatoJumping.png')))
 		self.spriteManagerExpected.append(call.flipSpriteImage())
 		self.spriteManagerExpected.append(call.updateSprite(expectedPosition.X, expectedPosition.Y))
-		self.enviromentExpected.append(call.getFinishCords())
 		self.collisionManagerExpected.append(call.getCollisions())
 		self.soundManagerExpected.append(call.getSound().play())
 

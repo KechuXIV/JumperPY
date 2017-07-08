@@ -3,6 +3,7 @@
 import sys
 import os
 import unittest
+import uuid
 
 from ..bin import Enviroment, Point
 
@@ -10,30 +11,22 @@ from ..bin import Enviroment, Point
 class test_Enviroment(unittest.TestCase):
 
 	def setUp(self):
-		startCords = Point(0, 0)
-		finishCords = Point(2, 3)
-		tiles = [Point(1, 2),Point(4, 5)]
-		self.target = Enviroment(startCords, finishCords, tiles)
+		self._startCords = Point(0, 0)
+		self._tiles = [str(uuid.uuid4()),str(uuid.uuid4())]
+		self._checkpoint = str(uuid.uuid4())
+		self.target = Enviroment(self._startCords, self._checkpoint, self._tiles)
 
 	def tearDown(self):
 		pass
 
-	def test_GetStartCords(self):
-		expectedCords = Point(0, 0)
-		startCords = self.target.getStartCords()
-		self.assertEqual(startCords, expectedCords)
+	def test_getCheckpoints(self):
+		result = self.target.getCheckpoints()
+		self.assertEqual(result, self._checkpoint)
 
-	def test_GetFinishCords(self):
-		expectedCords = Point(2, 3)
-		finishCords = self.target.getFinishCords()
-		self.assertEqual(finishCords, expectedCords)
+	def test_getStartCords(self):
+		result = self.target.getStartCords()
+		self.assertEqual(result, self._startCords)
 
-	def test_isTileShouldTrue(self):
-		point = Point(1, 2)
-		isTile = self.target.isTile(point)
-		self.assertTrue(isTile)
-
-	def test_isTileShouldFalse(self):
-		point = Point(0, 0)
-		isTile = self.target.isTile(point)
-		self.assertFalse(isTile)
+	def test_getTiles(self):
+		result = self.target.getTiles()
+		self.assertEqual(self._tiles, result)

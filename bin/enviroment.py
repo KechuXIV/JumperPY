@@ -7,16 +7,16 @@ from . import Point
 
 class Enviroment(object):
 
-	def __init__(self, starCords, finishCords, tiles):
+	def __init__(self, starCords, checkpoint, tiles):
 		self._starCords = starCords
-		self._finishCords = finishCords
+		self._checkpoint = checkpoint
 		self._tiles = tiles
 
 	def getStartCords(self):
 		return self._starCords
 
-	def getFinishCords(self):
-		return self._finishCords
+	def getCheckpoints(self):
+		return self._checkpoint
 
-	def isTile(self, point):
-		return point in self._tiles
+	def getTiles(self):
+		return self._tiles
