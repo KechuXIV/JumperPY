@@ -19,11 +19,16 @@ class test_LevelManager(unittest.TestCase):
 		self.tile = MagicMock()
 		self.checkpoint = MagicMock()
 
+		self.imageManager.getImageColor.side_effect = ["Black", "Red", "Green"]
+
 		self.target = LevelManager(self.imageManager, 
 			self.surfaceManager, self.spriteManager,
 			self.tile, self.checkpoint)
 
-		self.imageManagerExpects = []
+		self.imageManagerExpects = [call.getImageColor(0, 0, 0), 
+			call.getImageColor(255, 0, 0),
+			call.getImageColor(76, 255, 0)]
+
 		self.surfaceManagerExpects = []
 		self.spriteManagerExpects = []
 
@@ -150,9 +155,6 @@ class test_LevelManager(unittest.TestCase):
 		self.imageManagerExpects.append(call.getImageWidth())
 		self.imageManagerExpects.append(call.getImageHeight())
 		self.imageManagerExpects.append(call.getPixelArray())
-		self.imageManagerExpects.append(call.getImageColor(0, 0, 0))
-		self.imageManagerExpects.append(call.getImageColor(255, 0, 0))
-		self.imageManagerExpects.append(call.getImageColor(76, 255, 0))
 
 		for x in range(0,20):
 			for y in range(0,12):

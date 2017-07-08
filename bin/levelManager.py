@@ -16,6 +16,10 @@ class LevelManager(object):
 		self._sprite = None
 		self._enviroment = None
 
+		self._colorBlack = self._imageManager.getImageColor(0, 0, 0)
+		self._colorRed = self._imageManager.getImageColor(255, 0, 0)
+		self._colorGreen = self._imageManager.getImageColor(76, 255, 0)
+
 		self._levels = self.getLevels()
 		self._tile = tile
 		self._checkpoint = checkpoint
@@ -136,36 +140,42 @@ class LevelManager(object):
 		self._enviroment = Enviroment(startCord, finishCord, tilesCords)
 
 	def getLevelSprites(self):
-		sprites = []
-
 		level = self.getLevel()
 
 		self._imageManager.loadImage(level)
-		
+
 		width = self._imageManager.getImageWidth()
 		height = self._imageManager.getImageHeight()
 
 		pixelArray = self._imageManager.getPixelArray()
 
-		black = self._imageManager.getImageColor(0, 0, 0)
-		red = self._imageManager.getImageColor(255, 0, 0)
-		green = self._imageManager.getImageColor(76, 255, 0)
+		return self.getTilesFromPixelArray(width, height, pixelArray)
 
+	def getTilesFromPixelArray(self, width, height, pixelArray):
 		tiles = []
+
 		for x in xrange(0,width):
 			for y in xrange(0,height):
-				color = self._imageManager.getPixelArrayItemColor(pixelArray[x, y])
-				if color == black:
-					if(x != 20):
-						tiles.append(Tile(self._imageManager, self._spriteManager, Point(x*30, y*30)))
-				elif color == red:
-					if(x != 20): 
-						pass#startCord
-				elif color == green:
-					if(x != 20): 
-						pass#FinishCord
+				block = self.getBlockByColorInPixelArray(pixelArray, x, y)
+				if(block != None):
+					tiles.append(block)
 
 		return tiles
+
+	def getBlockByColorInPixelArray(self, pixelArray, x, y):
+		color = self._imageManager.getPixelArrayItemColor(pixelArray[x, y])
+		block = None
+		if color == self._colorBlack:
+			if(x != 20):
+				block = Tile(self._imageManager, self._spriteManager, Point(x*30, y*30))
+		elif color == self._colorRed:
+			if(x != 20): 
+				pass#startCord
+		elif color == self._colorGreen:
+			if(x != 20): 
+				pass#FinishCord
+
+		return block
 
 	def updateSpriteFromSurface(self):
 		sourceface = self._surfaceManager.getSurface()
