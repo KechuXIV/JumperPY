@@ -14,7 +14,7 @@ from pygameCollisionManager import PygameCollisionManager
 
 pygame.init()
 sountrack = pygame.mixer.Sound(rs.SOUNDTRACK)
-sountrack.play(-1)
+#sountrack.play(-1)
 
 screenCords = Point(600, 360)
 screen = pygame.display.set_mode((screenCords.X, screenCords.Y))
@@ -40,97 +40,85 @@ introSprite = intro.getSprite()
 potatoSprite = potato.getSprite()
 
 allSprites = pygame.sprite.Group()
-allSprites.add(introSprite)
-
 tilesGroup = pygame.sprite.Group()
 checkpointGroup = pygame.sprite.Group()
-for checkpoint in enviroment.getCheckpoints(): checkpointGroup.add(checkpoint.Sprite)
-for tile in enviroment.getTiles(): tilesGroup.add(tile.Sprite)
-pygameCollisionManager.setGroups(potatoSprite, tilesGroup, checkpointGroup)
+
+allSprites.add(introSprite)
 
 clock = pygame.time.Clock()
 
 FPS = 60
 
-def CheckQuitEvent():
+def checkQuitEvent():
 	for event in pygame.event.get():
 		if(event.type == pygame.QUIT):
 			pygame.quit()
 			sys.exit()
 
-def Draw():
-	ClearScreen()
+def draw():
+	clearScreen()
 	allSprites.draw(screen)
-	#DrawLines()
-	UpdateWindow()
+	updateWindow()
 
-def DrawLines():
-	x = 0 
-	y = 0
-
-	pygame.draw.line(screen, (0, 200, 200), (0, 0), (600, x), (1))
-	pygame.draw.line(screen, (0, 200, 200), (0, 0), (x, 480), (1))
-
-	for i in xrange(1,40):
-		x += 15
-		y += 15
-		pygame.draw.line(screen, (0, 200, 200), (0, y), (600, x), (1))
-		pygame.draw.line(screen, (0, 200, 200), (x, 0), (x, 480), (1))
-
-def ClearScreen():
+def clearScreen():
 	screen.fill((0,0,0))
 
-def UpdateWindow():
+def updateWindow():
 	pygame.display.flip()
 
 def startGame():
 	intro.gameStart = True
 	allSprites.remove(introSprite)
-	allSprites.add(tilesGroup)
+	setEnviromentGroups(enviroment)
 	allSprites.add(potatoSprite)
-	allSprites.add(checkpointGroup)
 
-def Logic():
+def getPressedKeys():
 	keys = pygame.key.get_pressed()
+	keysPressed = []
 
+	if(keys[pygame.K_d]):
+		keysPressed.append(Key.D)
+	if(keys[pygame.K_a]):
+		keysPressed.append(Key.A)
+	if(keys[pygame.K_SPACE]):
+		keysPressed.append(Key.Space)
+
+	return keysPressed
+
+def removeEnviromentGroups():
+	allSprites.remove(checkpointGroup)
+	allSprites.remove(tilesGroup)
+
+	tilesGroup.empty()
+	checkpointGroup.empty()
+
+def setEnviromentGroups(enviroment):
+	for checkpoint in enviroment.getCheckpoints(): checkpointGroup.add(checkpoint.Sprite)
+	for tile in enviroment.getTiles(): tilesGroup.add(tile.Sprite)
+
+	allSprites.add(checkpointGroup)
+	allSprites.add(tilesGroup)
+
+	pygameCollisionManager.setGroups(potatoSprite, tilesGroup, checkpointGroup)
+
+def goToNextLevel():
+	removeEnviromentGroups()
+
+	enviroment = levelManager.goToNextLevel()
+	setEnviromentGroups(enviroment)
+
+	potato.newLevel(enviroment)
+
+def logic():
 	if(not intro.gameStart):
-		if(keys[pygame.K_RETURN]):
-			startGame()		
-	else:
-		keysPressed = []
-
-		if(keys[pygame.K_d]):
-			keysPressed.append(Key.D)
-		if(keys[pygame.K_a]):
-			keysPressed.append(Key.A)
-		if(keys[pygame.K_SPACE]):
-			keysPressed.append(Key.Space)
-
-		potato.motion(keysPressed)
-
-		if(potato.reachCheckpoint):
-
-			allSprites.remove(checkpointGroup)
-			allSprites.remove(tilesGroup)
-
-			tilesGroup.empty()
-			checkpointGroup.empty()
-
-			enviroment = levelManager.goToNextLevel()
-
-			for checkpoint in enviroment.getCheckpoints(): checkpointGroup.add(checkpoint.Sprite)
-			for tile in enviroment.getTiles(): tilesGroup.add(tile.Sprite)
-
-			allSprites.add(checkpointGroup)
-			allSprites.add(tilesGroup)
-
-			pygameCollisionManager.setGroups(potatoSprite, tilesGroup, checkpointGroup)
-
-			potato.newLevel(enviroment)
+		if(pygame.key.get_pressed()[pygame.K_RETURN]):
+			startGame()
+	elif(potato.motion(getPressedKeys())):
+		goToNextLevel()
 
 while True:
 	tracer.cls()
-	CheckQuitEvent()
-	Logic()
-	Draw()
+	checkQuitEvent()
+	logic()
+	draw()
 	clock.tick(FPS)

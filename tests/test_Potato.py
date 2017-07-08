@@ -210,8 +210,10 @@ class test_Potato(unittest.TestCase):
 		self.collisionManagerExpected.append(call.getCollisions())
 
 		self.target.setActualPosition(startPosition)
-		self.target.motion(keysPressed)
 
+		result = self.target.motion(keysPressed)
+
+		self.assertFalse(result)
 		self.assertFalse(self.target.reachCheckpoint)
 
 	def test_PotatoReachCheckpointTrue(self):
@@ -232,8 +234,9 @@ class test_Potato(unittest.TestCase):
 		self.collisionManagerExpected.append(call.getCollisions())
 
 		self.target.setActualPosition(startPosition)
-		self.target.motion(keysPressed)
+		result = self.target.motion(keysPressed)
 
+		self.assertTrue(result)
 		self.assertTrue(self.target.reachCheckpoint)
 
 	def test_PotatoDie(self):

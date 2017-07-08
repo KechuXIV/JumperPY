@@ -70,8 +70,9 @@ class Potato(GameElement):
 		self.moveOnYAxis(keysPressed)
 
 		self._updateImage(self.getImageToShow(), self.isGoingLeft)
+		self._updateSpritePosition(self.ActualPosition)
 
-		return self._updateSpritePosition(self.ActualPosition)
+		return self.reachCheckpoint
 
 	def moveOnXAxis(self, keysPressed):
 		if(Key.A in keysPressed):
