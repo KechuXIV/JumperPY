@@ -32,7 +32,7 @@ class test_Point(unittest.TestCase):
 		self.assertEqual(self.target, expectedPoint)
 
 	def test_NotEqual(self):
-		notPoint = Point(4,5)
+		notPoint = Point(4,6)
 		self.target.X = 4
 		self.target.Y = 5
 

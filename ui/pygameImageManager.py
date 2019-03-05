@@ -39,4 +39,4 @@ class PygameImageManager(IImageManager):
 		return pygame.PixelArray(self._image)
 
 	def getPixelArrayItemColor(self, pixelArrayItem):
-		return pygame.Color(pixelArrayItem)
+		return pygame.Surface((1,1)).unmap_rgb(pixelArrayItem)

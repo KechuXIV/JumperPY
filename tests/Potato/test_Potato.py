@@ -5,7 +5,15 @@ import os
 import unittest
 
 from mock import Mock, MagicMock, call, NonCallableMock
-from ..bin import Enviroment, Key, Point, Position, Potato, ISoundManager, ISpriteManager, ICollisionManager, NullTracer
+from ...bin import Enviroment
+from ...bin import Key
+from ...bin import Point
+from ...bin import Position
+from ...bin import ISoundManager
+from ...bin import ISpriteManager
+from ...bin import ICollisionManager
+from ...bin import NullTracer
+from ...bin.Potato import Potato
 
 
 class test_Potato(unittest.TestCase):

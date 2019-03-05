@@ -2,7 +2,11 @@
 # -*- coding: utf-8 -*-
 import os
 
-from . import Point, Key, GameElement, Position, resourcePath as rs
+from .. import Point 
+from .. import Key
+from .. import GameElement 
+from .. import Position
+from .. import resourcePath as rs
 
 class Potato(GameElement):
 
@@ -83,7 +87,7 @@ class Potato(GameElement):
 		elif(Key.D in keysPressed):
 			self.isStanding = False
 			self.isGoingLeft = False
-			if(not self.collision[Position.RIGHT]):
+			if(not self.collision[Position.RIGHT]):	
 				self.ActualPosition.X += self._speed.X
 
 		self.hasReachCheckpoint()

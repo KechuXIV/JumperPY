@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import pygame
 
 from . import Checkpoint, Tile, Point, resourcePath as rs, Enviroment
 
@@ -15,9 +16,9 @@ class LevelManager(object):
 		self._sprite = None
 		self._enviroment = None
 
-		self._colorBlack = self._imageManager.getColor(255, 0, 0, 0)
-		self._colorRed = self._imageManager.getColor(255, 0, 0, 255)
-		self._colorGreen = self._imageManager.getColor(255, 0, 255, 76)
+		self._colorBlack = self._imageManager.getColor(0, 0, 0, 255)
+		self._colorRed = self._imageManager.getColor(0, 0, 255, 255)
+		self._colorGreen = self._imageManager.getColor(0, 255, 76, 255)
 
 		self._levels = self.getLevels()
 
@@ -72,7 +73,7 @@ class LevelManager(object):
 
 	def getEnviroment(self):
 		level = self.getLevel()
-
+		
 		self._imageManager.loadImage(level)
 
 		width = self._imageManager.getImageWidth()
@@ -86,8 +87,8 @@ class LevelManager(object):
 		tiles = []
 		checkpoints = []
 		startCord = None
-		for x in xrange(0,width):
-			for y in xrange(0,height):
+		for x in range(0,width):
+			for y in range(0,height):
 				block = self.getBlockByColorInPixelArray(pixelArray, x, y)
 				if(type(block) == Checkpoint):
 					checkpoints.append(block)
@@ -107,6 +108,7 @@ class LevelManager(object):
 			block = Point(x, y)
 		elif color == self._colorGreen:
 			block = Checkpoint(self._imageManager, self._spriteManager, Point(x*30, y*30))
+
 
 		return block
 

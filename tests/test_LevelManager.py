@@ -23,9 +23,9 @@ class test_LevelManager(unittest.TestCase):
 		self.target = LevelManager(self.imageManager, 
 			self.surfaceManager, self.spriteManager)
 
-		self.imageManagerExpects = [call.getColor(255, 0, 0, 0), 
-			call.getColor(255, 0, 0, 255),
-			call.getColor(255, 0, 255, 76)]
+		self.imageManagerExpects = [call.getColor(0, 0, 0, 255), 
+			call.getColor(0, 0, 255, 255),
+			call.getColor(0, 255, 76, 255)]
 
 		self.surfaceManagerExpects = []
 		self.spriteManagerExpects = []
@@ -71,11 +71,12 @@ class test_LevelManager(unittest.TestCase):
 
 
 		for j in range(0,2):
-			self.imageManagerExpects.append(call.getPixelArrayItemColor(5))
 			self.imageManagerExpects.append(call
-				.createImage(30, 30, rs.CHECKPOINT_IMAGE))
+					.getPixelArrayItemColor(5))
+			self.imageManagerExpects.append(call
+					.createImage(30, 30, rs.CHECKPOINT_IMAGE))
 			self.spriteManagerExpects.append(call
-				.createNewSprite(0, j*30, 30, 30, imageCheckpoint))
+					.createNewSprite(0, j*30, 30, 30, imageCheckpoint))
 
 		for x in range(0,imageWidth):
 			for y in range(0,imageHeight):
